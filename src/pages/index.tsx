@@ -11,7 +11,7 @@ import { ChirpCard } from "@/components/chirp/card";
 const Home: NextPage = () => {
   return (
     <Layout>
-      <header className="border-b px-6 py-4 xl:pt-12">
+      <header className="border-b px-6 py-4 2xl:pt-12">
         <h1 className="text-2xl font-bold">Home</h1>
       </header>
 
