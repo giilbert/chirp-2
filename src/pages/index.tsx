@@ -7,44 +7,69 @@ import { api } from "@/utils/api";
 import { Layout } from "@/components/layout";
 import { Button } from "@/components/ui/button";
 import { ChirpCard } from "@/components/chirp/card";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 const Home: NextPage = () => {
   return (
     <Layout>
-      <header className="border-b px-6 py-4 2xl:pt-12">
-        <h1 className="text-2xl font-bold">Home</h1>
-      </header>
+      <Tabs defaultValue="recent">
+        <header className="border-b px-6 py-4 2xl:pt-12">
+          <h1 className="text-2xl font-bold">Home</h1>
+          <TabsList className="mt-4 w-full">
+            <TabsTrigger value="recent" className="w-full">
+              Recent
+            </TabsTrigger>
+            <TabsTrigger value="following" className="w-full">
+              Following
+            </TabsTrigger>
+          </TabsList>
+        </header>
 
-      <main>
-        {/* chirp form */}
-        <section className="flex flex-col border-b px-6 pb-2 pt-4">
-          <div className="flex">
-            <div>
-              <div className="mt-2 h-12 w-12 rounded-full bg-gray-400" />
+        <main>
+          {/* chirp form */}
+          <section className="flex flex-col border-b px-6 pb-2 pt-4">
+            <div className="flex">
+              <div>
+                <div className="mt-2 h-12 w-12 rounded-full bg-gray-400" />
+              </div>
+
+              <div
+                contentEditable
+                placeholder="What do you want to complain about today?"
+                className="ml-4 mt-4 w-full bg-background text-xl outline-none"
+              />
             </div>
 
-            <div
-              contentEditable
-              placeholder="What do you want to complain about today?"
-              className="ml-4 mt-4 w-full bg-background text-xl outline-none"
-            />
-          </div>
+            <Button className="ml-auto mt-2 w-24" size="sm">
+              Chirp
+            </Button>
+          </section>
 
-          <Button className="ml-auto mt-2 w-24" size="sm">
-            Chirp
-          </Button>
-        </section>
+          <TabsContent value="recent">
+            <section className="mt-4">
+              {Array(4)
+                .fill(0)
+                .map((_, i) => (
+                  <div key={i} className="border-b px-6 py-4">
+                    <ChirpCard />
+                  </div>
+                ))}
+            </section>
+          </TabsContent>
 
-        <section className="mt-4">
-          {Array(4)
-            .fill(0)
-            .map((_, i) => (
-              <div key={i} className="border-b px-6 py-4">
-                <ChirpCard />
-              </div>
-            ))}
-        </section>
-      </main>
+          <TabsContent value="following">
+            <section className="mt-4">
+              {Array(4)
+                .fill(0)
+                .map((_, i) => (
+                  <div key={i} className="border-b px-6 py-4">
+                    <ChirpCard />
+                  </div>
+                ))}
+            </section>
+          </TabsContent>
+        </main>
+      </Tabs>
     </Layout>
   );
 };
