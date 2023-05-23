@@ -90,5 +90,5 @@
 
 [contenteditable="true"]:empty:not(:focus):before {
   content: attr(placeholder);
-  color: gray;
+  color: hsl(var(--muted-foreground));
 }

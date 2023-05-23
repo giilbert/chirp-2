@@ -6,6 +6,7 @@ import { signIn, signOut, useSession } from "next-auth/react";
 import { api } from "@/utils/api";
 import { Layout } from "@/components/layout";
 import { Button } from "@/components/ui/button";
+import { ChirpCard } from "@/components/chirp/card";
 
 const Home: NextPage = () => {
   return (
@@ -15,10 +16,11 @@ const Home: NextPage = () => {
       </header>
 
       <main>
+        {/* chirp form */}
         <section className="flex flex-col border-b px-6 pb-2 pt-4">
           <div className="flex">
             <div>
-              <div className="h-14 w-14 rounded-full bg-gray-400" />
+              <div className="mt-2 h-12 w-12 rounded-full bg-gray-400" />
             </div>
 
             <div
@@ -31,6 +33,16 @@ const Home: NextPage = () => {
           <Button className="ml-auto mt-2 w-24" size="sm">
             Chirp
           </Button>
+        </section>
+
+        <section className="mt-4">
+          {Array(4)
+            .fill(0)
+            .map((_, i) => (
+              <div key={i} className="border-b px-6 py-4">
+                <ChirpCard />
+              </div>
+            ))}
         </section>
       </main>
     </Layout>
