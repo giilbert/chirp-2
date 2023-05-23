@@ -4,11 +4,14 @@ import {
   HashIcon,
   HomeIcon,
   ListIcon,
+  MoreHorizontalIcon,
   TicketIcon,
   UserCircle,
 } from "lucide-react";
 import Link from "next/link";
 import { Button } from "../ui/button";
+import { signIn, signOut, useSession } from "next-auth/react";
+import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 
 const links = [
   {
@@ -49,25 +52,70 @@ const links = [
 ] as const;
 
 export const Nav: React.FC = () => {
+  const { data: session, status } = useSession();
+
   return (
-    <nav className="col-span-1 border-r px-12 pt-4 2xl:pt-12">
-      <div className="ml-5 text-3xl font-extrabold">Logo</div>
+    <nav className="col-span-1 flex h-full flex-col items-start border-r pt-4 2xl:pt-12">
+      <div className="w-full">
+        <div className="ml-8 text-3xl font-extrabold">Logo</div>
 
-      <div className="mt-4 flex flex-col">
-        {links.map(({ name, href, Icon }) => (
-          <Link
-            href={href}
-            key={name}
-            className="flex items-center gap-4 rounded-full py-3 pl-5 pr-6 text-2xl transition-colors hover:bg-gray-700/20"
-          >
-            <Icon />
-            {name}
-          </Link>
-        ))}
+        <div className="mx-4 mt-4 flex flex-col">
+          {links.map(({ name, href, Icon }) => (
+            <Link
+              href={href}
+              key={name}
+              className="flex w-min items-center gap-4 whitespace-nowrap rounded-full py-3 pl-4 pr-6 text-2xl transition-colors hover:bg-gray-700/20"
+            >
+              <Icon />
+              {name}
+            </Link>
+          ))}
+        </div>
+      </div>
 
-        <Button size="lg" className="ml-5 mt-2 text-xl font-bold">
-          Chirp
-        </Button>
+      <div className="w-full px-8">
+        <Button className="mt-4 w-full text-xl font-bold">Chirp</Button>
+      </div>
+
+      <div className="mt-auto w-full p-4">
+        {status === "unauthenticated" && (
+          <div className="px-4">
+            <Button
+              size="lg"
+              className="w-full text-xl"
+              variant="secondary"
+              onClick={() => void signIn("google")}
+            >
+              Sign in
+            </Button>
+          </div>
+        )}
+        {status === "authenticated" && (
+          <Popover>
+            <PopoverTrigger asChild>
+              <div className="flex cursor-pointer items-center gap-4 rounded-full py-2 pl-4 pr-6 transition-colors hover:bg-muted">
+                <div className="h-[40px] w-[40px] rounded-full bg-secondary-foreground" />
+
+                <div>
+                  <p className="font-bold">{session.user.name}</p>
+                  <p className="-mt-1 text-muted-foreground">@TODO_TAG</p>
+                </div>
+
+                <MoreHorizontalIcon className="ml-auto" />
+              </div>
+            </PopoverTrigger>
+
+            <PopoverContent>
+              <Button
+                className="w-full"
+                variant="destructive"
+                onClick={() => void signOut({ callbackUrl: "/" })}
+              >
+                Sign out
+              </Button>
+            </PopoverContent>
+          </Popover>
+        )}
       </div>
     </nav>
   );
