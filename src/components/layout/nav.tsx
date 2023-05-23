@@ -50,7 +50,7 @@ const links = [
 
 export const Nav: React.FC = () => {
   return (
-    <nav className="col-span-1 border-r px-12 pt-4">
+    <nav className="col-span-1 border-r px-12 pt-4 xl:pt-12">
       <div className="ml-5 text-3xl font-extrabold">Logo</div>
 
       <div className="mt-4 flex flex-col">
@@ -66,7 +66,7 @@ export const Nav: React.FC = () => {
         ))}
 
         <Button size="lg" className="ml-5 mt-2 text-xl font-bold">
-          Complain
+          Chirp
         </Button>
       </div>
     </nav>
