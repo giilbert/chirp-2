@@ -105,7 +105,11 @@ export const Nav: React.FC = () => {
 
                 <div>
                   <p className="font-bold">{session.user.name}</p>
-                  <p className="-mt-1 text-muted-foreground">@TODO_TAG</p>
+                  {session.user.profile && (
+                    <p className="-mt-1 text-muted-foreground">
+                      @{session.user.profile.username}
+                    </p>
+                  )}
                 </div>
 
                 <MoreHorizontalIcon className="ml-auto" />

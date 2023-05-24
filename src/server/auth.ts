@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { type GetServerSidePropsContext } from "next";
 import {
   getServerSession,
@@ -8,6 +9,7 @@ import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import GoogleProvider from "next-auth/providers/google";
 import { env } from "@/env.mjs";
 import { prisma } from "@/server/db";
+import { Profile } from "@prisma/client";
 
 /**
  * Module augmentation for `next-auth` types. Allows us to add custom properties to the `session`
@@ -16,18 +18,18 @@ import { prisma } from "@/server/db";
  * @see https://next-auth.js.org/getting-started/typescript#module-augmentation
  */
 declare module "next-auth" {
-  interface Session extends DefaultSession {
+  /**
+   * Returned by `useSession`, `getSession` and received as a prop on the `SessionProvider` React Context
+   */
+  interface Session {
     user: {
       id: string;
-      // ...other properties
-      // role: UserRole;
-    } & DefaultSession["user"];
+      name: string;
+      email: string;
+      image: string;
+      profile?: Profile;
+    };
   }
-
-  // interface User {
-  //   // ...other properties
-  //   // role: UserRole;
-  // }
 }
 
 /**
@@ -37,13 +39,20 @@ declare module "next-auth" {
  */
 export const authOptions: NextAuthOptions = {
   callbacks: {
-    session: ({ session, user }) => ({
-      ...session,
-      user: {
-        ...session.user,
-        id: user.id,
-      },
-    }),
+    session: async ({ session, user }) => {
+      session.user.email = user.email;
+      session.user.image = user.image!;
+      session.user.name = user.name!;
+      session.user.id = user.id;
+
+      const profile = await prisma.profile.findUnique({
+        where: { userId: user.id },
+      });
+
+      session.user.profile = profile!;
+
+      return session;
+    },
   },
   adapter: PrismaAdapter(prisma),
   providers: [
