@@ -66,6 +66,11 @@
     "@floating-ui/dom" "^0.5.3"
     use-isomorphic-layout-effect "^1.1.1"
 
+"@hookform/resolvers@^3.1.0":
+  version "3.1.0"
+  resolved "https://registry.yarnpkg.com/@hookform/resolvers/-/resolvers-3.1.0.tgz#ff83ef4aa6078173201da131ceea4c3583b67034"
+  integrity sha512-z0A8K+Nxq+f83Whm/ajlwE6VtQlp/yPHZnXw7XWVPIGm1Vx0QV8KThU3BpbBRfAZ7/dYqCKKBNnQh85BkmBKkA==
+
 "@humanwhocodes/config-array@^0.11.8":
   version "0.11.8"
   resolved "https://registry.npmjs.org/@humanwhocodes/config-array/-/config-array-0.11.8.tgz"
@@ -537,6 +542,11 @@
   version "10.27.1"
   resolved "https://registry.npmjs.org/@trpc/server/-/server-10.27.1.tgz"
   integrity sha512-oMTNpei0+CAet0BuDdBE9cup0SseJAOlWRhWhcTAU05rETsJnzCA5DfNkf+aP3XiAM8rMJfrTfC0Z3aeADhHaA==
+
+"@ts-react/form@^1.6.4":
+  version "1.6.4"
+  resolved "https://registry.yarnpkg.com/@ts-react/form/-/form-1.6.4.tgz#924052ab6f124c81aedfcf2f81639dfe1bcc8841"
+  integrity sha512-NkwpN8UJKEyheQIkG1O2LF38V0zpC1+38Ktpezlmk5C3pP6AWyy6mkE3YPCLAgYwvrsE6M3+oM2gBVMUp+n4JA==
 
 "@types/eslint@^8.21.3":
   version "8.37.0"
@@ -2641,6 +2651,11 @@ react-dom@18.2.0:
   dependencies:
     loose-envify "^1.1.0"
     scheduler "^0.23.0"
+
+react-hook-form@^7.43.9:
+  version "7.43.9"
+  resolved "https://registry.yarnpkg.com/react-hook-form/-/react-hook-form-7.43.9.tgz#84b56ac2f38f8e946c6032ccb760e13a1037c66d"
+  integrity sha512-AUDN3Pz2NSeoxQ7Hs6OhQhDr6gtF9YRuutGDwPQqhSUAHJSgGl2VeY3qN19MG0SucpjgDiuMJ4iC5T5uB+eaNQ==
 
 react-is@^16.13.1:
   version "16.13.1"

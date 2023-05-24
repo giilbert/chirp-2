@@ -84,7 +84,14 @@ export const Nav: React.FC = () => {
               size="lg"
               className="w-full text-xl"
               variant="secondary"
-              onClick={() => void signIn("google")}
+              onClick={() => {
+                const params = new URLSearchParams();
+                params.append("redirect", window.location.href);
+
+                void signIn("google", {
+                  callbackUrl: "/complete-sign-up?" + params.toString(),
+                });
+              }}
             >
               Sign in
             </Button>
