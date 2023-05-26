@@ -24,6 +24,7 @@ export const userRouter = createTRPCRouter({
           profile: {
             create: {
               username: input.username,
+              displayName: input.displayName,
             },
           },
         },

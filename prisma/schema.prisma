@@ -1,21 +1,22 @@
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
   previewFeatures = ["jsonProtocol", "fullTextSearch"]
 }
 
 datasource db {
-  provider = "mysql"
-  url      = env("DATABASE_URL")
+  provider     = "mysql"
+  url          = env("DATABASE_URL")
   relationMode = "prisma"
 }
 
 model Profile {
-  userId    String   @unique
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  createdAt DateTime @default(now())
-  username  String   @unique
-  chirps    Chirp[]
-  likes     Like[]
+  userId      String   @unique
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt   DateTime @default(now())
+  username    String   @unique
+  displayName String
+  chirps      Chirp[]
+  likes       Like[]
 }
 
 model Chirp {
@@ -34,12 +35,14 @@ model Chirp {
 
 model Like {
   chirpId String
-  chirp   Chirp @relation(fields: [chirpId], references: [id])
+  chirp   Chirp  @relation(fields: [chirpId], references: [id])
 
   userId String
   user   Profile @relation(fields: [userId], references: [userId])
 
   @@id([chirpId, userId])
+  @@index([chirpId])
+  @@index([userId])
 }
 
 model Hashtag {
@@ -65,8 +68,8 @@ model Account {
   session_state     String?
   user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  @@index([userId])
   @@unique([provider, providerAccountId])
+  @@index([userId])
 }
 
 model Session {
@@ -75,6 +78,7 @@ model Session {
   userId       String
   expires      DateTime
   user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
   @@index([userId])
 }
 

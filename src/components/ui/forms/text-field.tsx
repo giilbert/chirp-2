@@ -10,15 +10,16 @@ export const TextField = (props: InputProps) => {
   const { label, placeholder } = useDescription();
 
   return (
-    <div>
+    <div className="mt-4">
       <label htmlFor={label}>{label}</label>
       <Input
         type="text"
         id={label}
-        className="mt-2"
+        className={"mt-2"}
         value={value ? value : ""}
         onChange={(e) => onChange(e.target.value)}
         placeholder={placeholder}
+        {...props}
       />
       {/* TODO: field errors */}
       {error && error.errorMessage}

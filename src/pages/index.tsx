@@ -1,15 +1,25 @@
 import { type NextPage } from "next";
-import Head from "next/head";
-import Link from "next/link";
-import { signIn, signOut, useSession } from "next-auth/react";
-
-import { api } from "@/utils/api";
 import { Layout } from "@/components/layout";
-import { Button } from "@/components/ui/button";
-import { ChirpCard } from "@/components/chirp/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { CreateChirpsForm } from "@/components/chirp/create-form";
+import { Authed } from "@/components/layout/authed";
+import { ChirpsList } from "@/components/chirp/list";
+import { api } from "@/utils/api";
+import { useMemo } from "react";
+import { OnBottom } from "@/components/ui/on-bottom";
 
 const Home: NextPage = () => {
+  const recentChirpsQuery = api.chirp.getInfinite.useInfiniteQuery(
+    {},
+    {
+      getNextPageParam: (lastPage) => lastPage.nextCursor,
+    }
+  );
+
+  const allChirps = useMemo(() => {
+    return recentChirpsQuery.data?.pages.flatMap((p) => p.chirps);
+  }, [recentChirpsQuery.data?.pages]);
+
   return (
     <Layout>
       <Tabs defaultValue="recent">
@@ -27,45 +37,39 @@ const Home: NextPage = () => {
 
         <main>
           {/* chirp form */}
-          <section className="flex flex-col border-b px-6 pb-2 pt-4">
-            <div className="flex">
-              <div>
-                <div className="mt-2 h-12 w-12 rounded-full bg-gray-400" />
-              </div>
-
-              <div
-                contentEditable
-                placeholder="What do you want to complain about today?"
-                className="ml-4 mt-4 w-full bg-background text-xl outline-none"
-              />
-            </div>
-
-            <Button className="ml-auto mt-2 w-24" size="sm">
-              Chirp
-            </Button>
-          </section>
+          <Authed>
+            <section className="flex flex-col border-b px-6 py-4">
+              <CreateChirpsForm />
+            </section>
+          </Authed>
 
           <TabsContent value="recent">
-            <section className="mt-4">
-              {Array(4)
-                .fill(0)
-                .map((_, i) => (
-                  <div key={i} className="border-b px-6 py-4">
-                    <ChirpCard />
-                  </div>
-                ))}
+            <section>
+              <OnBottom
+                onBottom={() => {
+                  if (recentChirpsQuery.hasNextPage)
+                    recentChirpsQuery.fetchNextPage().catch(() => 0);
+                }}
+              >
+                {recentChirpsQuery.status === "loading" && <p>TODO: Loading</p>}
+                {recentChirpsQuery.status === "error" && <p>TODO: Error</p>}
+                {allChirps && <ChirpsList chirps={allChirps} />}
+              </OnBottom>
+
+              {
+                <p className="p-6 text-center text-2xl text-muted-foreground">
+                  {recentChirpsQuery.hasNextPage
+                    ? "Loading..."
+                    : "You reached the end"}
+                </p>
+              }
             </section>
           </TabsContent>
 
           <TabsContent value="following">
             <section className="mt-4">
-              {Array(4)
-                .fill(0)
-                .map((_, i) => (
-                  <div key={i} className="border-b px-6 py-4">
-                    <ChirpCard />
-                  </div>
-                ))}
+              {/* TODO: following section */}
+              <p>TODO!</p>
             </section>
           </TabsContent>
         </main>

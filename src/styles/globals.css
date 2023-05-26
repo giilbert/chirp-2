@@ -86,9 +86,16 @@
   p {
     @apply text-lg;
   }
-}
 
-[contenteditable="true"]:empty:not(:focus):before {
-  content: attr(placeholder);
-  color: hsl(var(--muted-foreground));
+  *::-webkit-scrollbar {
+    width: 5px;
+  }
+
+  *::-webkit-scrollbar-track {
+    @apply bg-muted;
+  }
+
+  *::-webkit-scrollbar-thumb {
+    @apply bg-muted-foreground;
+  }
 }
