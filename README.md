@@ -43,7 +43,9 @@ Twitter clone built with dark magic and ran by ducks.
 
 ### The Easy Way
 
-Literally just use the [devcontainer](https://code.visualstudio.com/docs/devcontainers/containers) config I set up in VSCode lol
+1. Load the devcontainer defined in `.devcontainer/devcontainer.json`
+2. Create a `.env.local` file with the appropriate environment variables (see `.env.example`)
+3. Run the development task in VSCode
 
 ### The Harder Way
 

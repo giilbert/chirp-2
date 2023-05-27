@@ -5,14 +5,11 @@ services:
     image: redis:7.0.11
     ports:
       - "6379:6379"
-  # Uncomment the following lines under the 'db' key if you need
-  # a MySQL database for development.
-  # Also, this is the key you should put in .env
-  # DATABASE_URL="mysql://root:prisma@localhost:3306/chirp-2"
-  # db:
-  #   image: mysql:8.0.33
-  #   environment:
-  #     MYSQL_ROOT_PASSWORD: prisma
-  #     MYSQL_DATABASE: chirp
-  #   ports:
-  #     - "3306:3306"
+  # A MySQL database for development.
+  db:
+    image: mysql:8.0.33
+    environment:
+      MYSQL_ROOT_PASSWORD: prisma
+      MYSQL_DATABASE: chirp
+    ports:
+      - "3306:3306"

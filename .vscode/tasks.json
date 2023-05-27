@@ -1,0 +1,48 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Develop",
+      "dependsOn": [
+        "Develop: Next.js",
+        "Develop: Prisma Studio",
+        "Develop: Docker"
+      ],
+      "runOptions": {
+        "runOn": "folderOpen"
+      },
+      "dependsOrder": "parallel",
+      "problemMatcher": []
+    },
+    {
+      "label": "Develop: Next.js",
+      "type": "shell",
+      "command": "yarn dev",
+      "presentation": {
+        "close": true,
+        "showReuseMessage": false,
+        "panel": "dedicated",
+      },
+    },
+    {
+      "label": "Develop: Prisma Studio",
+      "type": "shell",
+      "command": "yarn prisma studio",
+      "presentation": {
+        "close": true,
+        "showReuseMessage": false,
+        "panel": "dedicated"
+      }
+    },
+    {
+      "label": "Develop: Docker",
+      "type": "shell",
+      "command": "docker compose up",
+      "presentation": {
+        "close": true,
+        "showReuseMessage": false,
+        "panel": "dedicated"
+      }
+    }
+  ]
+}
