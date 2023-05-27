@@ -21,12 +21,20 @@ export const Layout: React.FC<
   }
 
   return (
-    <div className="flex justify-center">
-      <div className="grid h-screen w-screen max-w-[150rem] grid-cols-4">
-        <Nav />
-        <div className="col-span-2 overflow-auto">{children}</div>
-        <div className="border-l"></div>
+    <>
+      <div className="flex justify-center">
+        <div className="grid h-screen w-screen max-w-[150rem] grid-cols-4">
+          <div className="col-span-1" />
+          <div className="z-10 col-span-2">{children}</div>
+          <div className="border-l"></div>
+        </div>
       </div>
-    </div>
+
+      <div className="fixed left-0 top-0 flex justify-center">
+        <div className="grid h-screen w-screen max-w-[150rem] grid-cols-4">
+          <Nav />
+        </div>
+      </div>
+    </>
   );
 };

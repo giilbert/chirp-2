@@ -55,7 +55,7 @@ export const Nav: React.FC = () => {
   const { data: session, status } = useSession();
 
   return (
-    <nav className="col-span-1 flex h-full flex-col items-start border-r pt-4 2xl:pt-12">
+    <nav className="flex h-screen flex-col items-start border-r pt-4 2xl:pt-12">
       <div className="w-full">
         <div className="ml-8 text-3xl font-extrabold">Logo</div>
 
