@@ -8,6 +8,7 @@
 ![TailwindCSS](https://img.shields.io/badge/tailwindcss-%2338B2AC.svg?style=for-the-badge&logo=tailwind-css&logoColor=white)
 
 ### [🦆 Visit Here!](https://example.com)
+
 Twitter clone built with dark magic and ran by ducks.
 
 ## Features
@@ -54,11 +55,12 @@ Required tools (these are my versions, the app may or may not work on other vers
 
 ### Steps:
 
-1. Install dependencies: `yarn`
-2. Start redis and MySQL service: `docker compose up`
-3. Set up the database: `yarn prisma db push`
-4. Start the app: `yarn dev`
-5. If everything went right, you should be able to access the app at `http://localhost:3000`
+1. Create a `.env.local` file with the appropriate environment variables (see `.env.example`)
+2. Install dependencies: `yarn`
+3. Start redis and MySQL service: `docker compose up`
+4. Set up the database: `yarn prisma db push`
+5. Start the app: `yarn dev`
+6. If everything went right, you should be able to access the app at `http://localhost:3000`
 
 ## License
 

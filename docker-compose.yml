@@ -9,10 +9,10 @@ services:
   # a MySQL database for development.
   # Also, this is the key you should put in .env
   # DATABASE_URL="mysql://root:prisma@localhost:3306/chirp-2"
-  db:
-    image: mysql:8.0.33
-    environment:
-      MYSQL_ROOT_PASSWORD: prisma
-      MYSQL_DATABASE: chirp
-    ports:
-      - "3306:3306"
+  # db:
+  #   image: mysql:8.0.33
+  #   environment:
+  #     MYSQL_ROOT_PASSWORD: prisma
+  #     MYSQL_DATABASE: chirp
+  #   ports:
+  #     - "3306:3306"
