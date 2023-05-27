@@ -1,28 +1,59 @@
-# Create T3 App
+# Chirp (2.0)
 
-This is a [T3 Stack](https://create.t3.gg/) project bootstrapped with `create-t3-app`.
+## [🦆 Live URL](https://example.com)
 
-## What's next? How do I make an app with this?
+Twitter clone built with dark magic and ran by ducks.
 
-We try to keep this project as simple as possible, so you can start with just the scaffolding we set up for you, and add additional things later when they become necessary.
+## Features
 
-If you are not familiar with the different technologies used in this project, please refer to the respective docs. If you still are in the wind, please join our [Discord](https://t3.gg/discord) and ask for help.
+- [x] Create, edit, and delete posts
+- [x] Like and unlike posts
+- [x] User authentication and profiles
+- [x] Follow and unfollow users
+- [x] View posts from followed users
+- [ ] ✨ Recommendation algorithm 💰
+- [ ] Search for users and posts
+- [ ] Notifications
+- [ ] Direct messages
+- [ ] User analytics
+- [ ] Chirp Purple
 
-- [Next.js](https://nextjs.org)
-- [NextAuth.js](https://next-auth.js.org)
-- [Prisma](https://prisma.io)
-- [Tailwind CSS](https://tailwindcss.com)
-- [tRPC](https://trpc.io)
+## The Stack
 
-## Learn More
+- [Next.js](https://nextjs.org/) - Fullstack React framework 🚀💪
+- [Prisma](https://www.prisma.io/) - Database without the tears 😭
+- [tRPC](https://trpc.io/) - Typescript RPC framework 🦉
+- [Tailwind CSS](https://tailwindcss.com/) - CSS framework 🎨
+- [Redis](https://redis.io/) - In-memory data structure store 🗄️
+- [MySQL](https://www.mysql.com/) - Database 🗃️
 
-To learn more about the [T3 Stack](https://create.t3.gg/), take a look at the following resources:
+## Hosted on
 
-- [Documentation](https://create.t3.gg/)
-- [Learn the T3 Stack](https://create.t3.gg/en/faq#what-learning-resources-are-currently-available) — Check out these awesome tutorials
+- [Vercel](https://vercel.com/) - Frontend hosting ▲ (they're awesome ~~for sponsoring TechCodes~~)
+- [PlanetScale](https://planetscale.com/) - [Vitess](https://vitess.io/) MySQL Database hosting 🗄️ (they're awesome too)
 
-You can check out the [create-t3-app GitHub repository](https://github.com/t3-oss/create-t3-app) — your feedback and contributions are welcome!
+## Running in Development
 
-## How do I deploy this?
+### The Easy Way
 
-Follow our deployment guides for [Vercel](https://create.t3.gg/en/deployment/vercel), [Netlify](https://create.t3.gg/en/deployment/netlify) and [Docker](https://create.t3.gg/en/deployment/docker) for more information.
+Literally just use the [devcontainer](https://code.visualstudio.com/docs/devcontainers/containers) config I set up in VSCode lol
+
+### The Harder Way
+
+Required tools (these are my versions, the app may or may not work on other versions):
+
+- `node v19.9.0`
+- `yarn 1.22.19`
+- `docker 20.10.24`
+
+### Steps:
+
+1. Install dependencies: `yarn`
+2. Start redis and MySQL service: `docker compose up`
+3. Set up the database: `yarn prisma db push`
+4. Start the app: `yarn dev`
+5. If everything went right, you should be able to access the app at `http://localhost:3000`
+
+## License
+
+Distributed under the MIT License. See `LICENSE` for more information.
