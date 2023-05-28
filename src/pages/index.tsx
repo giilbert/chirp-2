@@ -23,7 +23,7 @@ const Home: NextPage = () => {
   return (
     <Layout>
       <Tabs defaultValue="recent">
-        <header className="sticky top-0 border-b bg-background/80 px-6 py-4 backdrop-blur-sm 2xl:pt-12">
+        <header className="sticky top-0 border-b bg-background/80 px-6 py-4 backdrop-blur-sm 2xl:pt-8">
           <h1 className="text-2xl font-bold">Home</h1>
           <TabsList className="mt-4 w-full">
             <TabsTrigger value="recent" className="w-full">

@@ -57,7 +57,7 @@ export const Nav: React.FC = () => {
   ] as const;
 
   return (
-    <nav className="col-span-1 flex h-screen w-[54px] flex-col items-start border-r pt-4 lg:w-full 2xl:pt-12">
+    <nav className="col-span-1 flex h-screen w-[54px] flex-col items-start border-r pt-4 lg:w-full 2xl:pt-8">
       <div>
         <div className="ml-4 w-min text-3xl font-extrabold lg:ml-8">
           <FileQuestionIcon />

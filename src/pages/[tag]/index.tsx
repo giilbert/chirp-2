@@ -33,7 +33,7 @@ const UserProfilePage: React.FC = () => {
 
   return (
     <Layout>
-      <div className="sticky top-0 z-10 flex items-center gap-2 border-b bg-background/80 px-2 py-1.5 backdrop-blur-sm 2xl:pt-12">
+      <div className="sticky top-0 z-10 flex items-center gap-2 border-b bg-background/80 px-2 py-1.5 backdrop-blur-sm 2xl:pt-8">
         <div
           className="flex h-12 w-12 cursor-pointer items-center justify-center rounded-full hover:bg-muted"
           role="button"
