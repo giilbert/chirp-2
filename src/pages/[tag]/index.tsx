@@ -27,9 +27,25 @@ const UserProfilePage: React.FC = () => {
       getNextPageParam: (lastPage) => lastPage.nextCursor,
     }
   );
+  const recentReplyingChirpsQuery =
+    api.chirp.getInfiniteFromUser.useInfiniteQuery(
+      {
+        userId: userProfileQuery.data?.userId || "",
+        filter: "replies",
+      },
+      {
+        enabled: !!userProfileQuery.data,
+        getNextPageParam: (lastPage) => lastPage.nextCursor,
+      }
+    );
+
   const allChirps = useMemo(() => {
     return recentChirpsQuery.data?.pages.flatMap((p) => p.chirps);
   }, [recentChirpsQuery.data?.pages]);
+
+  const allReplies = useMemo(() => {
+    return recentReplyingChirpsQuery.data?.pages.flatMap((p) => p.chirps);
+  }, [recentReplyingChirpsQuery.data?.pages]);
 
   const profile = userProfileQuery.data;
 
@@ -120,6 +136,20 @@ const UserProfilePage: React.FC = () => {
                   }}
                 >
                   <ChirpsList chirps={allChirps} />
+                </OnBottom>
+              )}
+            </TabsContent>
+
+            <TabsContent value="replies">
+              {allReplies && (
+                <OnBottom
+                  onBottom={() => {
+                    if (recentReplyingChirpsQuery.hasNextPage) {
+                      recentReplyingChirpsQuery.fetchNextPage().catch(() => 0);
+                    }
+                  }}
+                >
+                  <ChirpsList chirps={allReplies} />
                 </OnBottom>
               )}
             </TabsContent>

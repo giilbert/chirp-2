@@ -20,22 +20,32 @@ import { ChirpProfileCard } from "./profile-card";
 import { CreateReplyForm } from "./reply-form";
 import type { EverythingChirp } from "@/server/api/routers/chirp";
 import { ChirpCard } from "./card";
+import { useRouter } from "next/router";
 
 export const ChirpBigView: React.FC<{
   chirp: EverythingChirp;
 }> = ({ chirp }) => {
+  const router = useRouter();
+
   return (
     <>
-      <div className="ml-2">
-        <div className="border-l pl-4">
+      <div className="ml-1">
+        <div className="border-l pl-1">
           {chirp.replyingTo && (
-            <Link
-              href={`/${chirp.replyingTo.author.username}/chirp/${chirp.replyingTo.id}`}
+            <div
+              className="p-2 transition-colors hover:cursor-pointer hover:bg-muted/20"
+              onClick={() => {
+                router
+                  .push(
+                    `/${chirp.replyingTo?.author.username || ""}/chirp/${
+                      chirp.replyingTo?.id || ""
+                    }`
+                  )
+                  .catch(() => 0);
+              }}
             >
-              <div className="p-4 transition-colors hover:cursor-pointer hover:bg-muted/20">
-                <ChirpCard chirp={chirp.replyingTo} />
-              </div>
-            </Link>
+              <ChirpCard chirp={chirp.replyingTo} />
+            </div>
           )}
         </div>
       </div>
@@ -68,7 +78,7 @@ export const ChirpBigView: React.FC<{
           <p>{moment(chirp.createdAt).format("MMM D, YYYY")}</p>
         </div>
 
-        <div className="mt-4 flex gap-8 border-t pt-4">
+        <div className="mt-4 flex flex-wrap gap-4 border-t pt-4 md:gap-8">
           <p>
             <span className="mr-1 font-bold">420</span>
             <span className="text-muted-foreground">Rechirps</span>
@@ -87,7 +97,7 @@ export const ChirpBigView: React.FC<{
           </p>
         </div>
 
-        <div className="mb-4 mt-4 flex justify-around gap-8 border-y pt-2">
+        <div className="mb-4 mt-4 flex flex-wrap justify-around border-y pt-2 md:gap-8">
           <div className="flex h-12 w-12 cursor-pointer items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-purple-600/10 hover:text-purple-500">
             <MessageCircleIcon size={20} className="transition-colors" />
           </div>

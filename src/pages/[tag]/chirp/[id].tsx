@@ -1,6 +1,7 @@
 import { ChirpBigView } from "@/components/chirp/big-view";
 import { ChirpsList } from "@/components/chirp/list";
 import { Layout } from "@/components/layout";
+import { cn } from "@/lib/utils";
 import { api } from "@/utils/api";
 import { ArrowLeftIcon } from "lucide-react";
 import { useRouter } from "next/router";
@@ -37,7 +38,12 @@ const ChirpPage: React.FC = () => {
         </div>
       </div>
 
-      <div className="border-b px-4 pb-2 pt-4">
+      <div
+        className={cn(
+          "border-b px-4 pb-2",
+          chirpQuery.data?.replyingTo && "pt-2"
+        )}
+      >
         {chirpQuery.status === "success" && (
           <ChirpBigView chirp={chirpQuery.data} />
         )}

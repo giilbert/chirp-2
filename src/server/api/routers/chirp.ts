@@ -72,12 +72,12 @@ export const chirpRouter = createTRPCRouter({
       })
     )
     .query(async ({ ctx, input }) => {
-      const TAKE = 11;
+      const TAKE = 10;
       const chirps = await ctx.prisma.chirp.findMany({
         where: {
           replyingToId: input.replyingToId || undefined,
         },
-        take: TAKE,
+        take: TAKE + 1,
         orderBy: {
           createdAt: "desc",
         },
@@ -112,13 +112,13 @@ export const chirpRouter = createTRPCRouter({
       })
     )
     .query(async ({ ctx, input }) => {
-      const TAKE = 11;
+      const TAKE = 10;
       const chirps = await ctx.prisma.chirp.findMany({
         where: {
           authorId: input.userId,
           replyingToId: input.filter === "replies" ? { not: null } : undefined,
         },
-        take: TAKE,
+        take: TAKE + 1,
         orderBy: {
           createdAt: "desc",
         },

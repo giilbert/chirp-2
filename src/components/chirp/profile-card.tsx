@@ -14,7 +14,7 @@ export const ChirpProfileCard: React.FC<
 > = ({ author, children }) => {
   return (
     <HoverCard>
-      <HoverCardTrigger className="group cursor-pointer">
+      <HoverCardTrigger className="group cursor-pointer" asChild>
         {children}
       </HoverCardTrigger>
       <HoverCardContent side="top" className="w-80 text-foreground">
