@@ -23,15 +23,15 @@ export const Layout: React.FC<
   return (
     <>
       <div className="flex justify-center">
-        <div className="grid h-screen w-screen max-w-[150rem] grid-cols-4">
-          <div className="col-span-1" />
-          <div className="z-10 col-span-2">{children}</div>
-          <div className="border-l"></div>
+        <div className="flex h-screen w-screen lg:grid lg:max-w-[150rem] lg:grid-cols-4">
+          <div className="min-w-[70px] lg:col-span-1" />
+          <div className="z-10 col-span-2 w-full">{children}</div>
+          <div className="hidden w-[32rem] border-l md:block md:w-full"></div>
         </div>
       </div>
 
       <div className="fixed left-0 top-0 flex w-screen justify-center">
-        <div className="grid h-screen w-screen max-w-[150rem] grid-cols-4">
+        <div className="flex h-screen w-screen lg:grid lg:max-w-[150rem] lg:grid-cols-4">
           <Nav />
         </div>
       </div>

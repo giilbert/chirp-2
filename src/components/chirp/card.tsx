@@ -54,7 +54,7 @@ export const ChirpCard: React.FC<{
         </Avatar>
       </div>
       <div>
-        <div className="flex gap-1">
+        <div className="flex flex-wrap gap-1">
           <HoverCard>
             <HoverCardTrigger className="group cursor-pointer">
               <Link href={`/${chirp.author.username}`}>
@@ -100,7 +100,7 @@ export const ChirpCard: React.FC<{
           </p>
         </div>
 
-        <p>{chirp.body}</p>
+        <p className="break-all">{chirp.body}</p>
       </div>
     </div>
   );

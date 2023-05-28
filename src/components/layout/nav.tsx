@@ -5,6 +5,7 @@ import {
   HomeIcon,
   ListIcon,
   MoreHorizontalIcon,
+  PenToolIcon,
   TicketIcon,
   UserCircle,
 } from "lucide-react";
@@ -49,7 +50,7 @@ export const Nav: React.FC = () => {
     },
     {
       name: "Profile",
-      href: "/" + session?.user.profile?.username ?? "",
+      href: "/" + (session?.user.profile?.username ?? ""),
       Icon: UserCircle,
     },
   ] as const;
@@ -57,27 +58,33 @@ export const Nav: React.FC = () => {
   return (
     <nav className="col-span-1 flex h-screen flex-col items-start border-r pt-4 2xl:pt-12">
       <div className="w-full">
-        <div className="ml-8 text-3xl font-extrabold">Logo</div>
+        <div className="ml-6 text-3xl font-extrabold lg:ml-8">C</div>
 
-        <div className="mx-4 mt-4 flex flex-col">
+        <div className="mx-2 mt-4 flex flex-col lg:mx-4">
           {links.map(({ name, href, Icon }) => (
             <Link
               href={href}
               key={name}
-              className="flex w-min items-center gap-4 whitespace-nowrap rounded-full py-3 pl-4 pr-6 text-2xl transition-colors hover:bg-gray-700/20"
+              className="flex w-min items-center gap-4 whitespace-nowrap rounded-full p-4 text-2xl transition-colors hover:bg-gray-700/20 lg:py-3 lg:pl-4 lg:pr-6"
             >
               <Icon />
-              {name}
+              <span className="hidden lg:block">{name}</span>
             </Link>
           ))}
         </div>
       </div>
 
       <div className="w-full px-8">
-        <Button className="mt-4 w-full text-xl font-bold">Chirp</Button>
+        <Button className="mt-4 hidden w-full text-xl font-bold lg:block">
+          Chirp
+        </Button>
       </div>
 
-      <div className="mt-auto w-full p-4">
+      <Button className="ml-2 mt-2 h-[54px] w-[54px] rounded-full lg:hidden">
+        <PenToolIcon />
+      </Button>
+
+      <div className="mt-auto hidden w-full p-4 lg:block">
         {status === "unauthenticated" && (
           <div className="px-4">
             <Button
