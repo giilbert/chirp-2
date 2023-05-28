@@ -1,5 +1,12 @@
 import type { Chirp, Profile } from "@prisma/client";
 import moment from "moment";
+import {
+  HoverCard,
+  HoverCardContent,
+  HoverCardTrigger,
+} from "../ui/hover-card";
+import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
+import Link from "next/link";
 
 const betterFormatDate = (date: Date) => {
   const dateMoment = moment(date);
@@ -26,17 +33,64 @@ const betterFormatDate = (date: Date) => {
   return dateMoment.format("H:MM A");
 };
 
-export const ChirpCard: React.FC<{ chirp: Chirp & { author: Profile } }> = ({
-  chirp,
-}) => {
+export const ChirpCard: React.FC<{
+  chirp: Chirp & {
+    author: Profile & {
+      user: { image: string };
+    };
+  };
+}> = ({ chirp }) => {
   return (
     <div className="flex gap-4">
       <div>
-        <div className="h-12 w-12 rounded-full bg-gray-400" />
+        <Avatar className="h-12 w-12 rounded-full">
+          <AvatarImage src={chirp.author.user.image || undefined} />
+          <AvatarFallback className="text-2xl lg:text-6xl">
+            {chirp.author.displayName
+              .split(" ")
+              .map((w) => w[0]?.toUpperCase())
+              .join("")}
+          </AvatarFallback>
+        </Avatar>
       </div>
       <div>
         <div className="flex gap-1">
-          <p>{chirp.author.displayName}</p>
+          <HoverCard>
+            <HoverCardTrigger className="group cursor-pointer">
+              <Link href={`/${chirp.author.username}`}>
+                <p className="group-hover:underline">
+                  {chirp.author.displayName}
+                </p>
+              </Link>
+            </HoverCardTrigger>
+            <HoverCardContent side="top" className="w-80 text-foreground">
+              <Avatar className="h-12 w-12 rounded-full">
+                <AvatarImage src={chirp.author.user.image || undefined} />
+                <AvatarFallback className="text-2xl lg:text-6xl">
+                  {chirp.author.displayName
+                    .split(" ")
+                    .map((w) => w[0]?.toUpperCase())
+                    .join("")}
+                </AvatarFallback>
+              </Avatar>
+
+              <p className="mt-2">{chirp.author.displayName}</p>
+              <p className="text-muted-foreground">@{chirp.author.username}</p>
+
+              <div className="mt-2 flex gap-4">
+                <p>
+                  {/* TODO: make these number actual */}
+                  <span className="mr-1 font-bold">6969</span>
+                  <span className="text-muted-foreground">Following</span>
+                </p>
+                <p>
+                  <span className="mr-1 font-bold">420</span>
+                  <span className="text-muted-foreground">Followers</span>
+                </p>
+              </div>
+            </HoverCardContent>
+          </HoverCard>
+
           <p className="text-muted-foreground">@{chirp.author.username}</p>
 
           <p className="text-muted-foreground">·</p>

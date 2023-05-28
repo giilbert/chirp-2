@@ -30,7 +30,7 @@ export const Layout: React.FC<
         </div>
       </div>
 
-      <div className="fixed left-0 top-0 flex justify-center">
+      <div className="fixed left-0 top-0 flex w-screen justify-center">
         <div className="grid h-screen w-screen max-w-[150rem] grid-cols-4">
           <Nav />
         </div>

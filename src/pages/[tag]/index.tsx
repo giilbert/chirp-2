@@ -4,7 +4,7 @@ import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { api } from "@/utils/api";
-import { CalendarIcon } from "lucide-react";
+import { ArrowLeftIcon, CalendarIcon } from "lucide-react";
 import moment from "moment";
 import Image from "next/image";
 import { useRouter } from "next/router";
@@ -33,6 +33,24 @@ const UserProfilePage: React.FC = () => {
 
   return (
     <Layout>
+      <div className="sticky top-0 z-10 flex items-center gap-2 border-b bg-background/80 px-2 py-1.5 backdrop-blur-sm 2xl:pt-12">
+        <div
+          className="flex h-12 w-12 cursor-pointer items-center justify-center rounded-full hover:bg-muted"
+          role="button"
+          onClick={() => router.back()}
+        >
+          <ArrowLeftIcon />
+        </div>
+
+        {profile && (
+          <div>
+            <p className="text-xl font-bold">{profile.displayName}</p>
+            {/* TODO: actual numbers */}
+            <p className="text-sm text-muted-foreground">69K Chirps</p>
+          </div>
+        )}
+      </div>
+      {userProfileQuery.status === "error" && <p>TODO: error</p>}
       {userProfileQuery.status === "success" && profile && (
         <Tabs defaultValue="chirps">
           <header className="border-b pb-4">
@@ -40,7 +58,7 @@ const UserProfilePage: React.FC = () => {
               <div className="h-full w-full bg-secondary-foreground/10"></div>
             </AspectRatio>
 
-            <Avatar className="relative -top-12 left-6 h-24 w-24 rounded-full bg-gray-500 ring-4 ring-background lg:-top-20 lg:h-40 lg:w-40">
+            <Avatar className="relative -top-12 left-6 h-24 w-24 rounded-full ring-4 ring-background lg:-top-20 lg:h-40 lg:w-40">
               <AvatarImage src={profile.user.image || undefined} />
               <AvatarFallback className="text-2xl lg:text-6xl">
                 {profile.displayName
@@ -60,6 +78,7 @@ const UserProfilePage: React.FC = () => {
 
               <div className="mt-2 flex gap-4">
                 <p>
+                  {/* TODO: make these number actual */}
                   <span className="mr-1 font-bold">6969</span>
                   <span className="text-muted-foreground">Following</span>
                 </p>

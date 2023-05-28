@@ -34,7 +34,13 @@ export const chirpRouter = createTRPCRouter({
           createdAt: "desc",
         },
         include: {
-          author: true,
+          author: {
+            include: {
+              user: {
+                select: { image: true },
+              },
+            },
+          },
         },
         cursor: input.cursor
           ? {

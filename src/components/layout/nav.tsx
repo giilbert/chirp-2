@@ -13,49 +13,49 @@ import { Button } from "../ui/button";
 import { signIn, signOut, useSession } from "next-auth/react";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 
-const links = [
-  {
-    name: "Home",
-    href: "/",
-    Icon: HomeIcon,
-  },
-  {
-    name: "Explore",
-    href: "/explore",
-    Icon: HashIcon,
-  },
-  {
-    name: "Notifications",
-    href: "/notifications",
-    Icon: BellIcon,
-  },
-  {
-    name: "Lists",
-    href: "/lists",
-    Icon: ListIcon,
-  },
-  {
-    name: "Bookmarks",
-    href: "/bookmarks",
-    Icon: BookmarkIcon,
-  },
-  {
-    name: "Chirp Blue",
-    href: "/blue",
-    Icon: TicketIcon,
-  },
-  {
-    name: "Profile",
-    href: "/profile",
-    Icon: UserCircle,
-  },
-] as const;
-
 export const Nav: React.FC = () => {
   const { data: session, status } = useSession();
 
+  const links = [
+    {
+      name: "Home",
+      href: "/",
+      Icon: HomeIcon,
+    },
+    {
+      name: "Explore",
+      href: "/explore",
+      Icon: HashIcon,
+    },
+    {
+      name: "Notifications",
+      href: "/notifications",
+      Icon: BellIcon,
+    },
+    {
+      name: "Lists",
+      href: "/lists",
+      Icon: ListIcon,
+    },
+    {
+      name: "Bookmarks",
+      href: "/bookmarks",
+      Icon: BookmarkIcon,
+    },
+    {
+      name: "Chirp Blue",
+      href: "/blue",
+      Icon: TicketIcon,
+    },
+    {
+      name: "Profile",
+      href: "/" + session?.user.profile?.username ?? "",
+      Icon: UserCircle,
+    },
+  ] as const;
+
   return (
-    <nav className="flex h-screen flex-col items-start border-r pt-4 2xl:pt-12">
+    <nav className="col-span-1 flex h-screen flex-col items-start border-r pt-4 2xl:pt-12">
       <div className="w-full">
         <div className="ml-8 text-3xl font-extrabold">Logo</div>
 
