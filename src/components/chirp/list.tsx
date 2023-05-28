@@ -18,7 +18,7 @@ export const ChirpsList: React.FC<{
           key={chirp.id}
           href={`/${chirp.author.username}/chirp/${chirp.id}`}
         >
-          <div className="border-b px-6 py-4 transition-colors hover:cursor-pointer hover:bg-muted/20">
+          <div className="border-b p-4 transition-colors hover:cursor-pointer hover:bg-muted/20">
             <ChirpCard chirp={chirp} />
           </div>
         </Link>

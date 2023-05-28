@@ -58,7 +58,7 @@ const UserProfilePage: React.FC = () => {
               <div className="h-full w-full bg-secondary-foreground/10"></div>
             </AspectRatio>
 
-            <Avatar className="relative -top-12 left-6 h-24 w-24 rounded-full ring-4 ring-background lg:-top-20 lg:h-40 lg:w-40">
+            <Avatar className="relative -top-12 left-4 h-24 w-24 rounded-full ring-4 ring-background lg:-top-20 lg:h-40 lg:w-40">
               <AvatarImage src={profile.user.image || undefined} />
               <AvatarFallback className="text-2xl lg:text-6xl">
                 {profile.displayName
@@ -68,7 +68,7 @@ const UserProfilePage: React.FC = () => {
               </AvatarFallback>
             </Avatar>
 
-            <div className="m-6 -mt-8 lg:-mt-16">
+            <div className="m-4 -mt-8 lg:-mt-16">
               <h1 className="text-2xl font-bold">{profile.displayName}</h1>
               <p className="text-muted-foreground">@{profile.username}</p>
               <div className="mt-2 flex items-center gap-2 text-muted-foreground">
@@ -89,7 +89,7 @@ const UserProfilePage: React.FC = () => {
               </div>
             </div>
 
-            <div className="-mt-2 w-full px-6">
+            <div className="-mt-2 w-full px-4">
               <TabsList className="w-full">
                 <TabsTrigger value="chirps" className="w-full">
                   Chirps

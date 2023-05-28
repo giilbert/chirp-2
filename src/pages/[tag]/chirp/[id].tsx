@@ -27,7 +27,7 @@ const ChirpPage: React.FC = () => {
         </div>
       </div>
 
-      <div className="border-b px-6 pb-2 pt-4">
+      <div className="border-b px-4 pb-2 pt-4">
         {chirpQuery.status === "success" && (
           <ChirpBigView chirp={chirpQuery.data} />
         )}
