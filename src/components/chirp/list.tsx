@@ -6,7 +6,7 @@ export const ChirpsList: React.FC<{
 }> = ({ chirps }) => {
   if (chirps.length === 0) {
     return (
-      <p className="m-6 text-2xl text-muted-foreground">No Chirps yet :(</p>
+      <p className="m-6 text-lg text-muted-foreground">No Chirps yet :(</p>
     );
   }
 

@@ -18,11 +18,17 @@ export const chirpRouter = createTRPCRouter({
     .input(
       z.object({
         cursor: z.string().nullish(),
+        fromUserId: z.string().nullish(),
       })
     )
     .query(async ({ ctx, input }) => {
       const TAKE = 11;
       const chirps = await ctx.prisma.chirp.findMany({
+        where: input.fromUserId
+          ? {
+              authorId: input.fromUserId,
+            }
+          : undefined,
         take: TAKE,
         orderBy: {
           createdAt: "desc",

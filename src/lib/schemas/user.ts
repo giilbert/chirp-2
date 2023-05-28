@@ -5,6 +5,7 @@ export const completeSignUpSchema = z.object({
     .string()
     .min(3)
     .max(24)
+    .toLowerCase()
     .describe("Username // This will be your tag (3-24 characters)"),
   displayName: z
     .string()
