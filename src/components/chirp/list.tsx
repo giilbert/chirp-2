@@ -1,8 +1,9 @@
 import type { Chirp, Profile } from "@prisma/client";
 import { ChirpCard } from "./card";
+import Link from "next/link";
 
 export const ChirpsList: React.FC<{
-  chirps: (Chirp & { author: Profile })[];
+  chirps: (Chirp & { author: Profile & { user: { image: string | null } } })[];
 }> = ({ chirps }) => {
   if (chirps.length === 0) {
     return (
@@ -13,9 +14,14 @@ export const ChirpsList: React.FC<{
   return (
     <>
       {chirps.map((chirp) => (
-        <div key={chirp.id} className="border-b px-6 py-4">
-          <ChirpCard chirp={chirp} />
-        </div>
+        <Link
+          key={chirp.id}
+          href={`/${chirp.author.username}/chirp/${chirp.id}`}
+        >
+          <div className="border-b px-6 py-4 transition-colors hover:cursor-pointer hover:bg-muted/20">
+            <ChirpCard chirp={chirp} />
+          </div>
+        </Link>
       ))}
     </>
   );

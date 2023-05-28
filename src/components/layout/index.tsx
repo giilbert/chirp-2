@@ -26,13 +26,15 @@ export const Layout: React.FC<
         <div className="flex w-screen lg:grid lg:max-w-[150rem] lg:grid-cols-4">
           <div className="min-w-[54px] lg:col-span-1" />
           <div className="z-10 col-span-2 w-full">{children}</div>
-          <div className="hidden h-full w-[32rem] border-l md:block lg:w-full"></div>
+          <div className="hidden h-full w-[32rem] md:block lg:w-full"></div>
         </div>
       </div>
 
       <div className="fixed left-0 top-0 flex w-screen justify-center">
         <div className="flex h-screen w-screen lg:grid lg:max-w-[150rem] lg:grid-cols-4">
           <Nav />
+          <div className="col-span-2 w-full" />
+          <div className="hidden h-full w-[32rem] border-l md:block lg:w-full"></div>
         </div>
       </div>
     </>

@@ -1,8 +1,33 @@
 import { createChirpSchema } from "@/lib/schemas/chirp";
 import { createTRPCRouter, protectedProcedure, publicProcedure } from "../trpc";
 import { z } from "zod";
+import { TRPCError } from "@trpc/server";
 
 export const chirpRouter = createTRPCRouter({
+  getById: publicProcedure
+    .input(
+      z.object({
+        id: z.string(),
+      })
+    )
+    .query(async ({ ctx, input }) => {
+      const chirp = await ctx.prisma.chirp.findUnique({
+        where: {
+          id: input.id,
+        },
+        include: {
+          author: {
+            include: {
+              user: { select: { image: true } },
+            },
+          },
+        },
+      });
+
+      if (!chirp) throw new TRPCError({ code: "NOT_FOUND" });
+
+      return chirp;
+    }),
   create: protectedProcedure
     .input(createChirpSchema)
     .mutation(async ({ ctx, input }) => {
