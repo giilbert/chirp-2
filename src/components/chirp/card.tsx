@@ -7,6 +7,13 @@ import {
 } from "../ui/hover-card";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import Link from "next/link";
+import {
+  BarChartIcon,
+  HeartIcon,
+  MessageCircleIcon,
+  RepeatIcon,
+  ShareIcon,
+} from "lucide-react";
 
 const betterFormatDate = (date: Date) => {
   const dateMoment = moment(date);
@@ -53,7 +60,7 @@ export const ChirpCard: React.FC<{
           </AvatarFallback>
         </Avatar>
       </div>
-      <div>
+      <div className="w-full">
         <div className="flex flex-wrap gap-1">
           <HoverCard>
             <HoverCardTrigger className="group cursor-pointer">
@@ -101,6 +108,42 @@ export const ChirpCard: React.FC<{
         </div>
 
         <p className="break-all">{chirp.body}</p>
+
+        <div className="-mb-2 -ml-2 mt-1 flex w-full justify-between gap-4 text-muted-foreground">
+          <div className="group flex cursor-pointer items-center gap-1 transition-colors hover:text-purple-500">
+            <div className="flex h-10 w-10 items-center justify-center rounded-full transition-colors group-hover:bg-purple-600/10">
+              <MessageCircleIcon size={18} className="transition-colors" />
+            </div>
+            <p className="text-sm transition-colors">12.2k</p>
+          </div>
+
+          <div className="group flex cursor-pointer items-center gap-1 transition-colors hover:text-green-500">
+            <div className="flex h-10 w-10 items-center justify-center rounded-full transition-colors group-hover:bg-green-600/10">
+              <RepeatIcon size={18} className="transition-colors" />
+            </div>
+            <p className="text-sm transition-colors">12.2k</p>
+          </div>
+
+          <div className="group flex cursor-pointer items-center gap-1 transition-colors hover:text-red-500">
+            <div className="flex h-10 w-10 items-center justify-center rounded-full transition-colors group-hover:bg-red-600/10">
+              <HeartIcon size={18} className="transition-colors" />
+            </div>
+            <p className="text-sm transition-colors">12.2k</p>
+          </div>
+
+          <div className="group flex cursor-pointer items-center gap-1 transition-colors hover:text-purple-500">
+            <div className="flex h-10 w-10 items-center justify-center rounded-full transition-colors group-hover:bg-purple-600/10">
+              <BarChartIcon size={18} className="transition-colors" />
+            </div>
+            <p className="text-sm transition-colors">12.2k</p>
+          </div>
+
+          <div className="group flex cursor-pointer items-center gap-1 transition-colors hover:text-purple-500">
+            <div className="flex h-10 w-10 items-center justify-center rounded-full transition-colors group-hover:bg-purple-600/10">
+              <ShareIcon size={18} className="transition-colors" />
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );
