@@ -54,7 +54,7 @@ const UserProfilePage: React.FC = () => {
       {userProfileQuery.status === "success" && profile && (
         <Tabs defaultValue="chirps">
           <header className="border-b pb-4">
-            <AspectRatio ratio={4 / 1} className="w-full">
+            <AspectRatio ratio={4 / 1} className="-z-10 w-full">
               <div className="h-full w-full bg-secondary-foreground/10"></div>
             </AspectRatio>
 

@@ -1,6 +1,7 @@
 import {
   BellIcon,
   BookmarkIcon,
+  FileQuestionIcon,
   HashIcon,
   HomeIcon,
   ListIcon,
@@ -56,16 +57,18 @@ export const Nav: React.FC = () => {
   ] as const;
 
   return (
-    <nav className="col-span-1 flex h-screen flex-col items-start border-r pt-4 2xl:pt-12">
-      <div className="w-full">
-        <div className="ml-6 text-3xl font-extrabold lg:ml-8">C</div>
+    <nav className="col-span-1 flex h-screen w-[54px] flex-col items-start border-r pt-4 lg:w-full 2xl:pt-12">
+      <div>
+        <div className="ml-4 w-min text-3xl font-extrabold lg:ml-8">
+          <FileQuestionIcon />
+        </div>
 
-        <div className="mx-2 mt-4 flex flex-col lg:mx-4">
+        <div className="mx-1 mt-4 flex flex-col lg:mx-4">
           {links.map(({ name, href, Icon }) => (
             <Link
               href={href}
               key={name}
-              className="flex w-min items-center gap-4 whitespace-nowrap rounded-full p-4 text-2xl transition-colors hover:bg-gray-700/20 lg:py-3 lg:pl-4 lg:pr-6"
+              className="flex w-min items-center gap-4 whitespace-nowrap rounded-full p-3 text-2xl transition-colors hover:bg-gray-700/20 lg:py-3 lg:pl-4 lg:pr-6"
             >
               <Icon />
               <span className="hidden lg:block">{name}</span>
@@ -80,8 +83,8 @@ export const Nav: React.FC = () => {
         </Button>
       </div>
 
-      <Button className="ml-2 mt-2 h-[54px] w-[54px] rounded-full lg:hidden">
-        <PenToolIcon />
+      <Button className="ml-1 mt-2 flex h-[46.5px] w-[46.5px] items-center justify-center rounded-full p-0 lg:hidden">
+        <PenToolIcon size={20} />
       </Button>
 
       <div className="mt-auto hidden w-full p-4 lg:block">

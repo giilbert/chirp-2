@@ -31,7 +31,7 @@ export const CreateChirpsForm: React.FC = () => {
 
         <textarea
           placeholder="What do you want to complain about today?"
-          className="ml-4 mt-4 h-full w-full resize-none overflow-visible border-b bg-background text-xl outline-none transition-colors focus:h-32 focus:border-b-purple-600"
+          className="ml-4 mt-4 h-full w-full resize-none overflow-visible border-b bg-background pb-4 text-xl outline-none transition-colors focus:h-32 focus:border-b-purple-600"
           {...form.register("body")}
         />
       </div>
