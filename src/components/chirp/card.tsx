@@ -1,14 +1,6 @@
-import type { Chirp, Profile } from "@prisma/client";
 import moment from "moment";
-import {
-  HoverCard,
-  HoverCardContent,
-  HoverCardTrigger,
-} from "../ui/hover-card";
-import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import Link from "next/link";
 import {
-  BarChartIcon,
   HeartIcon,
   MessageCircleIcon,
   RepeatIcon,
@@ -16,6 +8,7 @@ import {
 } from "lucide-react";
 import { ChirpProfilePicture } from "./profile-picture";
 import { ChirpProfileCard } from "./profile-card";
+import type { EverythingChirp, EverythingChirpWithoutReplying } from "@/server/api/routers/chirp";
 
 const betterFormatDate = (date: Date) => {
   const dateMoment = moment(date);
@@ -43,11 +36,7 @@ const betterFormatDate = (date: Date) => {
 };
 
 export const ChirpCard: React.FC<{
-  chirp: Chirp & {
-    author: Profile & {
-      user: { image: string | null };
-    };
-  };
+  chirp: EverythingChirpWithoutReplying;
 }> = ({ chirp }) => {
   return (
     <div className="flex gap-4">

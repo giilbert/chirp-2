@@ -11,9 +11,7 @@ import { OnBottom } from "@/components/ui/on-bottom";
 const Home: NextPage = () => {
   const recentChirpsQuery = api.chirp.getInfinite.useInfiniteQuery(
     {},
-    {
-      getNextPageParam: (lastPage) => lastPage.nextCursor,
-    }
+    { getNextPageParam: (lastPage) => lastPage.nextCursor }
   );
 
   const allChirps = useMemo(() => {

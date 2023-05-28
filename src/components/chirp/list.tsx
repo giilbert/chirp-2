@@ -1,9 +1,10 @@
 import type { Chirp, Profile } from "@prisma/client";
 import { ChirpCard } from "./card";
 import Link from "next/link";
+import type { EverythingChirp } from "@/server/api/routers/chirp";
 
 export const ChirpsList: React.FC<{
-  chirps: (Chirp & { author: Profile & { user: { image: string | null } } })[];
+  chirps: EverythingChirp[];
 }> = ({ chirps }) => {
   if (chirps.length === 0) {
     return (

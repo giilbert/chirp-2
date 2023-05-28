@@ -2,6 +2,7 @@ import { ChirpsList } from "@/components/chirp/list";
 import { Layout } from "@/components/layout";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { OnBottom } from "@/components/ui/on-bottom";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { api } from "@/utils/api";
 import { ArrowLeftIcon, CalendarIcon } from "lucide-react";
@@ -16,9 +17,10 @@ const UserProfilePage: React.FC = () => {
     { tag: router.query.tag as string },
     { enabled: !!router.query.tag }
   );
-  const recentChirpsQuery = api.chirp.getInfinite.useInfiniteQuery(
+  const recentChirpsQuery = api.chirp.getInfiniteFromUser.useInfiniteQuery(
     {
-      fromUserId: userProfileQuery.data?.userId,
+      userId: userProfileQuery.data?.userId || "",
+      filter: "chirps",
     },
     {
       enabled: !!userProfileQuery.data,
@@ -109,7 +111,17 @@ const UserProfilePage: React.FC = () => {
 
           <main>
             <TabsContent value="chirps">
-              {allChirps && <ChirpsList chirps={allChirps} />}
+              {allChirps && (
+                <OnBottom
+                  onBottom={() => {
+                    if (recentChirpsQuery.hasNextPage) {
+                      recentChirpsQuery.fetchNextPage().catch(() => 0);
+                    }
+                  }}
+                >
+                  <ChirpsList chirps={allChirps} />
+                </OnBottom>
+              )}
             </TabsContent>
           </main>
         </Tabs>

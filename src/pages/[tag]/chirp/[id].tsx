@@ -1,8 +1,10 @@
 import { ChirpBigView } from "@/components/chirp/big-view";
+import { ChirpsList } from "@/components/chirp/list";
 import { Layout } from "@/components/layout";
 import { api } from "@/utils/api";
 import { ArrowLeftIcon } from "lucide-react";
 import { useRouter } from "next/router";
+import { useMemo } from "react";
 
 const ChirpPage: React.FC = () => {
   const router = useRouter();
@@ -10,6 +12,14 @@ const ChirpPage: React.FC = () => {
     { id: router.query.id as string },
     { enabled: !!router.query.id }
   );
+  const replyingChirpsQuery = api.chirp.getInfinite.useInfiniteQuery(
+    { replyingToId: chirpQuery.data?.id },
+    { enabled: !!chirpQuery.data }
+  );
+
+  const allChirps = useMemo(() => {
+    return replyingChirpsQuery.data?.pages.flatMap((p) => p.chirps);
+  }, [replyingChirpsQuery.data?.pages]);
 
   return (
     <Layout>
@@ -32,6 +42,8 @@ const ChirpPage: React.FC = () => {
           <ChirpBigView chirp={chirpQuery.data} />
         )}
       </div>
+
+      {allChirps && <ChirpsList chirps={allChirps} />}
     </Layout>
   );
 };

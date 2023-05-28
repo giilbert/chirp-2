@@ -27,9 +27,14 @@ model Chirp {
   authorId String
   author   Profile @relation(fields: [authorId], references: [userId])
 
+  replyingToId String?
+  replyingTo   Chirp?  @relation(fields: [replyingToId], references: [id], name: "ChirpReplyingTo", onDelete: NoAction, onUpdate: NoAction)
+
+  replies  Chirp[]   @relation("ChirpReplyingTo")
   likes    Like[]
   hashtags Hashtag[]
 
+  @@index([replyingToId])
   @@index([authorId])
 }
 
