@@ -30,7 +30,15 @@ const chirpInclude = Prisma.validator<Prisma.ChirpInclude>()({
       },
     },
   },
-});
+  _count: {
+    select: {
+      quotedBy: true,
+      rechirps: true,
+      likes: true,
+      replies: true,
+    },
+  },
+} satisfies Prisma.ChirpInclude);
 
 export const chirpRouter = createTRPCRouter({
   getById: publicProcedure

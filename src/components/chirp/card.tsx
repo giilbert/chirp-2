@@ -73,27 +73,31 @@ export const ChirpCard: React.FC<{
               <div className="flex h-10 w-10 items-center justify-center rounded-full transition-colors group-hover:bg-purple-600/10">
                 <MessageCircleIcon size={18} className="transition-colors" />
               </div>
-              <p className="text-sm transition-colors">12.2k</p>
+              <p className="text-sm transition-colors">
+                {chirp._count.replies}
+              </p>
             </div>
 
             <div className="group flex cursor-pointer items-center gap-1 transition-colors hover:text-green-500">
               <div className="flex h-10 w-10 items-center justify-center rounded-full transition-colors group-hover:bg-green-600/10">
                 <RepeatIcon size={18} className="transition-colors" />
               </div>
-              <p className="text-sm transition-colors">12.2k</p>
+              <p className="text-sm transition-colors">
+                {chirp._count.quotedBy + chirp._count.rechirps}
+              </p>
             </div>
 
             <div className="group flex cursor-pointer items-center gap-1 transition-colors hover:text-red-500">
               <div
                 className="flex h-10 w-10 items-center justify-center rounded-full transition-colors group-hover:bg-red-600/10"
                 onClick={(e) => {
-                  console.log(e);
+                  console.log("liking chirp");
                   e.stopPropagation();
                 }}
               >
                 <HeartIcon size={18} className="transition-colors" />
               </div>
-              <p className="text-sm transition-colors">12.2k</p>
+              <p className="text-sm transition-colors">{chirp._count.likes}</p>
             </div>
 
             <div className="group flex cursor-pointer items-center gap-1 transition-colors hover:text-purple-500">

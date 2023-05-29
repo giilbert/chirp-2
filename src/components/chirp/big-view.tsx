@@ -75,19 +75,19 @@ export const ChirpBigView: React.FC<{
 
         <div className="mt-4 flex flex-wrap gap-4 border-t pt-4 md:gap-8">
           <p>
-            <span className="mr-1 font-bold">420</span>
+            <span className="mr-1 font-bold">{chirp._count.rechirps}</span>
             <span className="text-muted-foreground">Rechirps</span>
           </p>
           <p>
-            <span className="mr-1 font-bold">493</span>
+            <span className="mr-1 font-bold">{chirp._count.quotedBy}</span>
             <span className="text-muted-foreground">Quotes</span>
           </p>
           <p>
-            <span className="mr-1 font-bold">60.9k</span>
+            <span className="mr-1 font-bold">{chirp._count.likes}</span>
             <span className="text-muted-foreground">Likes</span>
           </p>
           <p>
-            <span className="mr-1 font-bold">219</span>
+            <span className="mr-1 font-bold">0</span>
             <span className="text-muted-foreground">Bookmarks</span>
           </p>
         </div>

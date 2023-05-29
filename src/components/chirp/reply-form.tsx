@@ -18,8 +18,8 @@ export const CreateReplyForm: React.FC<{ replyingToId: string }> = ({
         replyingToId,
         ...values,
       });
-      await trpcContext.chirp.getInfinite.invalidate();
       form.reset();
+      await trpcContext.chirp.getInfinite.invalidate();
     },
     [createChirp, form, trpcContext.chirp.getInfinite, replyingToId]
   );

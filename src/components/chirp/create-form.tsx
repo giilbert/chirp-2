@@ -13,8 +13,8 @@ export const CreateChirpsForm: React.FC = () => {
   const onSubmit = useCallback(
     async (values: z.infer<typeof createChirpSchema>) => {
       await createChirp.mutateAsync(values);
-      await trpcContext.chirp.getInfinite.invalidate();
       form.reset();
+      await trpcContext.chirp.getInfinite.invalidate();
     },
     [createChirp, form, trpcContext.chirp.getInfinite]
   );
