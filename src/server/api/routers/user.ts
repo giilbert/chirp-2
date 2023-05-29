@@ -19,6 +19,9 @@ export const userRouter = createTRPCRouter({
               image: true,
             },
           },
+          _count: {
+            select: { chirps: true },
+          },
         },
       });
 

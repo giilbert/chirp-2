@@ -64,7 +64,9 @@ const UserProfilePage: React.FC = () => {
           <div>
             <p className="text-xl font-bold">{profile.displayName}</p>
             {/* TODO: actual numbers */}
-            <p className="text-sm text-muted-foreground">69K Chirps</p>
+            <p className="text-sm text-muted-foreground">
+              {profile._count.chirps} Chirps
+            </p>
           </div>
         )}
       </div>
