@@ -28,7 +28,10 @@ export const ChirpsList: React.FC<{
           )}
           <div
             className="border-b p-4 transition-colors hover:cursor-pointer hover:bg-muted/20"
-            onClick={() => {
+            onClick={(e) => {
+              // dont navigate if the user is clicking a link
+              if ((e.target as HTMLElement).closest("a")) return;
+
               router
                 .push(`/${chirp.author.username}/chirp/${chirp.id}`)
                 .catch(() => 0);
