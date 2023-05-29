@@ -7,7 +7,7 @@ export const ChirpProfilePicture: React.FC<{
   return (
     <Avatar className="h-12 w-12 rounded-full">
       <AvatarImage src={image || undefined} />
-      <AvatarFallback className="text-2xl lg:text-6xl">
+      <AvatarFallback className="text-2xl">
         {displayName
           .split(" ")
           .map((w) => w[0]?.toUpperCase())

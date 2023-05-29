@@ -116,7 +116,7 @@ export const chirpRouter = createTRPCRouter({
       const chirps = await ctx.prisma.chirp.findMany({
         where: {
           authorId: input.userId,
-          replyingToId: input.filter === "replies" ? { not: null } : undefined,
+          replyingToId: input.filter === "replies" ? { not: null } : null,
         },
         take: TAKE + 1,
         orderBy: {

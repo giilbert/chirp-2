@@ -49,7 +49,7 @@ const ChirpPage: React.FC = () => {
         )}
       </div>
 
-      {allChirps && <ChirpsList chirps={allChirps} />}
+      {allChirps && <ChirpsList chirps={allChirps} showReplyingTo={false} />}
     </Layout>
   );
 };

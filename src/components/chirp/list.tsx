@@ -4,8 +4,9 @@ import type { EverythingChirp } from "@/server/api/routers/chirp";
 import { useRouter } from "next/router";
 
 export const ChirpsList: React.FC<{
+  showReplyingTo?: boolean;
   chirps: EverythingChirp[];
-}> = ({ chirps }) => {
+}> = ({ chirps, showReplyingTo = true }) => {
   const router = useRouter();
 
   if (chirps.length === 0) {
@@ -18,7 +19,7 @@ export const ChirpsList: React.FC<{
     <>
       {chirps.map((chirp) => (
         <div key={chirp.id}>
-          {chirp.replyingTo && (
+          {chirp.replyingTo && showReplyingTo && (
             <div className="ml-4 mt-4">
               <div className="mb-2 border-l pl-4">
                 <ChirpCard chirp={chirp.replyingTo} showActions={false} />

@@ -51,7 +51,9 @@ const Home: NextPage = () => {
               >
                 {recentChirpsQuery.status === "loading" && <p>TODO: Loading</p>}
                 {recentChirpsQuery.status === "error" && <p>TODO: Error</p>}
-                {allChirps && <ChirpsList chirps={allChirps} />}
+                {allChirps && (
+                  <ChirpsList chirps={allChirps} showReplyingTo={false} />
+                )}
               </OnBottom>
 
               {
