@@ -27,7 +27,7 @@ export const CreateReplyForm: React.FC<{ replyingToId: string }> = ({
   return (
     <form
       onSubmit={(e) => void form.handleSubmit(onSubmit)(e)}
-      className="flex max-w-full flex-col"
+      className="group flex max-w-full flex-col"
     >
       <div className="flex max-w-full">
         <div>
@@ -35,8 +35,9 @@ export const CreateReplyForm: React.FC<{ replyingToId: string }> = ({
         </div>
 
         <textarea
+          disabled={createChirp.isLoading}
           placeholder="Chirp your reply!"
-          className="ml-4 mt-4 h-10 w-full resize-none overflow-visible border-b bg-background pb-4 text-xl outline-none transition-colors focus:h-24 focus:border-b-purple-600"
+          className="ml-4 mt-4 h-10 w-full resize-none overflow-visible border-b bg-background pb-4 text-xl outline-none transition-colors group-focus-within:h-24 group-focus-within:border-b-purple-600"
           {...form.register("body")}
         />
       </div>

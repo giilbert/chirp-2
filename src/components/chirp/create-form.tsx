@@ -22,7 +22,7 @@ export const CreateChirpsForm: React.FC = () => {
   return (
     <form
       onSubmit={(e) => void form.handleSubmit(onSubmit)(e)}
-      className="flex max-w-full flex-col"
+      className="group flex max-w-full flex-col"
     >
       <div className="flex max-w-full">
         <div>
@@ -30,8 +30,9 @@ export const CreateChirpsForm: React.FC = () => {
         </div>
 
         <textarea
+          disabled={createChirp.isLoading}
           placeholder="What do you want to complain about today?"
-          className="ml-4 mt-4 h-full w-full resize-none overflow-visible border-b bg-background pb-4 text-xl outline-none transition-colors focus:h-32 focus:border-b-purple-600"
+          className="ml-4 mt-4 h-full w-full resize-none overflow-visible border-b bg-background pb-4 text-xl outline-none transition-colors group-focus-within:h-32 group-focus-within:border-b-purple-600"
           {...form.register("body")}
         />
       </div>
