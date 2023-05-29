@@ -1,14 +1,6 @@
-import type { Chirp, Profile } from "@prisma/client";
 import moment from "moment";
-import {
-  HoverCard,
-  HoverCardContent,
-  HoverCardTrigger,
-} from "../ui/hover-card";
-import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import Link from "next/link";
 import {
-  BarChartIcon,
   BookmarkIcon,
   HeartIcon,
   MessageCircleIcon,
@@ -34,7 +26,10 @@ export const ChirpBigView: React.FC<{
           {chirp.replyingTo && (
             <div
               className="p-2 transition-colors hover:cursor-pointer hover:bg-muted/20"
-              onClick={() => {
+              onClick={(e) => {
+                // dont navigate if the user is clicking a link
+                if ((e.target as HTMLElement).closest("a")) return;
+
                 router
                   .push(
                     `/${chirp.replyingTo?.author.username || ""}/chirp/${
