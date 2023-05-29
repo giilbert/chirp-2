@@ -1,6 +1,7 @@
 import { ChirpBigView } from "@/components/chirp/big-view";
 import { ChirpsList } from "@/components/chirp/list";
 import { Layout } from "@/components/layout";
+import { OnBottom } from "@/components/ui/on-bottom";
 import { cn } from "@/lib/utils";
 import { api } from "@/utils/api";
 import { ArrowLeftIcon } from "lucide-react";
@@ -15,7 +16,10 @@ const ChirpPage: React.FC = () => {
   );
   const replyingChirpsQuery = api.chirp.getInfinite.useInfiniteQuery(
     { replyingToId: chirpQuery.data?.id },
-    { enabled: !!chirpQuery.data }
+    {
+      enabled: !!chirpQuery.data,
+      getNextPageParam: (lastPage) => lastPage.nextCursor,
+    }
   );
 
   const allChirps = useMemo(() => {
@@ -49,7 +53,16 @@ const ChirpPage: React.FC = () => {
         )}
       </div>
 
-      {allChirps && <ChirpsList chirps={allChirps} showReplyingTo={false} />}
+      {allChirps && (
+        <OnBottom
+          onBottom={() => {
+            if (replyingChirpsQuery.hasNextPage)
+              replyingChirpsQuery.fetchNextPage().catch(() => 0);
+          }}
+        >
+          <ChirpsList chirps={allChirps} showReplyingTo={false} />
+        </OnBottom>
+      )}
     </Layout>
   );
 };

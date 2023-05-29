@@ -8,10 +8,7 @@ import {
 } from "lucide-react";
 import { ChirpProfilePicture } from "./profile-picture";
 import { ChirpProfileCard } from "./profile-card";
-import type {
-  EverythingChirp,
-  EverythingChirpWithoutReplying,
-} from "@/server/api/routers/chirp";
+import type { EverythingChirpWithoutReplying } from "@/server/api/routers/chirp";
 
 const betterFormatDate = (date: Date) => {
   const dateMoment = moment(date);
@@ -87,7 +84,13 @@ export const ChirpCard: React.FC<{
             </div>
 
             <div className="group flex cursor-pointer items-center gap-1 transition-colors hover:text-red-500">
-              <div className="flex h-10 w-10 items-center justify-center rounded-full transition-colors group-hover:bg-red-600/10">
+              <div
+                className="flex h-10 w-10 items-center justify-center rounded-full transition-colors group-hover:bg-red-600/10"
+                onClick={(e) => {
+                  console.log(e);
+                  e.stopPropagation();
+                }}
+              >
                 <HeartIcon size={18} className="transition-colors" />
               </div>
               <p className="text-sm transition-colors">12.2k</p>

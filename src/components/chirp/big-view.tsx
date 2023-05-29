@@ -92,7 +92,7 @@ export const ChirpBigView: React.FC<{
           </p>
         </div>
 
-        <div className="mb-4 mt-4 flex flex-wrap justify-around border-y pt-2 md:gap-8">
+        <div className="mb-4 mt-4 flex flex-wrap justify-around border-y py-2 md:gap-8">
           <div className="flex h-12 w-12 cursor-pointer items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-purple-600/10 hover:text-purple-500">
             <MessageCircleIcon size={20} className="transition-colors" />
           </div>
