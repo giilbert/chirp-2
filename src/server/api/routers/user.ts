@@ -1,8 +1,35 @@
 import { completeSignUpSchema } from "@/lib/schemas/user";
 import { TRPCError } from "@trpc/server";
 import { createTRPCRouter, publicProcedure } from "../trpc";
+import { z } from "zod";
 
 export const userRouter = createTRPCRouter({
+  getUserProfileByTag: publicProcedure
+    .input(
+      z.object({
+        tag: z.string(),
+      })
+    )
+    .query(async ({ input, ctx }) => {
+      const profile = await ctx.prisma.profile.findUnique({
+        where: { username: input.tag },
+        include: {
+          user: {
+            select: {
+              image: true,
+            },
+          },
+          _count: {
+            select: { chirps: true },
+          },
+        },
+      });
+
+      if (!profile) throw new TRPCError({ code: "NOT_FOUND" });
+
+      return profile;
+    }),
+
   completeSignUp: publicProcedure
     .input(completeSignUpSchema)
     .mutation(async ({ input, ctx }) => {

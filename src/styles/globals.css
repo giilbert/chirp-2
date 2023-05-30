@@ -80,6 +80,9 @@
     @apply bg-background text-foreground;
     font-feature-settings: "rlig" 1, "calt" 1;
   }
+  textarea:disabled {
+    @apply text-muted-foreground;
+  }
 }
 
 @layer utilities {

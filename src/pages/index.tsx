@@ -11,9 +11,7 @@ import { OnBottom } from "@/components/ui/on-bottom";
 const Home: NextPage = () => {
   const recentChirpsQuery = api.chirp.getInfinite.useInfiniteQuery(
     {},
-    {
-      getNextPageParam: (lastPage) => lastPage.nextCursor,
-    }
+    { getNextPageParam: (lastPage) => lastPage.nextCursor }
   );
 
   const allChirps = useMemo(() => {
@@ -23,7 +21,7 @@ const Home: NextPage = () => {
   return (
     <Layout>
       <Tabs defaultValue="recent">
-        <header className="sticky top-0 border-b bg-background/80 px-6 py-4 backdrop-blur-sm 2xl:pt-12">
+        <header className="sticky top-0 z-10 border-b bg-background/80 p-4 backdrop-blur-sm 2xl:pt-8">
           <h1 className="text-2xl font-bold">Home</h1>
           <TabsList className="mt-4 w-full">
             <TabsTrigger value="recent" className="w-full">
@@ -38,7 +36,7 @@ const Home: NextPage = () => {
         <main>
           {/* chirp form */}
           <Authed>
-            <section className="flex flex-col border-b px-6 py-4">
+            <section className="flex flex-col border-b p-4">
               <CreateChirpsForm />
             </section>
           </Authed>
@@ -53,11 +51,13 @@ const Home: NextPage = () => {
               >
                 {recentChirpsQuery.status === "loading" && <p>TODO: Loading</p>}
                 {recentChirpsQuery.status === "error" && <p>TODO: Error</p>}
-                {allChirps && <ChirpsList chirps={allChirps} />}
+                {allChirps && (
+                  <ChirpsList chirps={allChirps} showReplyingTo={false} />
+                )}
               </OnBottom>
 
               {
-                <p className="p-6 text-center text-2xl text-muted-foreground">
+                <p className="p-4 text-center text-2xl text-muted-foreground">
                   {recentChirpsQuery.hasNextPage
                     ? "Loading..."
                     : "You reached the end"}

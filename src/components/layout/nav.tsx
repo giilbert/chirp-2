@@ -1,10 +1,12 @@
 import {
   BellIcon,
   BookmarkIcon,
+  FileQuestionIcon,
   HashIcon,
   HomeIcon,
   ListIcon,
   MoreHorizontalIcon,
+  PenToolIcon,
   TicketIcon,
   UserCircle,
 } from "lucide-react";
@@ -13,71 +15,79 @@ import { Button } from "../ui/button";
 import { signIn, signOut, useSession } from "next-auth/react";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 
-const links = [
-  {
-    name: "Home",
-    href: "/",
-    Icon: HomeIcon,
-  },
-  {
-    name: "Explore",
-    href: "/explore",
-    Icon: HashIcon,
-  },
-  {
-    name: "Notifications",
-    href: "/notifications",
-    Icon: BellIcon,
-  },
-  {
-    name: "Lists",
-    href: "/lists",
-    Icon: ListIcon,
-  },
-  {
-    name: "Bookmarks",
-    href: "/bookmarks",
-    Icon: BookmarkIcon,
-  },
-  {
-    name: "Chirp Blue",
-    href: "/blue",
-    Icon: TicketIcon,
-  },
-  {
-    name: "Profile",
-    href: "/profile",
-    Icon: UserCircle,
-  },
-] as const;
-
 export const Nav: React.FC = () => {
   const { data: session, status } = useSession();
 
-  return (
-    <nav className="flex h-screen flex-col items-start border-r pt-4 2xl:pt-12">
-      <div className="w-full">
-        <div className="ml-8 text-3xl font-extrabold">Logo</div>
+  const links = [
+    {
+      name: "Home",
+      href: "/",
+      Icon: HomeIcon,
+    },
+    {
+      name: "Explore",
+      href: "/explore",
+      Icon: HashIcon,
+    },
+    {
+      name: "Notifications",
+      href: "/notifications",
+      Icon: BellIcon,
+    },
+    {
+      name: "Lists",
+      href: "/lists",
+      Icon: ListIcon,
+    },
+    {
+      name: "Bookmarks",
+      href: "/bookmarks",
+      Icon: BookmarkIcon,
+    },
+    {
+      name: "Chirp Blue",
+      href: "/blue",
+      Icon: TicketIcon,
+    },
+    {
+      name: "Profile",
+      href: "/" + (session?.user.profile?.username ?? ""),
+      Icon: UserCircle,
+    },
+  ] as const;
 
-        <div className="mx-4 mt-4 flex flex-col">
+  return (
+    <nav className="col-span-1 flex h-screen w-[54px] flex-col items-start border-r pt-4 lg:w-full 2xl:pt-8">
+      <div>
+        <div className="ml-4 w-min text-3xl font-extrabold lg:ml-8">
+          <FileQuestionIcon />
+        </div>
+
+        <div className="mx-1 mt-4 flex flex-col lg:mx-4">
           {links.map(({ name, href, Icon }) => (
             <Link
               href={href}
               key={name}
-              className="flex w-min items-center gap-4 whitespace-nowrap rounded-full py-3 pl-4 pr-6 text-2xl transition-colors hover:bg-gray-700/20"
+              className="flex w-min items-center gap-4 whitespace-nowrap rounded-full p-3 text-2xl transition-colors hover:bg-gray-700/20 lg:py-3 lg:pl-4 lg:pr-6"
             >
               <Icon />
-              {name}
+              <span className="hidden lg:block">{name}</span>
             </Link>
           ))}
         </div>
       </div>
 
       <div className="w-full px-8">
-        <Button className="mt-4 w-full text-xl font-bold">Chirp</Button>
+        <Button className="mt-4 hidden w-full text-xl font-bold lg:block">
+          Chirp
+        </Button>
       </div>
 
-      <div className="mt-auto w-full p-4">
+      <Button className="ml-1 mt-2 flex h-[46.5px] w-[46.5px] items-center justify-center rounded-full p-0 lg:hidden">
+        <PenToolIcon size={20} />
+      </Button>
+
+      <div className="mt-auto hidden w-full p-4 lg:block">
         {status === "unauthenticated" && (
           <div className="px-4">
             <Button

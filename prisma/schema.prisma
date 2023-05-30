@@ -27,9 +27,22 @@ model Chirp {
   authorId String
   author   Profile @relation(fields: [authorId], references: [userId])
 
+  quotedFromId String?
+  quotedFrom   Chirp?  @relation(fields: [quotedFromId], references: [id], name: "ChirpQuotedFrom", onDelete: NoAction, onUpdate: NoAction)
+
+  rechirpedFromId String?
+  rechirpedFrom   Chirp?  @relation(fields: [rechirpedFromId], references: [id], name: "ChirpRechirps", onDelete: NoAction, onUpdate: NoAction)
+
+  replyingToId String?
+  replyingTo   Chirp?  @relation(fields: [replyingToId], references: [id], name: "ChirpReplyingTo", onDelete: NoAction, onUpdate: NoAction)
+
+  replies  Chirp[]   @relation("ChirpReplyingTo")
+  rechirps Chirp[]   @relation("ChirpRechirps")
+  quotedBy Chirp[]   @relation("ChirpQuotedFrom")
   likes    Like[]
   hashtags Hashtag[]
 
+  @@index([replyingToId])
   @@index([authorId])
 }
 

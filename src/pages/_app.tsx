@@ -3,14 +3,15 @@ import { type Session } from "next-auth";
 import { SessionProvider } from "next-auth/react";
 import { Roboto } from "next/font/google";
 import { api } from "@/utils/api";
+import NextNProgress from "nextjs-progressbar";
 
 import "@/styles/globals.css";
 
 export const roboto = Roboto({
   weight: ["300", "400", "500", "700"],
   variable: "--font-roboto",
-  subsets: ["latin"]
-})
+  subsets: ["latin"],
+});
 
 const MyApp: AppType<{ session: Session | null }> = ({
   Component,
@@ -18,6 +19,7 @@ const MyApp: AppType<{ session: Session | null }> = ({
 }) => {
   return (
     <SessionProvider session={session}>
+      <NextNProgress color="#6b21a8" />
       <Component {...pageProps} />
     </SessionProvider>
   );
