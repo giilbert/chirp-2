@@ -8,9 +8,6 @@
         "Develop: Prisma Studio",
         "Develop: Docker"
       ],
-      "runOptions": {
-        "runOn": "folderOpen"
-      },
       "dependsOrder": "parallel",
       "problemMatcher": []
     },
