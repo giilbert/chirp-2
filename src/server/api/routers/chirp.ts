@@ -21,6 +21,15 @@ const chirpInclude = Prisma.validator<Prisma.ChirpInclude>()({
           },
         },
       },
+
+      _count: {
+        select: {
+          quotedBy: true,
+          rechirps: true,
+          likes: true,
+          replies: true,
+        },
+      },
     },
   },
   author: {

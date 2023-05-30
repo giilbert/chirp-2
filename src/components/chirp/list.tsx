@@ -1,5 +1,4 @@
 import { ChirpCard } from "./card";
-import Link from "next/link";
 import type { EverythingChirp } from "@/server/api/routers/chirp";
 import { useRouter } from "next/router";
 

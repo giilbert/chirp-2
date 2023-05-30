@@ -7,7 +7,6 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { api } from "@/utils/api";
 import { ArrowLeftIcon, CalendarIcon } from "lucide-react";
 import moment from "moment";
-import Image from "next/image";
 import { useRouter } from "next/router";
 import { useMemo } from "react";
 

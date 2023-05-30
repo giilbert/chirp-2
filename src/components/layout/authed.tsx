@@ -1,4 +1,4 @@
-import { User } from "next-auth";
+import type { User } from "next-auth";
 import { useSession } from "next-auth/react";
 
 /// Renders its children if the user is currently signed in

@@ -4,7 +4,6 @@ import {
   HoverCardContent,
   HoverCardTrigger,
 } from "../ui/hover-card";
-import Link from "next/link";
 import { ChirpProfilePicture } from "./profile-picture";
 
 export const ChirpProfileCard: React.FC<

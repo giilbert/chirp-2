@@ -1,13 +1,12 @@
 import { useSession } from "next-auth/react";
-import { PropsWithChildren } from "react";
 import { Nav } from "./nav";
 import { useRouter } from "next/router";
 
 export const Layout: React.FC<
-  PropsWithChildren<{
+  React.PropsWithChildren<{
     title?: string;
   }>
-> = ({ title = "Chirp", children }) => {
+> = ({ title: _title = "Chirp", children }) => {
   const session = useSession();
   const router = useRouter();
 
