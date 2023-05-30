@@ -62,7 +62,6 @@ const UserProfilePage: React.FC = () => {
         {profile && (
           <div>
             <p className="text-xl font-bold">{profile.displayName}</p>
-            {/* TODO: actual numbers */}
             <p className="text-sm text-muted-foreground">
               {profile._count.chirps} Chirps
             </p>
@@ -98,11 +97,11 @@ const UserProfilePage: React.FC = () => {
               <div className="mt-2 flex gap-4">
                 <p>
                   {/* TODO: make these number actual */}
-                  <span className="mr-1 font-bold">6969</span>
+                  <span className="mr-1 font-bold">0</span>
                   <span className="text-muted-foreground">Following</span>
                 </p>
                 <p>
-                  <span className="mr-1 font-bold">420</span>
+                  <span className="mr-1 font-bold">0</span>
                   <span className="text-muted-foreground">Followers</span>
                 </p>
               </div>

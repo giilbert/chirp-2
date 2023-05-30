@@ -2,7 +2,7 @@ import { createChirpSchema } from "@/lib/schemas/chirp";
 import { createTRPCRouter, protectedProcedure, publicProcedure } from "../trpc";
 import { z } from "zod";
 import { TRPCError } from "@trpc/server";
-import { Prisma } from "@prisma/client";
+import { type Like, Prisma } from "@prisma/client";
 import type { RouterOutputs } from "@/utils/api";
 
 export type EverythingChirp = RouterOutputs["chirp"]["getById"];
@@ -77,6 +77,10 @@ export const chirpRouter = createTRPCRouter({
 
       if (!chirp) throw new TRPCError({ code: "NOT_FOUND" });
 
+      if (!chirp.likes) {
+        chirp.likes = [];
+      }
+
       return chirp;
     }),
 
@@ -125,6 +129,12 @@ export const chirpRouter = createTRPCRouter({
         nextCursor = nextItem!.id;
       }
 
+      for (const chirp of chirps) {
+        if (!chirp.likes) {
+          chirp.likes = [];
+        }
+      }
+
       return {
         chirps,
         nextCursor,
@@ -164,6 +174,12 @@ export const chirpRouter = createTRPCRouter({
         // This will never be null due to the length check
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         nextCursor = nextItem!.id;
+      }
+
+      for (const chirp of chirps) {
+        if (!chirp.likes) {
+          chirp.likes = [];
+        }
       }
 
       return {

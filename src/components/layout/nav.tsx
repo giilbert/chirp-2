@@ -1,4 +1,5 @@
 import {
+  ArrowRightSquareIcon,
   BellIcon,
   BookmarkIcon,
   FileQuestionIcon,
@@ -12,8 +13,9 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { Button } from "../ui/button";
-import { signIn, signOut, useSession } from "next-auth/react";
-import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
+import { signIn, useSession } from "next-auth/react";
+import { ProfilePopover } from "./profile-popover";
+import { Avatar, AvatarImage } from "../ui/avatar";
 
 export const Nav: React.FC = () => {
   const { data: session, status } = useSession();
@@ -77,15 +79,43 @@ export const Nav: React.FC = () => {
         </div>
       </div>
 
-      <div className="w-full px-8">
-        <Button className="mt-4 hidden w-full text-xl font-bold lg:block">
-          Chirp
-        </Button>
-      </div>
+      {status === "authenticated" && (
+        <>
+          <div className="w-full px-8">
+            <Button className="mt-4 hidden w-full text-xl font-bold lg:block">
+              Chirp
+            </Button>
+          </div>
+          <Button className="ml-1 mt-2 flex h-[46.5px] w-[46.5px] items-center justify-center rounded-full p-0 lg:hidden">
+            <PenToolIcon size={20} />
+          </Button>
+        </>
+      )}
 
-      <Button className="ml-1 mt-2 flex h-[46.5px] w-[46.5px] items-center justify-center rounded-full p-0 lg:hidden">
-        <PenToolIcon size={20} />
-      </Button>
+      <div className="mb-1 mt-auto lg:hidden">
+        {status === "unauthenticated" ? (
+          <Button
+            className="ml-1 mt-2 flex h-[46.5px] w-[46.5px] items-center justify-center rounded-full p-0 lg:hidden"
+            variant="secondary"
+            onClick={() => {
+              const params = new URLSearchParams();
+              params.append("redirect", window.location.href);
+
+              void signIn("google", {
+                callbackUrl: "/complete-sign-up?" + params.toString(),
+              });
+            }}
+          >
+            <ArrowRightSquareIcon size={20} />
+          </Button>
+        ) : (
+          <ProfilePopover>
+            <Avatar className="mb-1 ml-1 h-[46.5px] w-[46.5px] cursor-pointer">
+              <AvatarImage src={session?.user.image} />
+            </Avatar>
+          </ProfilePopover>
+        )}
+      </div>
 
       <div className="mt-auto hidden w-full p-4 lg:block">
         {status === "unauthenticated" && (
@@ -108,34 +138,24 @@ export const Nav: React.FC = () => {
           </div>
         )}
         {status === "authenticated" && (
-          <Popover>
-            <PopoverTrigger asChild>
-              <div className="flex cursor-pointer items-center gap-4 rounded-full py-2 pl-4 pr-6 transition-colors hover:bg-muted">
-                <div className="h-[40px] w-[40px] rounded-full bg-secondary-foreground" />
+          <ProfilePopover>
+            <div className="flex cursor-pointer items-center gap-4 rounded-full py-2 pl-4 pr-6 transition-colors hover:bg-muted">
+              <Avatar className="mb-1 ml-1 h-[40px] w-[40px] cursor-pointer">
+                <AvatarImage src={session?.user.image} />
+              </Avatar>
 
-                <div>
-                  <p className="font-bold">{session.user.name}</p>
-                  {session.user.profile && (
-                    <p className="-mt-1 text-muted-foreground">
-                      @{session.user.profile.username}
-                    </p>
-                  )}
-                </div>
-
-                <MoreHorizontalIcon className="ml-auto" />
+              <div>
+                <p className="font-bold">{session.user.name}</p>
+                {session.user.profile && (
+                  <p className="-mt-1 text-muted-foreground">
+                    @{session.user.profile.username}
+                  </p>
+                )}
               </div>
-            </PopoverTrigger>
 
-            <PopoverContent>
-              <Button
-                className="w-full"
-                variant="destructive"
-                onClick={() => void signOut({ callbackUrl: "/" })}
-              >
-                Sign out
-              </Button>
-            </PopoverContent>
-          </Popover>
+              <MoreHorizontalIcon className="ml-auto" />
+            </div>
+          </ProfilePopover>
         )}
       </div>
     </nav>
