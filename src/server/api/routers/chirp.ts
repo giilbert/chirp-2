@@ -11,43 +11,54 @@ export type EverythingChirpWithoutReplying = Omit<
   "replyingTo"
 >;
 
-const chirpInclude = Prisma.validator<Prisma.ChirpInclude>()({
-  replyingTo: {
-    include: {
-      author: {
-        include: {
-          user: {
-            select: { image: true },
+const createChirpInclude = (userId?: string) =>
+  Prisma.validator<Prisma.ChirpInclude>()({
+    replyingTo: {
+      include: {
+        likes: userId
+          ? {
+              where: { userId },
+            }
+          : undefined,
+        author: {
+          include: {
+            user: {
+              select: { image: true },
+            },
+          },
+        },
+
+        _count: {
+          select: {
+            quotedBy: true,
+            rechirps: true,
+            likes: true,
+            replies: true,
           },
         },
       },
-
-      _count: {
-        select: {
-          quotedBy: true,
-          rechirps: true,
-          likes: true,
-          replies: true,
+    },
+    author: {
+      include: {
+        user: {
+          select: { image: true },
         },
       },
     },
-  },
-  author: {
-    include: {
-      user: {
-        select: { image: true },
+    likes: userId
+      ? {
+          where: { userId },
+        }
+      : undefined,
+    _count: {
+      select: {
+        quotedBy: true,
+        rechirps: true,
+        likes: true,
+        replies: true,
       },
     },
-  },
-  _count: {
-    select: {
-      quotedBy: true,
-      rechirps: true,
-      likes: true,
-      replies: true,
-    },
-  },
-} satisfies Prisma.ChirpInclude);
+  } satisfies Prisma.ChirpInclude);
 
 export const chirpRouter = createTRPCRouter({
   getById: publicProcedure
@@ -61,7 +72,7 @@ export const chirpRouter = createTRPCRouter({
         where: {
           id: input.id,
         },
-        include: chirpInclude,
+        include: createChirpInclude(ctx.session?.user.id),
       });
 
       if (!chirp) throw new TRPCError({ code: "NOT_FOUND" });
@@ -98,7 +109,7 @@ export const chirpRouter = createTRPCRouter({
         orderBy: {
           createdAt: "desc",
         },
-        include: chirpInclude,
+        include: createChirpInclude(ctx.session?.user.id),
         cursor: input.cursor
           ? {
               id: input.cursor,
@@ -139,7 +150,7 @@ export const chirpRouter = createTRPCRouter({
         orderBy: {
           createdAt: "desc",
         },
-        include: chirpInclude,
+        include: createChirpInclude(ctx.session?.user.id),
         cursor: input.cursor
           ? {
               id: input.cursor,
@@ -159,5 +170,43 @@ export const chirpRouter = createTRPCRouter({
         chirps,
         nextCursor,
       };
+    }),
+
+  likeChirp: protectedProcedure
+    .input(
+      z.object({
+        chirpId: z.string(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      await ctx.prisma.chirp.update({
+        where: {
+          id: input.chirpId,
+        },
+        data: {
+          likes: {
+            create: {
+              userId: ctx.session.user.id,
+            },
+          },
+        },
+      });
+    }),
+
+  unlikeChirp: protectedProcedure
+    .input(
+      z.object({
+        chirpId: z.string(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      await ctx.prisma.like.delete({
+        where: {
+          chirpId_userId: {
+            chirpId: input.chirpId,
+            userId: ctx.session.user.id,
+          },
+        },
+      });
     }),
 });

@@ -1,14 +1,11 @@
 import moment from "moment";
 import Link from "next/link";
-import {
-  HeartIcon,
-  MessageCircleIcon,
-  RepeatIcon,
-  ShareIcon,
-} from "lucide-react";
+import { MessageCircleIcon, RepeatIcon, ShareIcon } from "lucide-react";
 import { ChirpProfilePicture } from "./profile-picture";
 import { ChirpProfileCard } from "./profile-card";
 import type { EverythingChirpWithoutReplying } from "@/server/api/routers/chirp";
+import { LikeButton } from "./like-button";
+import { useState } from "react";
 
 const betterFormatDate = (date: Date) => {
   const dateMoment = moment(date);
@@ -39,6 +36,8 @@ export const ChirpCard: React.FC<{
   chirp: EverythingChirpWithoutReplying;
   showActions?: boolean;
 }> = ({ chirp, showActions = true }) => {
+  const [likes, setLikes] = useState(chirp._count.likes);
+
   return (
     <div className="flex gap-4">
       <div>
@@ -87,18 +86,13 @@ export const ChirpCard: React.FC<{
               </p>
             </div>
 
-            <div className="group flex cursor-pointer items-center gap-1 transition-colors hover:text-red-500">
-              <div
-                className="flex h-10 w-10 items-center justify-center rounded-full transition-colors group-hover:bg-red-600/10"
-                onClick={(e) => {
-                  console.log("liking chirp");
-                  e.stopPropagation();
-                }}
-              >
-                <HeartIcon size={18} className="transition-colors" />
-              </div>
-              <p className="text-sm transition-colors">{chirp._count.likes}</p>
-            </div>
+            <LikeButton
+              chirpId={chirp.id}
+              likes={likes}
+              setLikes={setLikes}
+              numbered={true}
+              hasLiked={chirp.likes.length !== 0}
+            />
 
             <div className="group flex cursor-pointer items-center gap-1 transition-colors hover:text-purple-500">
               <div className="flex h-10 w-10 items-center justify-center rounded-full transition-colors group-hover:bg-purple-600/10">

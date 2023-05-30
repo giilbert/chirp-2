@@ -29,6 +29,7 @@
     "@ts-react/form": "^1.6.4",
     "class-variance-authority": "^0.6.0",
     "clsx": "^1.2.1",
+    "framer-motion": "^10.12.16",
     "lucide-react": "^0.220.0",
     "moment": "^2.29.4",
     "next": "^13.4.1",

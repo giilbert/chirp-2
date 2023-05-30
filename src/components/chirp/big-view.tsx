@@ -13,10 +13,13 @@ import { CreateReplyForm } from "./reply-form";
 import type { EverythingChirp } from "@/server/api/routers/chirp";
 import { ChirpCard } from "./card";
 import { useRouter } from "next/router";
+import { LikeButton } from "./like-button";
+import { useState } from "react";
 
 export const ChirpBigView: React.FC<{
   chirp: EverythingChirp;
 }> = ({ chirp }) => {
+  const [likes, setLikes] = useState(chirp._count.likes);
   const router = useRouter();
 
   return (
@@ -83,7 +86,7 @@ export const ChirpBigView: React.FC<{
             <span className="text-muted-foreground">Quotes</span>
           </p>
           <p>
-            <span className="mr-1 font-bold">{chirp._count.likes}</span>
+            <span className="mr-1 font-bold">{likes}</span>
             <span className="text-muted-foreground">Likes</span>
           </p>
           <p>
@@ -101,9 +104,13 @@ export const ChirpBigView: React.FC<{
             <RepeatIcon size={20} className="transition-colors" />
           </div>
 
-          <div className="flex h-12 w-12 cursor-pointer items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-red-600/10 hover:text-red-500">
-            <HeartIcon size={20} className="transition-colors" />
-          </div>
+          <LikeButton
+            chirpId={chirp.id}
+            numbered={false}
+            likes={likes}
+            setLikes={setLikes}
+            hasLiked={chirp.likes.length !== 0}
+          />
 
           <div className="flex h-12 w-12 cursor-pointer items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-purple-600/10 hover:text-purple-500">
             <BookmarkIcon size={20} className="transition-colors" />
