@@ -53,7 +53,7 @@ const ChirpPage: React.FC = () => {
         )}
       </div>
 
-      {allChirps && (
+      {allChirps && chirpQuery.status === "success" && (
         <OnBottom
           onBottom={() => {
             if (replyingChirpsQuery.hasNextPage)
