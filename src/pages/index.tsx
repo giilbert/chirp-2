@@ -7,6 +7,7 @@ import { ChirpsList } from "@/components/chirp/list";
 import { api } from "@/utils/api";
 import { useMemo } from "react";
 import { OnBottom } from "@/components/ui/on-bottom";
+import { ChirpSkeleton } from "@/components/chirp/skeleton";
 
 const Home: NextPage = () => {
   const recentChirpsQuery = api.chirp.getInfinite.useInfiniteQuery(
@@ -49,7 +50,15 @@ const Home: NextPage = () => {
                     recentChirpsQuery.fetchNextPage().catch(() => 0);
                 }}
               >
-                {recentChirpsQuery.status === "loading" && <p>TODO: Loading</p>}
+                {recentChirpsQuery.status === "loading" && (
+                  <>
+                    {Array.from({ length: 7 }).map((_, i) => (
+                      <div key={i} className="border-b p-4">
+                        <ChirpSkeleton />
+                      </div>
+                    ))}
+                  </>
+                )}
                 {recentChirpsQuery.status === "error" && <p>TODO: Error</p>}
                 {allChirps && (
                   <ChirpsList chirps={allChirps} showReplyingTo={false} />

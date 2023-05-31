@@ -1,6 +1,7 @@
 import { useSession } from "next-auth/react";
 import { Nav } from "./nav";
 import { useRouter } from "next/router";
+import { FullscreenLoader } from "./fullscreen-loader";
 
 export const Layout: React.FC<
   React.PropsWithChildren<{
@@ -11,8 +12,7 @@ export const Layout: React.FC<
   const router = useRouter();
 
   if (session.status === "loading") {
-    // TODO: loading state
-    return <p>Loading</p>;
+    return <FullscreenLoader />;
   }
 
   if (session.data && !session.data.user.profile) {
@@ -28,7 +28,7 @@ export const Layout: React.FC<
             <div className="sticky left-0 top-0 z-10 h-2 w-full border-r bg-background backdrop-blur-sm" />
           </div>
           <div className="z-10 col-span-2 w-full">{children}</div>
-          <div className="hidden h-full w-[32rem] md:block lg:w-full">
+          <div className="hidden h-full w-[32rem] border-l md:block lg:w-full">
             {/* see comment above */}
             <div className="sticky left-0 top-0 z-10 h-2 w-full border-l bg-background backdrop-blur-sm" />
           </div>
@@ -39,7 +39,7 @@ export const Layout: React.FC<
         <div className="flex h-screen w-screen lg:grid lg:max-w-[150rem] lg:grid-cols-4">
           <Nav />
           <div className="col-span-2 w-full" />
-          <div className="hidden h-full w-[32rem] border-l md:block lg:w-full"></div>
+          <div className="hidden h-full w-[32rem] md:block lg:w-full"></div>
         </div>
       </div>
     </>

@@ -1,14 +1,14 @@
 import {
   ArrowRightSquareIcon,
-  BellIcon,
-  BookmarkIcon,
+  // BellIcon,
+  // BookmarkIcon,
   FileQuestionIcon,
-  HashIcon,
+  // HashIcon,
   HomeIcon,
-  ListIcon,
+  // ListIcon,
   MoreHorizontalIcon,
   PenToolIcon,
-  TicketIcon,
+  // TicketIcon,
   UserCircle,
 } from "lucide-react";
 import Link from "next/link";
@@ -26,31 +26,31 @@ export const Nav: React.FC = () => {
       href: "/",
       Icon: HomeIcon,
     },
-    {
-      name: "Explore",
-      href: "/explore",
-      Icon: HashIcon,
-    },
-    {
-      name: "Notifications",
-      href: "/notifications",
-      Icon: BellIcon,
-    },
-    {
-      name: "Lists",
-      href: "/lists",
-      Icon: ListIcon,
-    },
-    {
-      name: "Bookmarks",
-      href: "/bookmarks",
-      Icon: BookmarkIcon,
-    },
-    {
-      name: "Chirp Blue",
-      href: "/blue",
-      Icon: TicketIcon,
-    },
+    // {
+    //   name: "Explore",
+    //   href: "/explore",
+    //   Icon: HashIcon,
+    // },
+    // {
+    //   name: "Notifications",
+    //   href: "/notifications",
+    //   Icon: BellIcon,
+    // },
+    // {
+    //   name: "Lists",
+    //   href: "/lists",
+    //   Icon: ListIcon,
+    // },
+    // {
+    //   name: "Bookmarks",
+    //   href: "/bookmarks",
+    //   Icon: BookmarkIcon,
+    // },
+    // {
+    //   name: "Chirp Purple",
+    //   href: "/purple",
+    //   Icon: TicketIcon,
+    // },
     {
       name: "Profile",
       href: "/" + (session?.user.profile?.username ?? ""),
