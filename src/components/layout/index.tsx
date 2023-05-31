@@ -27,7 +27,7 @@ export const Layout: React.FC<
             {/* the progress bar has some issues, this is here to cover those issues */}
             <div className="sticky left-0 top-0 z-10 h-2 w-full border-r bg-background backdrop-blur-sm" />
           </div>
-          <div className="z-10 col-span-2 w-full">{children}</div>
+          <div className="z-10 col-span-2 min-h-screen w-full">{children}</div>
           <div className="hidden h-full w-[32rem] border-l md:block lg:w-full">
             {/* see comment above */}
             <div className="sticky left-0 top-0 z-10 h-2 w-full border-l bg-background backdrop-blur-sm" />
