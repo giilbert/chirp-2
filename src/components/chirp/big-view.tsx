@@ -2,7 +2,6 @@ import moment from "moment";
 import Link from "next/link";
 import {
   BookmarkIcon,
-  HeartIcon,
   MessageCircleIcon,
   RepeatIcon,
   ShareIcon,

@@ -2,7 +2,7 @@ import { api } from "@/utils/api";
 import { useAnimate } from "framer-motion";
 import { HeartIcon } from "lucide-react";
 import { useSession } from "next-auth/react";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 
 export const LikeButton: React.FC<{
   chirpId: string;

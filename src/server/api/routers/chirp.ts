@@ -2,7 +2,7 @@ import { createChirpSchema } from "@/lib/schemas/chirp";
 import { createTRPCRouter, protectedProcedure, publicProcedure } from "../trpc";
 import { z } from "zod";
 import { TRPCError } from "@trpc/server";
-import { type Like, Prisma } from "@prisma/client";
+import { Prisma } from "@prisma/client";
 import type { RouterOutputs } from "@/utils/api";
 
 export type EverythingChirp = RouterOutputs["chirp"]["getById"];
