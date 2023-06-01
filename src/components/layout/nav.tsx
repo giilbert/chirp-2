@@ -16,6 +16,7 @@ import { Button } from "../ui/button";
 import { signIn, useSession } from "next-auth/react";
 import { ProfilePopover } from "./profile-popover";
 import { Avatar, AvatarImage } from "../ui/avatar";
+import { CreateChirpDialog } from "../chirp/dialog";
 
 export const Nav: React.FC = () => {
   const { data: session, status } = useSession();
@@ -82,13 +83,17 @@ export const Nav: React.FC = () => {
       {status === "authenticated" && (
         <>
           <div className="w-full px-8">
-            <Button className="mt-4 hidden w-full text-xl font-bold lg:block">
-              Chirp
-            </Button>
+            <CreateChirpDialog>
+              <Button className="mt-4 hidden w-full text-xl font-bold lg:block">
+                Chirp
+              </Button>
+            </CreateChirpDialog>
           </div>
-          <Button className="ml-1 mt-2 flex h-[46.5px] w-[46.5px] items-center justify-center rounded-full p-0 lg:hidden">
-            <PenToolIcon size={20} />
-          </Button>
+          <CreateChirpDialog>
+            <Button className="ml-1 mt-2 flex h-[46.5px] w-[46.5px] items-center justify-center rounded-full p-0 lg:hidden">
+              <PenToolIcon size={20} />
+            </Button>
+          </CreateChirpDialog>
         </>
       )}
 

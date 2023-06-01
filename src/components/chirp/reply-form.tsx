@@ -1,13 +1,19 @@
 import { createChirpSchema } from "@/lib/schemas/chirp";
 import { useZodForm } from "@/lib/use-zod-form";
 import { api } from "@/utils/api";
-import { useCallback } from "react";
+import { forwardRef, useCallback } from "react";
 import type { z } from "zod";
 import { Button } from "../ui/button";
+import { cn } from "@/lib/utils";
+import { mergeRefs } from "react-merge-refs";
 
-export const CreateReplyForm: React.FC<{ replyingToId: string }> = ({
-  replyingToId,
-}) => {
+export const CreateReplyForm = forwardRef<
+  HTMLTextAreaElement,
+  {
+    replyingToId: string;
+    enlarged?: boolean;
+  }
+>(({ replyingToId, enlarged = false }, ref) => {
   const trpcContext = api.useContext();
   const form = useZodForm({ schema: createChirpSchema });
   const createChirp = api.chirp.create.useMutation();
@@ -37,8 +43,12 @@ export const CreateReplyForm: React.FC<{ replyingToId: string }> = ({
         <textarea
           disabled={createChirp.isLoading}
           placeholder="Chirp your reply!"
-          className="ml-4 mt-4 h-10 w-full resize-none overflow-visible border-b bg-background pb-4 text-xl outline-none transition-colors group-focus-within:h-24 group-focus-within:border-b-purple-600"
+          className={cn(
+            "ml-4 mt-4 h-full w-full resize-none overflow-visible border-b bg-background pb-4 text-xl outline-none transition-colors group-focus-within:border-b-purple-600",
+            enlarged ? "h-32" : "group-focus-within:h-32"
+          )}
           {...form.register("body")}
+          ref={mergeRefs([form.register("body").ref, ref])}
         />
       </div>
 
@@ -52,4 +62,6 @@ export const CreateReplyForm: React.FC<{ replyingToId: string }> = ({
       </Button>
     </form>
   );
-};
+});
+
+CreateReplyForm.displayName = "CreateReplyForm";

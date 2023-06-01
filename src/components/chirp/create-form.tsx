@@ -4,8 +4,11 @@ import { api } from "@/utils/api";
 import { useCallback } from "react";
 import type { z } from "zod";
 import { Button } from "../ui/button";
+import { cn } from "@/lib/utils";
 
-export const CreateChirpsForm: React.FC = () => {
+export const CreateChirpsForm: React.FC<{
+  enlarged?: boolean;
+}> = ({ enlarged = false }) => {
   const trpcContext = api.useContext();
   const form = useZodForm({ schema: createChirpSchema });
   const createChirp = api.chirp.create.useMutation();
@@ -31,8 +34,11 @@ export const CreateChirpsForm: React.FC = () => {
 
         <textarea
           disabled={createChirp.isLoading}
-          placeholder="What do you want to complain about today?"
-          className="ml-4 mt-4 h-full w-full resize-none overflow-visible border-b bg-background pb-4 text-xl outline-none transition-colors group-focus-within:h-32 group-focus-within:border-b-purple-600"
+          placeholder="What do you want to chirp about today?"
+          className={cn(
+            "ml-4 mt-4 h-full w-full resize-none overflow-visible border-b bg-background pb-4 text-xl outline-none transition-colors group-focus-within:border-b-purple-600",
+            enlarged ? "h-32" : "group-focus-within:h-32"
+          )}
           {...form.register("body")}
         />
       </div>

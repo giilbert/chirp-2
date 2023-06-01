@@ -6,6 +6,7 @@ import { ChirpProfileCard } from "./profile-card";
 import type { EverythingChirpWithoutReplying } from "@/server/api/routers/chirp";
 import { LikeButton } from "./like-button";
 import { useState } from "react";
+import { CreateChirpDialog } from "./dialog";
 
 const betterFormatDate = (date: Date) => {
   const dateMoment = moment(date);
@@ -67,15 +68,17 @@ export const ChirpCard: React.FC<{
         <p className="break-all">{chirp.body}</p>
 
         {showActions && (
-          <div className="-mb-2 -ml-2 mt-1 flex w-full flex-wrap gap-2 text-muted-foreground sm:justify-between md:gap-4">
-            <div className="group flex cursor-pointer items-center gap-1 transition-colors hover:text-purple-500">
-              <div className="flex h-10 w-10 items-center justify-center rounded-full transition-colors group-hover:bg-purple-600/10">
-                <MessageCircleIcon size={18} className="transition-colors" />
+          <div className="actions -mb-2 -ml-2 mt-1 flex w-full flex-wrap gap-4 text-muted-foreground xs:justify-between">
+            <CreateChirpDialog replyingToId={chirp.id}>
+              <div className="group flex cursor-pointer items-center gap-1 transition-colors hover:text-purple-500">
+                <div className="flex h-10 w-10 items-center justify-center rounded-full transition-colors group-hover:bg-purple-600/10">
+                  <MessageCircleIcon size={18} className="transition-colors" />
+                </div>
+                <p className="text-sm transition-colors">
+                  {chirp._count.replies}
+                </p>
               </div>
-              <p className="text-sm transition-colors">
-                {chirp._count.replies}
-              </p>
-            </div>
+            </CreateChirpDialog>
 
             <div className="group flex cursor-pointer items-center gap-1 transition-colors hover:text-green-500">
               <div className="flex h-10 w-10 items-center justify-center rounded-full transition-colors group-hover:bg-green-600/10">
