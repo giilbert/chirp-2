@@ -42,6 +42,8 @@ model Chirp {
   likes    Like[]
   hashtags Hashtag[]
 
+  @@index([quotedFromId])
+  @@index([rechirpedFromId])
   @@index([replyingToId])
   @@index([authorId])
 }
