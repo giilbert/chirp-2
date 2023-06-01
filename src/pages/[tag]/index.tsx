@@ -37,6 +37,16 @@ const UserProfilePage: React.FC = () => {
         getNextPageParam: (lastPage) => lastPage.nextCursor,
       }
     );
+  const recentMediaChirpsQuery = api.chirp.getInfiniteFromUser.useInfiniteQuery(
+    {
+      userId: userProfileQuery.data?.userId || "",
+      filter: "media",
+    },
+    {
+      enabled: !!userProfileQuery.data,
+      getNextPageParam: (lastPage) => lastPage.nextCursor,
+    }
+  );
 
   const allChirps = useMemo(() => {
     return recentChirpsQuery.data?.pages.flatMap((p) => p.chirps);
@@ -45,6 +55,10 @@ const UserProfilePage: React.FC = () => {
   const allReplies = useMemo(() => {
     return recentReplyingChirpsQuery.data?.pages.flatMap((p) => p.chirps);
   }, [recentReplyingChirpsQuery.data?.pages]);
+
+  const allMediaChirps = useMemo(() => {
+    return recentMediaChirpsQuery.data?.pages.flatMap((p) => p.chirps);
+  }, [recentMediaChirpsQuery.data?.pages]);
 
   const profile = userProfileQuery.data;
 
@@ -150,6 +164,20 @@ const UserProfilePage: React.FC = () => {
                   }}
                 >
                   <ChirpsList chirps={allReplies} />
+                </OnBottom>
+              )}
+            </TabsContent>
+
+            <TabsContent value="media" className="mt-0">
+              {allMediaChirps && (
+                <OnBottom
+                  onBottom={() => {
+                    if (recentMediaChirpsQuery.hasNextPage) {
+                      recentMediaChirpsQuery.fetchNextPage().catch(() => 0);
+                    }
+                  }}
+                >
+                  <ChirpsList chirps={allMediaChirps} />
                 </OnBottom>
               )}
             </TabsContent>
