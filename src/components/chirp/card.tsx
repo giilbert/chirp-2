@@ -40,15 +40,14 @@ export const ChirpCard: React.FC<{
   const [likes, setLikes] = useState(chirp._count.likes);
 
   return (
-    <div className="flex gap-4">
-      <div>
+    <div className="flex flex-col gap-4 xs:flex-row">
+      <div className="flex items-center gap-4 xs:items-start">
         <ChirpProfilePicture
           displayName={chirp.author.displayName}
           image={chirp.author.user.image}
         />
-      </div>
-      <div className="w-full">
-        <div className="flex flex-wrap gap-1">
+        {/* MOBILE: show the profile and post metadata above the content */}
+        <div className="xs:hidden">
           <ChirpProfileCard author={chirp.author}>
             <Link href={`/${chirp.author.username}`}>
               <p className="group-hover:underline">
@@ -56,13 +55,25 @@ export const ChirpCard: React.FC<{
               </p>
             </Link>
           </ChirpProfileCard>
-          <p className="text-muted-foreground">@{chirp.author.username}</p>
-
-          <p className="text-muted-foreground">·</p>
-
-          <p className="text-muted-foreground">
-            {betterFormatDate(chirp.createdAt)}
-          </p>
+          <div className="flex gap-1 text-muted-foreground">
+            <p>@{chirp.author.username}</p>
+            <p>·</p>
+            <p>{betterFormatDate(chirp.createdAt)}</p>
+          </div>
+        </div>
+      </div>
+      <div className="w-full">
+        <div className="hidden flex-wrap gap-1 text-muted-foreground xs:flex">
+          <ChirpProfileCard author={chirp.author}>
+            <Link href={`/${chirp.author.username}`}>
+              <p className="group-hover:underline">
+                {chirp.author.displayName}
+              </p>
+            </Link>
+          </ChirpProfileCard>
+          <p>@{chirp.author.username}</p>
+          <p>·</p>
+          <p>{betterFormatDate(chirp.createdAt)}</p>
         </div>
 
         <p className="break-all">{chirp.body}</p>
