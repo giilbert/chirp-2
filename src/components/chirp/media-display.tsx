@@ -18,7 +18,7 @@ export const ChirpMediaDisplay: React.FC<{
             <img
               src={media.mediaUrl}
               className="max-h-[400px] w-full rounded-md hover:brightness-90"
-              alt="Image attached a chirp"
+              alt="Image failed to load"
             />
           </DialogTrigger>
 
@@ -31,7 +31,7 @@ export const ChirpMediaDisplay: React.FC<{
             <img
               src={media.mediaUrl}
               className="w-full"
-              alt="Image attached a chirp"
+              alt="Image failed to load"
             />
           </DialogContent>
         </Dialog>
