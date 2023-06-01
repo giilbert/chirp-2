@@ -42,7 +42,7 @@ const Home: NextPage = () => {
             </section>
           </Authed>
 
-          <TabsContent value="recent">
+          <TabsContent value="recent" className="mt-0">
             <section>
               <OnBottom
                 onBottom={() => {

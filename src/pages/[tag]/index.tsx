@@ -126,7 +126,7 @@ const UserProfilePage: React.FC = () => {
           </header>
 
           <main>
-            <TabsContent value="chirps">
+            <TabsContent value="chirps" className="mt-0">
               {allChirps && (
                 <OnBottom
                   onBottom={() => {
@@ -140,7 +140,7 @@ const UserProfilePage: React.FC = () => {
               )}
             </TabsContent>
 
-            <TabsContent value="replies">
+            <TabsContent value="replies" className="mt-0">
               {allReplies && (
                 <OnBottom
                   onBottom={() => {

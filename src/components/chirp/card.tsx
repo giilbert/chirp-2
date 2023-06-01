@@ -66,7 +66,7 @@ export const ChirpCard: React.FC<{
         <div className="hidden flex-wrap gap-1 text-muted-foreground xs:flex">
           <ChirpProfileCard author={chirp.author}>
             <Link href={`/${chirp.author.username}`}>
-              <p className="group-hover:underline">
+              <p className="text-foreground group-hover:underline">
                 {chirp.author.displayName}
               </p>
             </Link>
