@@ -39,6 +39,7 @@ model Chirp {
   replies  Chirp[]   @relation("ChirpReplyingTo")
   rechirps Chirp[]   @relation("ChirpRechirps")
   quotedBy Chirp[]   @relation("ChirpQuotedFrom")
+  media    ChirpMedia[]
   likes    Like[]
   hashtags Hashtag[]
 
@@ -46,6 +47,24 @@ model Chirp {
   @@index([rechirpedFromId])
   @@index([replyingToId])
   @@index([authorId])
+}
+
+model ChirpMedia {
+  id String @id @default(cuid())
+
+  mediaType MediaType
+  mediaUrl  String    @unique
+
+  chirpId String
+  chirp   Chirp  @relation(fields: [chirpId], references: [id], onDelete: Cascade)
+
+  @@index([chirpId])
+}
+
+enum MediaType {
+  IMAGE
+  VIDEO
+  AUDIO
 }
 
 model Like {
