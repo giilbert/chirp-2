@@ -5,6 +5,7 @@ import {
   HoverCardTrigger,
 } from "../ui/hover-card";
 import { ChirpProfilePicture } from "./profile-picture";
+import { Button } from "../ui/button";
 
 export const ChirpProfileCard: React.FC<
   React.PropsWithChildren<{
@@ -17,10 +18,15 @@ export const ChirpProfileCard: React.FC<
         {children}
       </HoverCardTrigger>
       <HoverCardContent side="top" className="w-80 text-foreground">
-        <ChirpProfilePicture
-          displayName={author.displayName}
-          image={author.user.image}
-        />
+        <div className="flex">
+          <ChirpProfilePicture
+            displayName={author.displayName}
+            image={author.user.image}
+          />
+          <Button size="sm" className="ml-auto">
+            Follow
+          </Button>
+        </div>
 
         <p className="mt-2">{author.displayName}</p>
         <p className="text-muted-foreground">@{author.username}</p>

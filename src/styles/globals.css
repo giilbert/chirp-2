@@ -99,6 +99,6 @@
   }
 
   *::-webkit-scrollbar-thumb {
-    @apply bg-muted-foreground;
+    @apply bg-muted-foreground/50;
   }
 }

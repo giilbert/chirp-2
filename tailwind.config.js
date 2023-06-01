@@ -5,8 +5,12 @@ module.exports = {
   darkMode: ["class"],
   content: ["./src/**/*.{ts,tsx}"],
   theme: {
+    screens: {
+      xs: "475px",
+      ...defaultTheme.screens,
+    },
     fontFamily: {
-      sans: ["--font-roboto", ...defaultTheme.fontFamily.sans]
+      sans: ["--font-roboto", ...defaultTheme.fontFamily.sans],
     },
     container: {
       center: true,

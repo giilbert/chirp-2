@@ -1,14 +1,13 @@
 import {
   ArrowRightSquareIcon,
-  BellIcon,
-  BookmarkIcon,
-  FileQuestionIcon,
-  HashIcon,
+  // BellIcon,
+  // BookmarkIcon,
+  // HashIcon,
   HomeIcon,
-  ListIcon,
+  // ListIcon,
   MoreHorizontalIcon,
   PenToolIcon,
-  TicketIcon,
+  // TicketIcon,
   UserCircle,
 } from "lucide-react";
 import Link from "next/link";
@@ -16,6 +15,8 @@ import { Button } from "../ui/button";
 import { signIn, useSession } from "next-auth/react";
 import { ProfilePopover } from "./profile-popover";
 import { Avatar, AvatarImage } from "../ui/avatar";
+import { CreateChirpDialog } from "../chirp/dialog";
+import { Logo } from "./logo";
 
 export const Nav: React.FC = () => {
   const { data: session, status } = useSession();
@@ -26,31 +27,31 @@ export const Nav: React.FC = () => {
       href: "/",
       Icon: HomeIcon,
     },
-    {
-      name: "Explore",
-      href: "/explore",
-      Icon: HashIcon,
-    },
-    {
-      name: "Notifications",
-      href: "/notifications",
-      Icon: BellIcon,
-    },
-    {
-      name: "Lists",
-      href: "/lists",
-      Icon: ListIcon,
-    },
-    {
-      name: "Bookmarks",
-      href: "/bookmarks",
-      Icon: BookmarkIcon,
-    },
-    {
-      name: "Chirp Blue",
-      href: "/blue",
-      Icon: TicketIcon,
-    },
+    // {
+    //   name: "Explore",
+    //   href: "/explore",
+    //   Icon: HashIcon,
+    // },
+    // {
+    //   name: "Notifications",
+    //   href: "/notifications",
+    //   Icon: BellIcon,
+    // },
+    // {
+    //   name: "Lists",
+    //   href: "/lists",
+    //   Icon: ListIcon,
+    // },
+    // {
+    //   name: "Bookmarks",
+    //   href: "/bookmarks",
+    //   Icon: BookmarkIcon,
+    // },
+    // {
+    //   name: "Chirp Purple",
+    //   href: "/purple",
+    //   Icon: TicketIcon,
+    // },
     {
       name: "Profile",
       href: "/" + (session?.user.profile?.username ?? ""),
@@ -61,8 +62,8 @@ export const Nav: React.FC = () => {
   return (
     <nav className="col-span-1 flex h-screen w-[54px] flex-col items-start border-r pt-4 lg:w-full 2xl:pt-8">
       <div>
-        <div className="ml-4 w-min text-3xl font-extrabold lg:ml-8">
-          <FileQuestionIcon />
+        <div className="ml-3.5 mt-1 h-[32px] w-[32px] text-3xl font-extrabold lg:ml-8">
+          <Logo />
         </div>
 
         <div className="mx-1 mt-4 flex flex-col lg:mx-4">
@@ -82,13 +83,17 @@ export const Nav: React.FC = () => {
       {status === "authenticated" && (
         <>
           <div className="w-full px-8">
-            <Button className="mt-4 hidden w-full text-xl font-bold lg:block">
-              Chirp
-            </Button>
+            <CreateChirpDialog>
+              <Button className="mt-4 hidden w-full text-xl font-bold lg:block">
+                Chirp
+              </Button>
+            </CreateChirpDialog>
           </div>
-          <Button className="ml-1 mt-2 flex h-[46.5px] w-[46.5px] items-center justify-center rounded-full p-0 lg:hidden">
-            <PenToolIcon size={20} />
-          </Button>
+          <CreateChirpDialog>
+            <Button className="ml-1 mt-2 flex h-[46.5px] w-[46.5px] items-center justify-center rounded-full p-0 lg:hidden">
+              <PenToolIcon size={20} />
+            </Button>
+          </CreateChirpDialog>
         </>
       )}
 

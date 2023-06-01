@@ -2,7 +2,7 @@ import { api } from "@/utils/api";
 import { useAnimate } from "framer-motion";
 import { HeartIcon } from "lucide-react";
 import { useSession } from "next-auth/react";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 
 export const LikeButton: React.FC<{
   chirpId: string;
@@ -59,22 +59,17 @@ export const LikeButton: React.FC<{
     await unlikeChirp.mutateAsync({ chirpId });
   }, [animate, unlikeChirp, chirpId, setLikes, likes]);
 
-  const buttonAction = useCallback(
-    (e: React.MouseEvent) => {
-      e.stopPropagation();
+  const buttonAction = useCallback(() => {
+    if (sessionStatus !== "authenticated") return;
 
-      if (sessionStatus !== "authenticated") return;
-
-      if (liked) {
-        unlike().catch(() => 0);
-        setLiked(false);
-      } else {
-        like().catch(() => 0);
-        setLiked(true);
-      }
-    },
-    [like, unlike, liked, sessionStatus]
-  );
+    if (liked) {
+      unlike().catch(() => 0);
+      setLiked(false);
+    } else {
+      like().catch(() => 0);
+      setLiked(true);
+    }
+  }, [like, unlike, liked, sessionStatus]);
 
   if (numbered) {
     return (

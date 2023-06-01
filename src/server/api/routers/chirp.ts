@@ -2,42 +2,46 @@ import { createChirpSchema } from "@/lib/schemas/chirp";
 import { createTRPCRouter, protectedProcedure, publicProcedure } from "../trpc";
 import { z } from "zod";
 import { TRPCError } from "@trpc/server";
-import { type Like, Prisma } from "@prisma/client";
+import { Prisma } from "@prisma/client";
 import type { RouterOutputs } from "@/utils/api";
 
 export type EverythingChirp = RouterOutputs["chirp"]["getById"];
-export type EverythingChirpWithoutReplying = Omit<
+export type EverythingChirpWithoutNesting = Omit<
   EverythingChirp,
-  "replyingTo"
+  "replyingTo" | "quotedFrom" | "rechirpedFrom"
 >;
 
-const createChirpInclude = (userId?: string) =>
+const createChirpIncludeWithoutReplyingTo = (userId?: string) =>
   Prisma.validator<Prisma.ChirpInclude>()({
-    replyingTo: {
+    media: true,
+    likes: userId
+      ? {
+          where: { userId },
+        }
+      : undefined,
+    author: {
       include: {
-        likes: userId
-          ? {
-              where: { userId },
-            }
-          : undefined,
-        author: {
-          include: {
-            user: {
-              select: { image: true },
-            },
-          },
-        },
-
-        _count: {
-          select: {
-            quotedBy: true,
-            rechirps: true,
-            likes: true,
-            replies: true,
-          },
+        user: {
+          select: { image: true },
         },
       },
     },
+    _count: {
+      select: {
+        quotedBy: true,
+        rechirps: true,
+        likes: true,
+        replies: true,
+      },
+    },
+  } satisfies Prisma.ChirpInclude);
+
+const createChirpInclude = (userId?: string) =>
+  Prisma.validator<Prisma.ChirpInclude>()({
+    quotedFrom: { include: createChirpIncludeWithoutReplyingTo(userId) },
+    rechirpedFrom: { include: createChirpIncludeWithoutReplyingTo(userId) },
+    replyingTo: { include: createChirpIncludeWithoutReplyingTo(userId) },
+    media: true,
     author: {
       include: {
         user: {
@@ -155,6 +159,16 @@ export const chirpRouter = createTRPCRouter({
         where: {
           authorId: input.userId,
           replyingToId: input.filter === "replies" ? { not: null } : null,
+          media:
+            input.filter === "media"
+              ? {
+                  some: {
+                    mediaType: {
+                      in: ["IMAGE", "VIDEO", "AUDIO"],
+                    },
+                  },
+                }
+              : undefined,
         },
         take: TAKE + 1,
         orderBy: {
@@ -222,6 +236,39 @@ export const chirpRouter = createTRPCRouter({
             chirpId: input.chirpId,
             userId: ctx.session.user.id,
           },
+        },
+      });
+    }),
+
+  rechirp: protectedProcedure
+    .input(
+      z.object({
+        chirpId: z.string(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      await ctx.prisma.chirp.create({
+        data: {
+          body: "",
+          authorId: ctx.session.user.id,
+          rechirpedFromId: input.chirpId,
+        },
+      });
+    }),
+
+  quoteChirp: protectedProcedure
+    .input(
+      z.object({
+        chirpId: z.string(),
+        body: z.string(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      await ctx.prisma.chirp.create({
+        data: {
+          body: input.body,
+          authorId: ctx.session.user.id,
+          quotedFromId: input.chirpId,
         },
       });
     }),

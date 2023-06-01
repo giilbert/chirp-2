@@ -3,9 +3,11 @@ import Link from "next/link";
 import { MessageCircleIcon, RepeatIcon, ShareIcon } from "lucide-react";
 import { ChirpProfilePicture } from "./profile-picture";
 import { ChirpProfileCard } from "./profile-card";
-import type { EverythingChirpWithoutReplying } from "@/server/api/routers/chirp";
+import type { EverythingChirpWithoutNesting } from "@/server/api/routers/chirp";
 import { LikeButton } from "./like-button";
 import { useState } from "react";
+import { CreateChirpDialog } from "./dialog";
+import { ChirpMediaDisplay } from "./media-display";
 
 const betterFormatDate = (date: Date) => {
   const dateMoment = moment(date);
@@ -33,21 +35,20 @@ const betterFormatDate = (date: Date) => {
 };
 
 export const ChirpCard: React.FC<{
-  chirp: EverythingChirpWithoutReplying;
+  chirp: EverythingChirpWithoutNesting;
   showActions?: boolean;
 }> = ({ chirp, showActions = true }) => {
   const [likes, setLikes] = useState(chirp._count.likes);
 
   return (
-    <div className="flex gap-4">
-      <div>
+    <div className="flex flex-col gap-4 xs:flex-row">
+      <div className="flex items-center gap-4 xs:items-start">
         <ChirpProfilePicture
           displayName={chirp.author.displayName}
           image={chirp.author.user.image}
         />
-      </div>
-      <div className="w-full">
-        <div className="flex flex-wrap gap-1">
+        {/* MOBILE: show the profile and post metadata above the content */}
+        <div className="xs:hidden">
           <ChirpProfileCard author={chirp.author}>
             <Link href={`/${chirp.author.username}`}>
               <p className="group-hover:underline">
@@ -55,27 +56,47 @@ export const ChirpCard: React.FC<{
               </p>
             </Link>
           </ChirpProfileCard>
-          <p className="text-muted-foreground">@{chirp.author.username}</p>
-
-          <p className="text-muted-foreground">·</p>
-
-          <p className="text-muted-foreground">
-            {betterFormatDate(chirp.createdAt)}
-          </p>
+          <div className="flex gap-1 text-muted-foreground">
+            <p>@{chirp.author.username}</p>
+            <p>·</p>
+            <p>{betterFormatDate(chirp.createdAt)}</p>
+          </div>
+        </div>
+      </div>
+      <div className="w-full">
+        <div className="hidden flex-wrap gap-1 text-muted-foreground xs:flex">
+          <ChirpProfileCard author={chirp.author}>
+            <Link href={`/${chirp.author.username}`}>
+              <p className="text-foreground group-hover:underline">
+                {chirp.author.displayName}
+              </p>
+            </Link>
+          </ChirpProfileCard>
+          <p>@{chirp.author.username}</p>
+          <p>·</p>
+          <p>{betterFormatDate(chirp.createdAt)}</p>
         </div>
 
         <p className="break-all">{chirp.body}</p>
 
+        {chirp.media.length > 0 && (
+          <div className="mt-2">
+            <ChirpMediaDisplay media={chirp.media} />
+          </div>
+        )}
+
         {showActions && (
-          <div className="-mb-2 -ml-2 mt-1 flex w-full flex-wrap gap-2 text-muted-foreground sm:justify-between md:gap-4">
-            <div className="group flex cursor-pointer items-center gap-1 transition-colors hover:text-purple-500">
-              <div className="flex h-10 w-10 items-center justify-center rounded-full transition-colors group-hover:bg-purple-600/10">
-                <MessageCircleIcon size={18} className="transition-colors" />
+          <div className="actions -mb-2 -ml-2 mt-1 flex w-full flex-wrap gap-4 text-muted-foreground xs:justify-between">
+            <CreateChirpDialog replyingToId={chirp.id}>
+              <div className="group flex cursor-pointer items-center gap-1 transition-colors hover:text-purple-500">
+                <div className="flex h-10 w-10 items-center justify-center rounded-full transition-colors group-hover:bg-purple-600/10">
+                  <MessageCircleIcon size={18} className="transition-colors" />
+                </div>
+                <p className="text-sm transition-colors">
+                  {chirp._count.replies}
+                </p>
               </div>
-              <p className="text-sm transition-colors">
-                {chirp._count.replies}
-              </p>
-            </div>
+            </CreateChirpDialog>
 
             <div className="group flex cursor-pointer items-center gap-1 transition-colors hover:text-green-500">
               <div className="flex h-10 w-10 items-center justify-center rounded-full transition-colors group-hover:bg-green-600/10">

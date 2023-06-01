@@ -2,7 +2,6 @@ import moment from "moment";
 import Link from "next/link";
 import {
   BookmarkIcon,
-  HeartIcon,
   MessageCircleIcon,
   RepeatIcon,
   ShareIcon,
@@ -14,11 +13,13 @@ import type { EverythingChirp } from "@/server/api/routers/chirp";
 import { ChirpCard } from "./card";
 import { useRouter } from "next/router";
 import { LikeButton } from "./like-button";
-import { useState } from "react";
+import { createRef, useState } from "react";
+import { ChirpMediaDisplay } from "./media-display";
 
 export const ChirpBigView: React.FC<{
   chirp: EverythingChirp;
 }> = ({ chirp }) => {
+  const replyTextareaRef = createRef<HTMLTextAreaElement>();
   const [likes, setLikes] = useState(chirp._count.likes);
   const router = useRouter();
 
@@ -70,6 +71,10 @@ export const ChirpBigView: React.FC<{
       <div className="mt-6">
         <p>{chirp.body}</p>
 
+        <div className="mt-2">
+          <ChirpMediaDisplay media={chirp.media} />
+        </div>
+
         <div className="mt-2 flex gap-1 text-muted-foreground">
           <p>{moment(chirp.createdAt).format("h:mm A")}</p>
           <p>·</p>
@@ -96,7 +101,12 @@ export const ChirpBigView: React.FC<{
         </div>
 
         <div className="mb-4 mt-4 flex flex-wrap justify-around border-y py-2 md:gap-8">
-          <div className="flex h-12 w-12 cursor-pointer items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-purple-600/10 hover:text-purple-500">
+          <div
+            className="flex h-12 w-12 cursor-pointer items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-purple-600/10 hover:text-purple-500"
+            onClick={() => {
+              if (replyTextareaRef.current) replyTextareaRef.current.focus();
+            }}
+          >
             <MessageCircleIcon size={20} className="transition-colors" />
           </div>
 
@@ -121,7 +131,7 @@ export const ChirpBigView: React.FC<{
           </div>
         </div>
 
-        <CreateReplyForm replyingToId={chirp.id} />
+        <CreateReplyForm replyingToId={chirp.id} ref={replyTextareaRef} />
       </div>
     </>
   );

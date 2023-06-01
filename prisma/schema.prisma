@@ -10,11 +10,15 @@ datasource db {
 }
 
 model Profile {
-  userId      String   @unique
+  userId      String   @id @unique
   user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   createdAt   DateTime @default(now())
   username    String   @unique
   displayName String
+
+  following   Profile[] @relation("Follows")
+  followers   Profile[] @relation("Follows")
+
   chirps      Chirp[]
   likes       Like[]
 }
@@ -39,11 +43,32 @@ model Chirp {
   replies  Chirp[]   @relation("ChirpReplyingTo")
   rechirps Chirp[]   @relation("ChirpRechirps")
   quotedBy Chirp[]   @relation("ChirpQuotedFrom")
+  media    ChirpMedia[]
   likes    Like[]
   hashtags Hashtag[]
 
+  @@index([quotedFromId])
+  @@index([rechirpedFromId])
   @@index([replyingToId])
   @@index([authorId])
+}
+
+model ChirpMedia {
+  id String @id @default(cuid())
+
+  mediaType MediaType
+  mediaUrl  String    @unique
+
+  chirpId String
+  chirp   Chirp  @relation(fields: [chirpId], references: [id], onDelete: Cascade)
+
+  @@index([chirpId])
+}
+
+enum MediaType {
+  IMAGE
+  VIDEO
+  AUDIO
 }
 
 model Like {

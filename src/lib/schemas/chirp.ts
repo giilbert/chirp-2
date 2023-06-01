@@ -5,6 +5,6 @@ export const createChirpSchema = z.object({
     .string()
     .min(1)
     .max(400)
-    .describe(" // What do you want to complain about today?"),
+    .describe(" // What do you want to chirp about today?"),
   replyingToId: z.string().nullish(),
 });
