@@ -14,6 +14,7 @@ import { ChirpCard } from "./card";
 import { useRouter } from "next/router";
 import { LikeButton } from "./like-button";
 import { createRef, useState } from "react";
+import { ChirpMediaDisplay } from "./media-display";
 
 export const ChirpBigView: React.FC<{
   chirp: EverythingChirp;
@@ -69,6 +70,10 @@ export const ChirpBigView: React.FC<{
       </div>
       <div className="mt-6">
         <p>{chirp.body}</p>
+
+        <div className="mt-2">
+          <ChirpMediaDisplay media={chirp.media} />
+        </div>
 
         <div className="mt-2 flex gap-1 text-muted-foreground">
           <p>{moment(chirp.createdAt).format("h:mm A")}</p>

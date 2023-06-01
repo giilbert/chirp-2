@@ -15,6 +15,7 @@ const createChirpInclude = (userId?: string) =>
   Prisma.validator<Prisma.ChirpInclude>()({
     replyingTo: {
       include: {
+        media: true,
         likes: userId
           ? {
               where: { userId },
@@ -38,6 +39,7 @@ const createChirpInclude = (userId?: string) =>
         },
       },
     },
+    media: true,
     author: {
       include: {
         user: {

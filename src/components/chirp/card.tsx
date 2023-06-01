@@ -7,6 +7,7 @@ import type { EverythingChirpWithoutReplying } from "@/server/api/routers/chirp"
 import { LikeButton } from "./like-button";
 import { useState } from "react";
 import { CreateChirpDialog } from "./dialog";
+import { ChirpMediaDisplay } from "./media-display";
 
 const betterFormatDate = (date: Date) => {
   const dateMoment = moment(date);
@@ -77,6 +78,12 @@ export const ChirpCard: React.FC<{
         </div>
 
         <p className="break-all">{chirp.body}</p>
+
+        {chirp.media.length > 0 && (
+          <div className="mt-2">
+            <ChirpMediaDisplay media={chirp.media} />
+          </div>
+        )}
 
         {showActions && (
           <div className="actions -mb-2 -ml-2 mt-1 flex w-full flex-wrap gap-4 text-muted-foreground xs:justify-between">
