@@ -2,6 +2,7 @@ import { ChirpsList } from "@/components/chirp/list";
 import { Layout } from "@/components/layout";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Button } from "@/components/ui/button";
 import { OnBottom } from "@/components/ui/on-bottom";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { api } from "@/utils/api";
@@ -82,7 +83,9 @@ const UserProfilePage: React.FC = () => {
           </div>
         )}
       </div>
+
       {userProfileQuery.status === "error" && <p>TODO: error</p>}
+
       {userProfileQuery.status === "success" && profile && (
         <Tabs defaultValue="chirps">
           <header className="border-b pb-4">
@@ -100,7 +103,13 @@ const UserProfilePage: React.FC = () => {
               </AvatarFallback>
             </Avatar>
 
-            <div className="m-4 -mt-8 lg:-mt-16">
+            <div className="-mt-20 flex w-full pr-4 lg:-mt-36 lg:mb-10">
+              <Button className="ml-auto" size="sm">
+                Follow
+              </Button>
+            </div>
+
+            <div className="m-4 mt-0">
               <h1 className="text-2xl font-bold">{profile.displayName}</h1>
               <p className="text-muted-foreground">@{profile.username}</p>
               <div className="mt-2 flex items-center gap-2 text-muted-foreground">

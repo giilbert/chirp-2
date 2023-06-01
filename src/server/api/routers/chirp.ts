@@ -26,7 +26,6 @@ const createChirpIncludeWithoutReplyingTo = (userId?: string) =>
         },
       },
     },
-
     _count: {
       select: {
         quotedBy: true,

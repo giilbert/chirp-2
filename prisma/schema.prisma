@@ -10,11 +10,15 @@ datasource db {
 }
 
 model Profile {
-  userId      String   @unique
+  userId      String   @id @unique
   user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   createdAt   DateTime @default(now())
   username    String   @unique
   displayName String
+
+  following   Profile[] @relation("Follows")
+  followers   Profile[] @relation("Follows")
+
   chirps      Chirp[]
   likes       Like[]
 }
