@@ -3,7 +3,7 @@ import Link from "next/link";
 import { MessageCircleIcon, RepeatIcon, ShareIcon } from "lucide-react";
 import { ChirpProfilePicture } from "./profile-picture";
 import { ChirpProfileCard } from "./profile-card";
-import type { EverythingChirpWithoutReplying } from "@/server/api/routers/chirp";
+import type { EverythingChirpWithoutNesting } from "@/server/api/routers/chirp";
 import { LikeButton } from "./like-button";
 import { useState } from "react";
 import { CreateChirpDialog } from "./dialog";
@@ -35,7 +35,7 @@ const betterFormatDate = (date: Date) => {
 };
 
 export const ChirpCard: React.FC<{
-  chirp: EverythingChirpWithoutReplying;
+  chirp: EverythingChirpWithoutNesting;
   showActions?: boolean;
 }> = ({ chirp, showActions = true }) => {
   const [likes, setLikes] = useState(chirp._count.likes);

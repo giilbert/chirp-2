@@ -6,9 +6,9 @@ import { Prisma } from "@prisma/client";
 import type { RouterOutputs } from "@/utils/api";
 
 export type EverythingChirp = RouterOutputs["chirp"]["getById"];
-export type EverythingChirpWithoutReplying = Omit<
+export type EverythingChirpWithoutNesting = Omit<
   EverythingChirp,
-  "replyingTo"
+  "replyingTo" | "quotedFrom" | "rechirpedFrom"
 >;
 
 const createChirpIncludeWithoutReplyingTo = (userId?: string) =>
