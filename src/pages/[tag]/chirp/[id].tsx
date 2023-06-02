@@ -4,7 +4,7 @@ import { Layout } from "@/components/layout";
 import { OnBottom } from "@/components/ui/on-bottom";
 import { cn } from "@/lib/utils";
 import { api } from "@/utils/api";
-import { ArrowLeftIcon } from "lucide-react";
+import { ArrowLeftIcon, Loader2Icon } from "lucide-react";
 import { useRouter } from "next/router";
 import { useMemo } from "react";
 
@@ -53,6 +53,9 @@ const ChirpPage: React.FC = () => {
           chirpQuery.data?.replyingTo && "pt-2"
         )}
       >
+        {chirpQuery.status === "loading" && (
+          <Loader2Icon className="mx-auto my-4 animate-spin" />
+        )}
         {chirpQuery.status === "success" && (
           <ChirpBigView chirp={chirpQuery.data} />
         )}
