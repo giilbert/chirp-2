@@ -45,6 +45,17 @@ export const userRouter = createTRPCRouter({
           message: "You've already signed up.",
         });
 
+      // check that the username is not taken
+      const alreadyUsername = await ctx.prisma.profile.findUnique({
+        where: { username: input.username },
+      });
+
+      if (alreadyUsername)
+        throw new TRPCError({
+          code: "CONFLICT",
+          message: "Username is already taken.",
+        });
+
       await ctx.prisma.user.update({
         where: { id: ctx.session.user.id },
         data: {
