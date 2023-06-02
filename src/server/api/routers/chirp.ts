@@ -8,8 +8,30 @@ import type { RouterOutputs } from "@/utils/api";
 export type EverythingChirp = RouterOutputs["chirp"]["getById"];
 export type EverythingChirpWithoutNesting = Omit<
   EverythingChirp,
-  "replyingTo" | "quotedFrom" | "rechirpedFrom"
+  | "replyingTo"
+  | "quotedFrom"
+  | "rechirpedFrom"
+  | "replyingToId"
+  | "quotedFromId"
+  | "rechirpedFromId"
 >;
+
+const fixChirpLikes = (
+  chirp: EverythingChirp | EverythingChirpWithoutNesting
+) => {
+  if (!chirp.likes) {
+    chirp.likes = [];
+  }
+  if ("rechirpedFrom" in chirp && chirp.rechirpedFrom) {
+    fixChirpLikes(chirp.rechirpedFrom);
+  }
+  if ("quotedFrom" in chirp && chirp.quotedFrom) {
+    fixChirpLikes(chirp.quotedFrom);
+  }
+  if ("replyingTo" in chirp && chirp.replyingTo) {
+    fixChirpLikes(chirp.replyingTo);
+  }
+};
 
 const createChirpIncludeWithoutReplyingTo = (userId?: string) =>
   Prisma.validator<Prisma.ChirpInclude>()({
@@ -81,9 +103,7 @@ export const chirpRouter = createTRPCRouter({
 
       if (!chirp) throw new TRPCError({ code: "NOT_FOUND" });
 
-      if (!chirp.likes) {
-        chirp.likes = [];
-      }
+      fixChirpLikes(chirp);
 
       return chirp;
     }),
@@ -134,9 +154,7 @@ export const chirpRouter = createTRPCRouter({
       }
 
       for (const chirp of chirps) {
-        if (!chirp.likes) {
-          chirp.likes = [];
-        }
+        fixChirpLikes(chirp);
       }
 
       return {
@@ -191,9 +209,7 @@ export const chirpRouter = createTRPCRouter({
       }
 
       for (const chirp of chirps) {
-        if (!chirp.likes) {
-          chirp.likes = [];
-        }
+        fixChirpLikes(chirp);
       }
 
       return {
