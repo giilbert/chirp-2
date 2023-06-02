@@ -272,7 +272,7 @@ export const chirpRouter = createTRPCRouter({
       });
     }),
 
-  quoteChirp: protectedProcedure
+  quote: protectedProcedure
     .input(
       z.object({
         chirpId: z.string(),

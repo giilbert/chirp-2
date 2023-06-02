@@ -8,15 +8,8 @@ import { LikeButton } from "./like-button";
 import { useState } from "react";
 import { CreateChirpDialog } from "./dialog";
 import { ChirpMediaDisplay } from "./media-display";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuTrigger,
-} from "../ui/dropdown-menu";
-import { PencilIcon } from "lucide-react";
 import { useSession } from "next-auth/react";
+import { ChirpRepostOptions } from "./repost-options";
 
 const betterFormatDate = (date: Date) => {
   const dateMoment = moment(date);
@@ -108,33 +101,19 @@ export const ChirpCard: React.FC<{
               </div>
             </CreateChirpDialog>
 
-            <DropdownMenu>
-              <DropdownMenuTrigger
-                asChild
-                disabled={session.status !== "authenticated"}
-              >
-                <div className="group flex cursor-pointer items-center gap-1 transition-colors hover:text-green-500">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-full transition-colors group-hover:bg-green-600/10">
-                    <RepeatIcon size={18} className="transition-colors" />
-                  </div>
-                  <p className="text-sm transition-colors">
-                    {chirp._count.quotedBy + chirp._count.rechirps}
-                  </p>
+            <ChirpRepostOptions
+              disabled={session.status !== "authenticated"}
+              chirp={chirp}
+            >
+              <div className="group flex cursor-pointer items-center gap-1 transition-colors hover:text-green-500">
+                <div className="flex h-10 w-10 items-center justify-center rounded-full transition-colors group-hover:bg-green-600/10">
+                  <RepeatIcon size={18} className="transition-colors" />
                 </div>
-              </DropdownMenuTrigger>
-
-              <DropdownMenuContent align="start">
-                <DropdownMenuLabel>Repost Options</DropdownMenuLabel>
-                <DropdownMenuItem>
-                  <RepeatIcon size={16} className="mr-2" />
-                  Rechirp
-                </DropdownMenuItem>
-                <DropdownMenuItem>
-                  <PencilIcon size={16} className="mr-2" />
-                  Quote
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
+                <p className="text-sm transition-colors">
+                  {chirp._count.quotedBy + chirp._count.rechirps}
+                </p>
+              </div>
+            </ChirpRepostOptions>
 
             <LikeButton
               chirpId={chirp.id}

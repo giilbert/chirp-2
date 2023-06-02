@@ -14,8 +14,13 @@ const ChirpPage: React.FC = () => {
     { id: router.query.id as string },
     { enabled: !!router.query.id }
   );
+
+  // if the chirp is a rechirp, users should be replying to the chirp that is rechirped
+  const replyingToId = chirpQuery.data?.rechirpedFrom
+    ? chirpQuery.data.rechirpedFrom.id
+    : chirpQuery.data?.id;
   const replyingChirpsQuery = api.chirp.getInfinite.useInfiniteQuery(
-    { replyingToId: chirpQuery.data?.id },
+    { replyingToId },
     {
       enabled: !!chirpQuery.data,
       getNextPageParam: (lastPage) => lastPage.nextCursor,
