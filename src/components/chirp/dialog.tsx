@@ -1,3 +1,4 @@
+import { useSession } from "next-auth/react";
 import {
   Dialog,
   DialogContent,
@@ -13,9 +14,15 @@ export const CreateChirpDialog: React.FC<
     replyingToId?: string;
   }>
 > = ({ children, replyingToId }) => {
+  const session = useSession();
+
   return (
     <Dialog>
-      <DialogTrigger asChild>{children}</DialogTrigger>
+      {session.status === "authenticated" ? (
+        <DialogTrigger asChild>{children}</DialogTrigger>
+      ) : (
+        children
+      )}
 
       <DialogContent onClick={(e) => e.stopPropagation()}>
         <DialogHeader>

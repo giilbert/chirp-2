@@ -6,7 +6,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "../layout/dialog";
-import { FileIcon, FileImageIcon } from "lucide-react";
+import { FileImageIcon } from "lucide-react";
 import { Button } from "../ui/button";
 
 export const ChirpMediaUpload: React.FC<

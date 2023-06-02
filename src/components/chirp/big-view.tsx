@@ -15,6 +15,7 @@ import { useRouter } from "next/router";
 import { LikeButton } from "./like-button";
 import { createRef, useState } from "react";
 import { ChirpMediaDisplay } from "./media-display";
+import { Authed } from "../layout/authed";
 
 export const ChirpBigView: React.FC<{
   chirp: EverythingChirp;
@@ -131,7 +132,9 @@ export const ChirpBigView: React.FC<{
           </div>
         </div>
 
-        <CreateReplyForm replyingToId={chirp.id} ref={replyTextareaRef} />
+        <Authed>
+          <CreateReplyForm replyingToId={chirp.id} ref={replyTextareaRef} />
+        </Authed>
       </div>
     </>
   );
