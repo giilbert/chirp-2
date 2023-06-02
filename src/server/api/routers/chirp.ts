@@ -8,12 +8,7 @@ import type { RouterOutputs } from "@/utils/api";
 export type EverythingChirp = RouterOutputs["chirp"]["getById"];
 export type EverythingChirpWithoutNesting = Omit<
   EverythingChirp,
-  | "replyingTo"
-  | "quotedFrom"
-  | "rechirpedFrom"
-  | "replyingToId"
-  | "quotedFromId"
-  | "rechirpedFromId"
+  "replyingTo" | "rechirpedFrom" | "replyingToId" | "rechirpedFromId"
 >;
 
 const fixChirpLikes = (
@@ -24,9 +19,6 @@ const fixChirpLikes = (
   }
   if ("rechirpedFrom" in chirp && chirp.rechirpedFrom) {
     fixChirpLikes(chirp.rechirpedFrom);
-  }
-  if ("quotedFrom" in chirp && chirp.quotedFrom) {
-    fixChirpLikes(chirp.quotedFrom);
   }
   if ("replyingTo" in chirp && chirp.replyingTo) {
     fixChirpLikes(chirp.replyingTo);
@@ -50,7 +42,6 @@ const createChirpIncludeWithoutReplyingTo = (userId?: string) =>
     },
     _count: {
       select: {
-        quotedBy: true,
         rechirps: true,
         likes: true,
         replies: true,
@@ -60,7 +51,6 @@ const createChirpIncludeWithoutReplyingTo = (userId?: string) =>
 
 const createChirpInclude = (userId?: string) =>
   Prisma.validator<Prisma.ChirpInclude>()({
-    quotedFrom: { include: createChirpIncludeWithoutReplyingTo(userId) },
     rechirpedFrom: { include: createChirpIncludeWithoutReplyingTo(userId) },
     replyingTo: { include: createChirpIncludeWithoutReplyingTo(userId) },
     media: true,
@@ -78,7 +68,6 @@ const createChirpInclude = (userId?: string) =>
       : undefined,
     _count: {
       select: {
-        quotedBy: true,
         rechirps: true,
         likes: true,
         replies: true,
@@ -268,23 +257,6 @@ export const chirpRouter = createTRPCRouter({
           body: "",
           authorId: ctx.session.user.id,
           rechirpedFromId: input.chirpId,
-        },
-      });
-    }),
-
-  quote: protectedProcedure
-    .input(
-      z.object({
-        chirpId: z.string(),
-        body: z.string(),
-      })
-    )
-    .mutation(async ({ ctx, input }) => {
-      await ctx.prisma.chirp.create({
-        data: {
-          body: input.body,
-          authorId: ctx.session.user.id,
-          quotedFromId: input.chirpId,
         },
       });
     }),

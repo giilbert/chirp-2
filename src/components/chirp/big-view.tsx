@@ -116,10 +116,6 @@ export const ChirpBigView: React.FC<{
             <span className="text-muted-foreground">Rechirps</span>
           </p>
           <p>
-            <span className="mr-1 font-bold">{chirp._count.quotedBy}</span>
-            <span className="text-muted-foreground">Quotes</span>
-          </p>
-          <p>
             <span className="mr-1 font-bold">{likes}</span>
             <span className="text-muted-foreground">Likes</span>
           </p>

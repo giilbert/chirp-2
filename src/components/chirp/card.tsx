@@ -110,7 +110,7 @@ export const ChirpCard: React.FC<{
                   <RepeatIcon size={18} className="transition-colors" />
                 </div>
                 <p className="text-sm transition-colors">
-                  {chirp._count.quotedBy + chirp._count.rechirps}
+                  {chirp._count.rechirps}
                 </p>
               </div>
             </ChirpRepostOptions>

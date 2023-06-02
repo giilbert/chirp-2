@@ -15,7 +15,7 @@ export const ChirpRepostOptions: React.FC<{
   chirp: EverythingChirpWithoutNesting;
 }> = ({ children, disabled, chirp }) => {
   const rechirp = api.chirp.rechirp.useMutation();
-  const quote = api.chirp.quote.useMutation();
+  // const quote = api.chirp.quote.useMutation();
 
   return (
     <DropdownMenu>
@@ -42,10 +42,7 @@ export const ChirpRepostOptions: React.FC<{
           <RepeatIcon size={16} className="mr-2" />
           Rechirp
         </DropdownMenuItem>
-        <DropdownMenuItem>
-          <PencilIcon size={16} className="mr-2" />
-          Quote
-        </DropdownMenuItem>
+        <p className="m-2 text-sm">More coming soon!</p>
       </DropdownMenuContent>
     </DropdownMenu>
   );
