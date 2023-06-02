@@ -66,7 +66,7 @@ export const Nav: React.FC = () => {
           <Logo />
         </div>
 
-        <div className="mx-1 mt-4 flex flex-col lg:mx-4">
+        <div className="mx-1 mt-4 flex flex-col gap-1 lg:mx-4">
           {links.map(({ name, href, Icon }) => (
             <Link
               href={href}
