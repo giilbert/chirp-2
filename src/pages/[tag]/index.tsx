@@ -5,14 +5,17 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { OnBottom } from "@/components/ui/on-bottom";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { cn } from "@/lib/utils";
 import { api } from "@/utils/api";
 import { ArrowLeftIcon, CalendarIcon } from "lucide-react";
 import moment from "moment";
+import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { useMemo } from "react";
 
 const UserProfilePage: React.FC = () => {
   const router = useRouter();
+  const session = useSession();
   const follow = api.user.followUser.useMutation();
   const unfollow = api.user.unfollowUser.useMutation();
   const userProfileQuery = api.user.getUserProfileByTag.useQuery(
@@ -64,6 +67,7 @@ const UserProfilePage: React.FC = () => {
   }, [recentMediaChirpsQuery.data?.pages]);
 
   const profile = userProfileQuery.data;
+  const isMe = profile?.userId === session.data?.user.id;
 
   return (
     <Layout>
@@ -105,44 +109,46 @@ const UserProfilePage: React.FC = () => {
               </AvatarFallback>
             </Avatar>
 
-            <div className="-mt-20 flex w-full pr-4 lg:-mt-36 lg:mb-10">
-              {userProfileQuery.data.followers.length === 0 ? (
-                <Button
-                  className="ml-auto"
-                  size="sm"
-                  isLoading={follow.isLoading || userProfileQuery.isLoading}
-                  onClick={() => {
-                    follow
-                      .mutateAsync({ userId: profile.userId })
-                      .then(async () => {
-                        await userProfileQuery.refetch();
-                      })
-                      .catch(console.error);
-                  }}
-                >
-                  Follow
-                </Button>
-              ) : (
-                <Button
-                  className="ml-auto"
-                  size="sm"
-                  variant="secondary"
-                  isLoading={unfollow.isLoading || userProfileQuery.isLoading}
-                  onClick={() => {
-                    unfollow
-                      .mutateAsync({ userId: profile.userId })
-                      .then(async () => {
-                        await userProfileQuery.refetch();
-                      })
-                      .catch(console.error);
-                  }}
-                >
-                  Unfollow
-                </Button>
-              )}
-            </div>
+            {!isMe && (
+              <div className="-mt-20 flex w-full pr-4 lg:-mt-36 lg:mb-10">
+                {profile.followers.length === 0 ? (
+                  <Button
+                    className="ml-auto"
+                    size="sm"
+                    isLoading={follow.isLoading || userProfileQuery.isLoading}
+                    onClick={() => {
+                      follow
+                        .mutateAsync({ userId: profile.userId })
+                        .then(async () => {
+                          await userProfileQuery.refetch();
+                        })
+                        .catch(console.error);
+                    }}
+                  >
+                    Follow
+                  </Button>
+                ) : (
+                  <Button
+                    className="ml-auto"
+                    size="sm"
+                    variant="secondary"
+                    isLoading={unfollow.isLoading || userProfileQuery.isLoading}
+                    onClick={() => {
+                      unfollow
+                        .mutateAsync({ userId: profile.userId })
+                        .then(async () => {
+                          await userProfileQuery.refetch();
+                        })
+                        .catch(console.error);
+                    }}
+                  >
+                    Unfollow
+                  </Button>
+                )}
+              </div>
+            )}
 
-            <div className="m-4 mt-0">
+            <div className={cn("m-4", isMe ? "-mt-16" : "mt-0")}>
               <h1 className="text-2xl font-bold">{profile.displayName}</h1>
               <p className="text-muted-foreground">@{profile.username}</p>
               <div className="mt-2 flex items-center gap-2 text-muted-foreground">
@@ -166,7 +172,7 @@ const UserProfilePage: React.FC = () => {
               </div>
             </div>
 
-            <div className="-mt-2 w-full px-4">
+            <div className="w-full px-4">
               <TabsList className="w-full">
                 <TabsTrigger value="chirps" className="w-full">
                   Chirps
