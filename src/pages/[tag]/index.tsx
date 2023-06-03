@@ -13,6 +13,8 @@ import { useMemo } from "react";
 
 const UserProfilePage: React.FC = () => {
   const router = useRouter();
+  const follow = api.user.followUser.useMutation();
+  const unfollow = api.user.unfollowUser.useMutation();
   const userProfileQuery = api.user.getUserProfileByTag.useQuery(
     { tag: router.query.tag as string },
     { enabled: !!router.query.tag }
@@ -104,9 +106,40 @@ const UserProfilePage: React.FC = () => {
             </Avatar>
 
             <div className="-mt-20 flex w-full pr-4 lg:-mt-36 lg:mb-10">
-              <Button className="ml-auto" size="sm">
-                Follow
-              </Button>
+              {userProfileQuery.data.followers.length === 0 ? (
+                <Button
+                  className="ml-auto"
+                  size="sm"
+                  isLoading={follow.isLoading || userProfileQuery.isLoading}
+                  onClick={() => {
+                    follow
+                      .mutateAsync({ userId: profile.userId })
+                      .then(async () => {
+                        await userProfileQuery.refetch();
+                      })
+                      .catch(console.error);
+                  }}
+                >
+                  Follow
+                </Button>
+              ) : (
+                <Button
+                  className="ml-auto"
+                  size="sm"
+                  variant="secondary"
+                  isLoading={unfollow.isLoading || userProfileQuery.isLoading}
+                  onClick={() => {
+                    unfollow
+                      .mutateAsync({ userId: profile.userId })
+                      .then(async () => {
+                        await userProfileQuery.refetch();
+                      })
+                      .catch(console.error);
+                  }}
+                >
+                  Unfollow
+                </Button>
+              )}
             </div>
 
             <div className="m-4 mt-0">

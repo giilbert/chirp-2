@@ -4,7 +4,9 @@ import { useInView } from "react-intersection-observer";
 export const OnBottom: React.FC<
   PropsWithChildren<{ onBottom: () => void }>
 > = ({ children, onBottom }) => {
-  const { ref, inView } = useInView();
+  const { ref, inView } = useInView({
+    delay: 1000,
+  });
 
   if (inView) onBottom();
 

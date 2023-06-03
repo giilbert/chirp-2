@@ -52,7 +52,7 @@ export const ChirpCard: React.FC<{
         />
         {/* MOBILE: show the profile and post metadata above the content */}
         <div className="xs:hidden">
-          <ChirpProfileCard author={chirp.author}>
+          <ChirpProfileCard chirp={chirp}>
             <Link href={`/${chirp.author.username}`}>
               <p className="group-hover:underline">
                 {chirp.author.displayName}
@@ -68,7 +68,7 @@ export const ChirpCard: React.FC<{
       </div>
       <div className="w-full">
         <div className="hidden flex-wrap gap-1 text-muted-foreground xs:flex">
-          <ChirpProfileCard author={chirp.author}>
+          <ChirpProfileCard chirp={chirp}>
             <Link href={`/${chirp.author.username}`}>
               <p className="text-foreground group-hover:underline">
                 {chirp.author.displayName}

@@ -4,7 +4,7 @@ import { z } from "zod";
 import { TRPCError } from "@trpc/server";
 import { Prisma } from "@prisma/client";
 import type { RouterOutputs } from "@/utils/api";
-import { profileInclude } from "./user";
+import { createProfileInclude, fixFollowers } from "./user";
 
 export type EverythingChirp = RouterOutputs["chirp"]["getById"];
 export type EverythingChirpWithoutNesting = Omit<
@@ -35,7 +35,7 @@ const createChirpIncludeWithoutReplyingTo = (userId?: string) =>
         }
       : undefined,
     author: {
-      include: profileInclude,
+      include: createProfileInclude(userId),
     },
     _count: {
       select: {
@@ -52,7 +52,7 @@ const createChirpInclude = (userId?: string) =>
     replyingTo: { include: createChirpIncludeWithoutReplyingTo(userId) },
     media: true,
     author: {
-      include: profileInclude,
+      include: createProfileInclude(userId),
     },
     likes: userId
       ? {
@@ -86,6 +86,7 @@ export const chirpRouter = createTRPCRouter({
       if (!chirp) throw new TRPCError({ code: "NOT_FOUND" });
 
       fixChirpLikes(chirp);
+      fixFollowers(chirp.author);
 
       return chirp;
     }),
@@ -137,6 +138,7 @@ export const chirpRouter = createTRPCRouter({
 
       for (const chirp of chirps) {
         fixChirpLikes(chirp);
+        fixFollowers(chirp.author);
       }
 
       return {
@@ -192,6 +194,7 @@ export const chirpRouter = createTRPCRouter({
 
       for (const chirp of chirps) {
         fixChirpLikes(chirp);
+        fixFollowers(chirp.author);
       }
 
       return {

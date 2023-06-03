@@ -37,7 +37,7 @@ export const ChirpBigView: React.FC<{
         <div className="flex items-center gap-2 text-muted-foreground">
           <ReplyIcon size={16} />
 
-          <ChirpProfileCard author={chirp.author}>
+          <ChirpProfileCard chirp={chirp}>
             <Link href={`/${chirp.author.username}`}>
               <p className="group-hover:underline">
                 {chirp.author.displayName} rechirped
@@ -84,7 +84,7 @@ export const ChirpBigView: React.FC<{
             displayName={chirp.author.displayName}
           />
           <div className="ml-4">
-            <ChirpProfileCard author={chirp.author}>
+            <ChirpProfileCard chirp={chirp}>
               <Link href={`/${chirp.author.username}`}>
                 <p className="group-hover:underline">
                   {chirp.author.displayName}

@@ -33,6 +33,7 @@
     "class-variance-authority": "^0.6.0",
     "clsx": "^1.2.1",
     "framer-motion": "^10.12.16",
+    "lodash": "^4.17.21",
     "lucide-react": "^0.220.0",
     "moment": "^2.29.4",
     "next": "^13.4.1",
@@ -52,6 +53,7 @@
   },
   "devDependencies": {
     "@types/eslint": "^8.21.3",
+    "@types/lodash": "^4.14.195",
     "@types/node": "^18.15.5",
     "@types/prettier": "^2.7.2",
     "@types/react": "^18.0.28",

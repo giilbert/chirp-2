@@ -2,22 +2,32 @@ import { completeSignUpSchema } from "@/lib/schemas/user";
 import { TRPCError } from "@trpc/server";
 import { createTRPCRouter, protectedProcedure, publicProcedure } from "../trpc";
 import { z } from "zod";
-import { Prisma } from "@prisma/client";
+import { Prisma, Profile } from "@prisma/client";
 
-export const profileInclude = Prisma.validator<Prisma.ProfileInclude>()({
-  user: {
-    select: {
-      image: true,
+export const createProfileInclude = (userId?: string) =>
+  Prisma.validator<Prisma.ProfileInclude>()({
+    user: {
+      select: {
+        image: true,
+      },
     },
-  },
-  _count: {
-    select: {
-      chirps: true,
-      followers: true,
-      following: true,
+    _count: {
+      select: {
+        chirps: true,
+        followers: true,
+        following: true,
+      },
     },
-  },
-} satisfies Prisma.ProfileInclude);
+    followers: {
+      where: { userId },
+    },
+  } satisfies Prisma.ProfileInclude);
+
+export const fixFollowers = (profile: { followers: Profile[] }) => {
+  if (!profile.followers) {
+    profile.followers = [];
+  }
+};
 
 export const userRouter = createTRPCRouter({
   getUserProfileByTag: publicProcedure
@@ -29,10 +39,12 @@ export const userRouter = createTRPCRouter({
     .query(async ({ input, ctx }) => {
       const profile = await ctx.prisma.profile.findUnique({
         where: { username: input.tag },
-        include: profileInclude,
+        include: createProfileInclude(ctx.session?.user.id),
       });
 
       if (!profile) throw new TRPCError({ code: "NOT_FOUND" });
+
+      fixFollowers(profile);
 
       return profile;
     }),
@@ -83,6 +95,12 @@ export const userRouter = createTRPCRouter({
       })
     )
     .mutation(async ({ input, ctx }) => {
+      if (input.userId === ctx.session.user.id)
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "You can't follow yourself.",
+        });
+
       await ctx.prisma.profile.update({
         where: { userId: ctx.session.user.id },
         data: {

@@ -26,7 +26,7 @@ export const ChirpsList: React.FC<{
               <div className="mb-2 flex items-center gap-2 text-muted-foreground">
                 <ReplyIcon size={16} />
 
-                <ChirpProfileCard author={chirp.author}>
+                <ChirpProfileCard chirp={chirp}>
                   <Link href={`/${chirp.author.username}`}>
                     <p className="group-hover:underline">
                       {chirp.author.displayName} rechirped
