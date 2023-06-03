@@ -14,10 +14,19 @@ const Home: NextPage = () => {
     {},
     { getNextPageParam: (lastPage) => lastPage.nextCursor }
   );
+  const recentFollowingChirpsQuery =
+    api.chirp.getInfiniteFollowing.useInfiniteQuery(
+      {},
+      { getNextPageParam: (lastPage) => lastPage.nextCursor }
+    );
 
   const allChirps = useMemo(() => {
     return recentChirpsQuery.data?.pages.flatMap((p) => p.chirps);
   }, [recentChirpsQuery.data?.pages]);
+
+  const allFollowingChirps = useMemo(() => {
+    return recentFollowingChirpsQuery.data?.pages.flatMap((p) => p.chirps);
+  }, [recentFollowingChirpsQuery.data?.pages]);
 
   return (
     <Layout>
@@ -76,9 +85,40 @@ const Home: NextPage = () => {
           </TabsContent>
 
           <TabsContent value="following">
-            <section className="mt-4">
-              {/* TODO: following section */}
-              <p>TODO!</p>
+            <section>
+              <OnBottom
+                onBottom={() => {
+                  if (recentFollowingChirpsQuery.hasNextPage)
+                    recentFollowingChirpsQuery.fetchNextPage().catch(() => 0);
+                }}
+              >
+                {recentFollowingChirpsQuery.status === "loading" && (
+                  <>
+                    {Array.from({ length: 7 }).map((_, i) => (
+                      <div key={i} className="border-b p-4">
+                        <ChirpSkeleton />
+                      </div>
+                    ))}
+                  </>
+                )}
+                {recentFollowingChirpsQuery.status === "error" && (
+                  <p>TODO: Error</p>
+                )}
+                {allFollowingChirps && (
+                  <ChirpsList
+                    chirps={allFollowingChirps}
+                    showReplyingTo={false}
+                  />
+                )}
+              </OnBottom>
+
+              {
+                <p className="p-4 text-center text-2xl text-muted-foreground">
+                  {recentFollowingChirpsQuery.hasNextPage
+                    ? "Loading..."
+                    : "You reached the end"}
+                </p>
+              }
             </section>
           </TabsContent>
         </main>

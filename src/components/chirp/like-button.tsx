@@ -2,7 +2,7 @@ import { api } from "@/utils/api";
 import { useAnimate } from "framer-motion";
 import { HeartIcon } from "lucide-react";
 import { useSession } from "next-auth/react";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 export const LikeButton: React.FC<{
   chirpId: string;
@@ -16,12 +16,10 @@ export const LikeButton: React.FC<{
   const unlikeChirp = api.chirp.unlikeChirp.useMutation();
   const [scope, animate] = useAnimate();
   const [liked, setLiked] = useState(hasLiked);
-  const initialStyles = liked
-    ? {
-        stroke: "#ef4444",
-        fill: "#ef4444",
-      }
-    : undefined;
+
+  useEffect(() => {
+    setLiked(hasLiked);
+  }, [hasLiked]);
 
   const like = useCallback(async () => {
     // TODO: throttle maybe?
@@ -70,6 +68,13 @@ export const LikeButton: React.FC<{
       setLiked(true);
     }
   }, [like, unlike, liked, sessionStatus]);
+
+  const initialStyles = liked
+    ? {
+        stroke: "#ef4444",
+        fill: "#ef4444",
+      }
+    : undefined;
 
   if (numbered) {
     return (

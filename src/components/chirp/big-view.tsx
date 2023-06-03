@@ -4,30 +4,59 @@ import {
   BookmarkIcon,
   MessageCircleIcon,
   RepeatIcon,
+  ReplyIcon,
   ShareIcon,
 } from "lucide-react";
 import { ChirpProfilePicture } from "./profile-picture";
 import { ChirpProfileCard } from "./profile-card";
 import { CreateReplyForm } from "./reply-form";
-import type { EverythingChirp } from "@/server/api/routers/chirp";
+import type {
+  EverythingChirp,
+  EverythingChirpWithoutNesting,
+} from "@/server/api/routers/chirp";
 import { ChirpCard } from "./card";
 import { useRouter } from "next/router";
 import { LikeButton } from "./like-button";
 import { createRef, useState } from "react";
 import { ChirpMediaDisplay } from "./media-display";
+import { Authed } from "../layout/authed";
+import { ChirpRepostOptions } from "./repost-options";
+import { useSession } from "next-auth/react";
 
 export const ChirpBigView: React.FC<{
-  chirp: EverythingChirp;
+  chirp: EverythingChirp | EverythingChirpWithoutNesting;
 }> = ({ chirp }) => {
+  const session = useSession();
   const replyTextareaRef = createRef<HTMLTextAreaElement>();
   const [likes, setLikes] = useState(chirp._count.likes);
   const router = useRouter();
+
+  if ("rechirpedFrom" in chirp && chirp.rechirpedFrom)
+    return (
+      <div className="mt-4">
+        <div className="flex items-center gap-2 text-muted-foreground">
+          <ReplyIcon size={16} />
+
+          <ChirpProfileCard chirp={chirp}>
+            <Link href={`/${chirp.author.username}`}>
+              <p className="group-hover:underline">
+                {chirp.author.displayName} rechirped
+              </p>
+            </Link>
+          </ChirpProfileCard>
+        </div>
+
+        <div className="-mt-4">
+          <ChirpBigView chirp={chirp.rechirpedFrom} />
+        </div>
+      </div>
+    );
 
   return (
     <>
       <div className="ml-1">
         <div className="border-l pl-1">
-          {chirp.replyingTo && (
+          {"replyingTo" in chirp && chirp.replyingTo && (
             <div
               className="p-2 transition-colors hover:cursor-pointer hover:bg-muted/20"
               onClick={(e) => {
@@ -55,7 +84,7 @@ export const ChirpBigView: React.FC<{
             displayName={chirp.author.displayName}
           />
           <div className="ml-4">
-            <ChirpProfileCard author={chirp.author}>
+            <ChirpProfileCard chirp={chirp}>
               <Link href={`/${chirp.author.username}`}>
                 <p className="group-hover:underline">
                   {chirp.author.displayName}
@@ -87,10 +116,6 @@ export const ChirpBigView: React.FC<{
             <span className="text-muted-foreground">Rechirps</span>
           </p>
           <p>
-            <span className="mr-1 font-bold">{chirp._count.quotedBy}</span>
-            <span className="text-muted-foreground">Quotes</span>
-          </p>
-          <p>
             <span className="mr-1 font-bold">{likes}</span>
             <span className="text-muted-foreground">Likes</span>
           </p>
@@ -110,9 +135,14 @@ export const ChirpBigView: React.FC<{
             <MessageCircleIcon size={20} className="transition-colors" />
           </div>
 
-          <div className="flex h-12 w-12 cursor-pointer items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-green-600/10 hover:text-green-500">
-            <RepeatIcon size={20} className="transition-colors" />
-          </div>
+          <ChirpRepostOptions
+            disabled={session.status !== "authenticated"}
+            chirp={chirp}
+          >
+            <div className="flex h-12 w-12 cursor-pointer items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-green-600/10 hover:text-green-500">
+              <RepeatIcon size={20} className="transition-colors" />
+            </div>
+          </ChirpRepostOptions>
 
           <LikeButton
             chirpId={chirp.id}
@@ -131,7 +161,9 @@ export const ChirpBigView: React.FC<{
           </div>
         </div>
 
-        <CreateReplyForm replyingToId={chirp.id} ref={replyTextareaRef} />
+        <Authed>
+          <CreateReplyForm replyingToId={chirp.id} ref={replyTextareaRef} />
+        </Authed>
       </div>
     </>
   );

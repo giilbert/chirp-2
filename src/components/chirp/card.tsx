@@ -8,6 +8,8 @@ import { LikeButton } from "./like-button";
 import { useState } from "react";
 import { CreateChirpDialog } from "./dialog";
 import { ChirpMediaDisplay } from "./media-display";
+import { useSession } from "next-auth/react";
+import { ChirpRepostOptions } from "./repost-options";
 
 const betterFormatDate = (date: Date) => {
   const dateMoment = moment(date);
@@ -38,6 +40,7 @@ export const ChirpCard: React.FC<{
   chirp: EverythingChirpWithoutNesting;
   showActions?: boolean;
 }> = ({ chirp, showActions = true }) => {
+  const session = useSession();
   const [likes, setLikes] = useState(chirp._count.likes);
 
   return (
@@ -49,7 +52,7 @@ export const ChirpCard: React.FC<{
         />
         {/* MOBILE: show the profile and post metadata above the content */}
         <div className="xs:hidden">
-          <ChirpProfileCard author={chirp.author}>
+          <ChirpProfileCard chirp={chirp}>
             <Link href={`/${chirp.author.username}`}>
               <p className="group-hover:underline">
                 {chirp.author.displayName}
@@ -65,7 +68,7 @@ export const ChirpCard: React.FC<{
       </div>
       <div className="w-full">
         <div className="hidden flex-wrap gap-1 text-muted-foreground xs:flex">
-          <ChirpProfileCard author={chirp.author}>
+          <ChirpProfileCard chirp={chirp}>
             <Link href={`/${chirp.author.username}`}>
               <p className="text-foreground group-hover:underline">
                 {chirp.author.displayName}
@@ -98,14 +101,19 @@ export const ChirpCard: React.FC<{
               </div>
             </CreateChirpDialog>
 
-            <div className="group flex cursor-pointer items-center gap-1 transition-colors hover:text-green-500">
-              <div className="flex h-10 w-10 items-center justify-center rounded-full transition-colors group-hover:bg-green-600/10">
-                <RepeatIcon size={18} className="transition-colors" />
+            <ChirpRepostOptions
+              disabled={session.status !== "authenticated"}
+              chirp={chirp}
+            >
+              <div className="group flex cursor-pointer items-center gap-1 transition-colors hover:text-green-500">
+                <div className="flex h-10 w-10 items-center justify-center rounded-full transition-colors group-hover:bg-green-600/10">
+                  <RepeatIcon size={18} className="transition-colors" />
+                </div>
+                <p className="text-sm transition-colors">
+                  {chirp._count.rechirps}
+                </p>
               </div>
-              <p className="text-sm transition-colors">
-                {chirp._count.quotedBy + chirp._count.rechirps}
-              </p>
-            </div>
+            </ChirpRepostOptions>
 
             <LikeButton
               chirpId={chirp.id}

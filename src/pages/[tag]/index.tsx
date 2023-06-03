@@ -5,14 +5,22 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { OnBottom } from "@/components/ui/on-bottom";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { cn } from "@/lib/utils";
 import { api } from "@/utils/api";
+import { createSsgHelpers } from "@/utils/ssg-helpers";
+import { TRPCError } from "@trpc/server";
 import { ArrowLeftIcon, CalendarIcon } from "lucide-react";
 import moment from "moment";
+import type { GetStaticPaths, GetStaticProps } from "next";
+import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { useMemo } from "react";
 
 const UserProfilePage: React.FC = () => {
   const router = useRouter();
+  const session = useSession();
+  const follow = api.user.followUser.useMutation();
+  const unfollow = api.user.unfollowUser.useMutation();
   const userProfileQuery = api.user.getUserProfileByTag.useQuery(
     { tag: router.query.tag as string },
     { enabled: !!router.query.tag }
@@ -62,9 +70,17 @@ const UserProfilePage: React.FC = () => {
   }, [recentMediaChirpsQuery.data?.pages]);
 
   const profile = userProfileQuery.data;
+  const isMe = profile?.userId === session.data?.user.id;
 
   return (
-    <Layout>
+    <Layout
+      seo={{
+        title: profile
+          ? `${profile.displayName} (@${profile.username}) / Chirp`
+          : "Profile / Chirp",
+        description: profile?.bio || "This user doesn't have a bio.",
+      }}
+    >
       <div className="sticky top-0 z-10 flex items-center gap-2 border-b bg-background/80 px-2 py-1.5 backdrop-blur-sm 2xl:pt-8">
         <div
           className="flex h-12 w-12 cursor-pointer items-center justify-center rounded-full hover:bg-muted"
@@ -103,13 +119,46 @@ const UserProfilePage: React.FC = () => {
               </AvatarFallback>
             </Avatar>
 
-            <div className="-mt-20 flex w-full pr-4 lg:-mt-36 lg:mb-10">
-              <Button className="ml-auto" size="sm">
-                Follow
-              </Button>
-            </div>
+            {!isMe && (
+              <div className="-mt-20 flex w-full pr-4 lg:-mt-36 lg:mb-10">
+                {profile.followers.length === 0 ? (
+                  <Button
+                    className="ml-auto"
+                    size="sm"
+                    isLoading={follow.isLoading || userProfileQuery.isLoading}
+                    onClick={() => {
+                      follow
+                        .mutateAsync({ userId: profile.userId })
+                        .then(async () => {
+                          await userProfileQuery.refetch();
+                        })
+                        .catch(console.error);
+                    }}
+                  >
+                    Follow
+                  </Button>
+                ) : (
+                  <Button
+                    className="ml-auto"
+                    size="sm"
+                    variant="secondary"
+                    isLoading={unfollow.isLoading || userProfileQuery.isLoading}
+                    onClick={() => {
+                      unfollow
+                        .mutateAsync({ userId: profile.userId })
+                        .then(async () => {
+                          await userProfileQuery.refetch();
+                        })
+                        .catch(console.error);
+                    }}
+                  >
+                    Unfollow
+                  </Button>
+                )}
+              </div>
+            )}
 
-            <div className="m-4 mt-0">
+            <div className={cn("m-4", isMe ? "-mt-16" : "mt-0")}>
               <h1 className="text-2xl font-bold">{profile.displayName}</h1>
               <p className="text-muted-foreground">@{profile.username}</p>
               <div className="mt-2 flex items-center gap-2 text-muted-foreground">
@@ -119,18 +168,21 @@ const UserProfilePage: React.FC = () => {
 
               <div className="mt-2 flex gap-4">
                 <p>
-                  {/* TODO: make these number actual */}
-                  <span className="mr-1 font-bold">0</span>
+                  <span className="mr-1 font-bold">
+                    {profile._count.following}
+                  </span>
                   <span className="text-muted-foreground">Following</span>
                 </p>
                 <p>
-                  <span className="mr-1 font-bold">0</span>
+                  <span className="mr-1 font-bold">
+                    {profile._count.followers}
+                  </span>
                   <span className="text-muted-foreground">Followers</span>
                 </p>
               </div>
             </div>
 
-            <div className="-mt-2 w-full px-4">
+            <div className="w-full px-4">
               <TabsList className="w-full">
                 <TabsTrigger value="chirps" className="w-full">
                   Chirps
@@ -195,6 +247,38 @@ const UserProfilePage: React.FC = () => {
       )}
     </Layout>
   );
+};
+
+export const getStaticProps: GetStaticProps = async (ctx) => {
+  const ssg = createSsgHelpers();
+
+  try {
+    await ssg.user.getUserProfileByTag.fetch({
+      tag: ctx.params?.tag as string,
+    });
+  } catch (e: unknown) {
+    if (e instanceof TRPCError && e.code === "NOT_FOUND") {
+      return {
+        notFound: true,
+      };
+    }
+
+    throw e;
+  }
+
+  return {
+    props: {
+      trpcState: ssg.dehydrate(),
+    },
+    revalidate: 60,
+  };
+};
+
+export const getStaticPaths: GetStaticPaths = () => {
+  return {
+    paths: [],
+    fallback: "blocking",
+  };
 };
 
 export default UserProfilePage;

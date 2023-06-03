@@ -4,12 +4,27 @@ import { z } from "zod";
 import { TRPCError } from "@trpc/server";
 import { Prisma } from "@prisma/client";
 import type { RouterOutputs } from "@/utils/api";
+import { createProfileInclude, fixFollowers } from "./user";
 
 export type EverythingChirp = RouterOutputs["chirp"]["getById"];
 export type EverythingChirpWithoutNesting = Omit<
   EverythingChirp,
-  "replyingTo" | "quotedFrom" | "rechirpedFrom"
+  "replyingTo" | "rechirpedFrom" | "replyingToId" | "rechirpedFromId"
 >;
+
+const fixChirpLikes = (
+  chirp: EverythingChirp | EverythingChirpWithoutNesting
+) => {
+  if (!chirp.likes) {
+    chirp.likes = [];
+  }
+  if ("rechirpedFrom" in chirp && chirp.rechirpedFrom) {
+    fixChirpLikes(chirp.rechirpedFrom);
+  }
+  if ("replyingTo" in chirp && chirp.replyingTo) {
+    fixChirpLikes(chirp.replyingTo);
+  }
+};
 
 const createChirpIncludeWithoutReplyingTo = (userId?: string) =>
   Prisma.validator<Prisma.ChirpInclude>()({
@@ -20,15 +35,10 @@ const createChirpIncludeWithoutReplyingTo = (userId?: string) =>
         }
       : undefined,
     author: {
-      include: {
-        user: {
-          select: { image: true },
-        },
-      },
+      include: createProfileInclude(userId),
     },
     _count: {
       select: {
-        quotedBy: true,
         rechirps: true,
         likes: true,
         replies: true,
@@ -38,16 +48,11 @@ const createChirpIncludeWithoutReplyingTo = (userId?: string) =>
 
 const createChirpInclude = (userId?: string) =>
   Prisma.validator<Prisma.ChirpInclude>()({
-    quotedFrom: { include: createChirpIncludeWithoutReplyingTo(userId) },
     rechirpedFrom: { include: createChirpIncludeWithoutReplyingTo(userId) },
     replyingTo: { include: createChirpIncludeWithoutReplyingTo(userId) },
     media: true,
     author: {
-      include: {
-        user: {
-          select: { image: true },
-        },
-      },
+      include: createProfileInclude(userId),
     },
     likes: userId
       ? {
@@ -56,7 +61,6 @@ const createChirpInclude = (userId?: string) =>
       : undefined,
     _count: {
       select: {
-        quotedBy: true,
         rechirps: true,
         likes: true,
         replies: true,
@@ -81,9 +85,8 @@ export const chirpRouter = createTRPCRouter({
 
       if (!chirp) throw new TRPCError({ code: "NOT_FOUND" });
 
-      if (!chirp.likes) {
-        chirp.likes = [];
-      }
+      fixChirpLikes(chirp);
+      fixFollowers(chirp.author);
 
       return chirp;
     }),
@@ -134,9 +137,52 @@ export const chirpRouter = createTRPCRouter({
       }
 
       for (const chirp of chirps) {
-        if (!chirp.likes) {
-          chirp.likes = [];
-        }
+        fixChirpLikes(chirp);
+        fixFollowers(chirp.author);
+      }
+
+      return {
+        chirps,
+        nextCursor,
+      };
+    }),
+
+  getInfiniteFollowing: protectedProcedure
+    .input(
+      z.object({
+        cursor: z.string().nullish(),
+      })
+    )
+    .query(async ({ ctx, input }) => {
+      const TAKE = 10;
+      const chirps = await ctx.prisma.chirp.findMany({
+        where: {
+          author: {
+            followers: {
+              some: {
+                userId: ctx.session.user.id,
+              },
+            },
+          },
+        },
+        take: TAKE + 1,
+        orderBy: {
+          createdAt: "desc",
+        },
+        include: createChirpInclude(ctx.session.user.id),
+      });
+
+      let nextCursor: typeof input.cursor | undefined = undefined;
+      if (chirps.length > TAKE) {
+        const nextItem = chirps.pop();
+        // This will never be null due to the length check
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        nextCursor = nextItem!.id;
+      }
+
+      for (const chirp of chirps) {
+        fixChirpLikes(chirp);
+        fixFollowers(chirp.author);
       }
 
       return {
@@ -191,9 +237,8 @@ export const chirpRouter = createTRPCRouter({
       }
 
       for (const chirp of chirps) {
-        if (!chirp.likes) {
-          chirp.likes = [];
-        }
+        fixChirpLikes(chirp);
+        fixFollowers(chirp.author);
       }
 
       return {
@@ -252,23 +297,6 @@ export const chirpRouter = createTRPCRouter({
           body: "",
           authorId: ctx.session.user.id,
           rechirpedFromId: input.chirpId,
-        },
-      });
-    }),
-
-  quoteChirp: protectedProcedure
-    .input(
-      z.object({
-        chirpId: z.string(),
-        body: z.string(),
-      })
-    )
-    .mutation(async ({ ctx, input }) => {
-      await ctx.prisma.chirp.create({
-        data: {
-          body: input.body,
-          authorId: ctx.session.user.id,
-          quotedFromId: input.chirpId,
         },
       });
     }),
