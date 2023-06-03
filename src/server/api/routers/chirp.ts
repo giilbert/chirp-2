@@ -147,6 +147,50 @@ export const chirpRouter = createTRPCRouter({
       };
     }),
 
+  getInfiniteFollowing: protectedProcedure
+    .input(
+      z.object({
+        cursor: z.string().nullish(),
+      })
+    )
+    .query(async ({ ctx, input }) => {
+      const TAKE = 10;
+      const chirps = await ctx.prisma.chirp.findMany({
+        where: {
+          author: {
+            followers: {
+              some: {
+                userId: ctx.session.user.id,
+              },
+            },
+          },
+        },
+        take: TAKE + 1,
+        orderBy: {
+          createdAt: "desc",
+        },
+        include: createChirpInclude(ctx.session.user.id),
+      });
+
+      let nextCursor: typeof input.cursor | undefined = undefined;
+      if (chirps.length > TAKE) {
+        const nextItem = chirps.pop();
+        // This will never be null due to the length check
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        nextCursor = nextItem!.id;
+      }
+
+      for (const chirp of chirps) {
+        fixChirpLikes(chirp);
+        fixFollowers(chirp.author);
+      }
+
+      return {
+        chirps,
+        nextCursor,
+      };
+    }),
+
   getInfiniteFromUser: publicProcedure
     .input(
       z.object({
