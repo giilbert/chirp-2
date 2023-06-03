@@ -4,6 +4,7 @@ import { z } from "zod";
 import { TRPCError } from "@trpc/server";
 import { Prisma } from "@prisma/client";
 import type { RouterOutputs } from "@/utils/api";
+import { profileInclude } from "./user";
 
 export type EverythingChirp = RouterOutputs["chirp"]["getById"];
 export type EverythingChirpWithoutNesting = Omit<
@@ -34,11 +35,7 @@ const createChirpIncludeWithoutReplyingTo = (userId?: string) =>
         }
       : undefined,
     author: {
-      include: {
-        user: {
-          select: { image: true },
-        },
-      },
+      include: profileInclude,
     },
     _count: {
       select: {
@@ -55,11 +52,7 @@ const createChirpInclude = (userId?: string) =>
     replyingTo: { include: createChirpIncludeWithoutReplyingTo(userId) },
     media: true,
     author: {
-      include: {
-        user: {
-          select: { image: true },
-        },
-      },
+      include: profileInclude,
     },
     likes: userId
       ? {

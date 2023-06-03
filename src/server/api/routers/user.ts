@@ -1,7 +1,23 @@
 import { completeSignUpSchema } from "@/lib/schemas/user";
 import { TRPCError } from "@trpc/server";
-import { createTRPCRouter, publicProcedure } from "../trpc";
+import { createTRPCRouter, protectedProcedure, publicProcedure } from "../trpc";
 import { z } from "zod";
+import { Prisma } from "@prisma/client";
+
+export const profileInclude = Prisma.validator<Prisma.ProfileInclude>()({
+  user: {
+    select: {
+      image: true,
+    },
+  },
+  _count: {
+    select: {
+      chirps: true,
+      followers: true,
+      following: true,
+    },
+  },
+} satisfies Prisma.ProfileInclude);
 
 export const userRouter = createTRPCRouter({
   getUserProfileByTag: publicProcedure
@@ -13,16 +29,7 @@ export const userRouter = createTRPCRouter({
     .query(async ({ input, ctx }) => {
       const profile = await ctx.prisma.profile.findUnique({
         where: { username: input.tag },
-        include: {
-          user: {
-            select: {
-              image: true,
-            },
-          },
-          _count: {
-            select: { chirps: true },
-          },
-        },
+        include: profileInclude,
       });
 
       if (!profile) throw new TRPCError({ code: "NOT_FOUND" });
@@ -63,6 +70,44 @@ export const userRouter = createTRPCRouter({
             create: {
               username: input.username,
               displayName: input.displayName,
+            },
+          },
+        },
+      });
+    }),
+
+  followUser: protectedProcedure
+    .input(
+      z.object({
+        userId: z.string(),
+      })
+    )
+    .mutation(async ({ input, ctx }) => {
+      await ctx.prisma.profile.update({
+        where: { userId: ctx.session.user.id },
+        data: {
+          following: {
+            connect: {
+              userId: input.userId,
+            },
+          },
+        },
+      });
+    }),
+
+  unfollowUser: protectedProcedure
+    .input(
+      z.object({
+        userId: z.string(),
+      })
+    )
+    .mutation(async ({ input, ctx }) => {
+      await ctx.prisma.profile.update({
+        where: { userId: ctx.session.user.id },
+        data: {
+          following: {
+            disconnect: {
+              userId: input.userId,
             },
           },
         },
