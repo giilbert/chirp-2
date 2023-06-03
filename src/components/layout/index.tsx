@@ -2,17 +2,29 @@ import { useSession } from "next-auth/react";
 import { Nav } from "./nav";
 import { useRouter } from "next/router";
 import { FullscreenLoader } from "./fullscreen-loader";
+import { NextSeo, type NextSeoProps } from "next-seo";
 
 export const Layout: React.FC<
   React.PropsWithChildren<{
-    title?: string;
+    seo?: NextSeoProps;
   }>
-> = ({ title: _title = "Chirp", children }) => {
+> = ({ seo = {}, children }) => {
+  const mergedProps = {
+    title: "Chirp",
+    description: "Basically a Twitter clone, but missing a lot of features",
+    themeColor: "#9333ea",
+    ...seo,
+  };
   const session = useSession();
   const router = useRouter();
 
   if (session.status === "loading") {
-    return <FullscreenLoader />;
+    return (
+      <>
+        <NextSeo {...mergedProps} />
+        <FullscreenLoader />
+      </>
+    );
   }
 
   if (session.data && !session.data.user.profile) {
@@ -21,6 +33,8 @@ export const Layout: React.FC<
 
   return (
     <>
+      <NextSeo {...mergedProps} />
+
       <div className="flex justify-center">
         <div className="flex w-screen lg:grid lg:max-w-[150rem] lg:grid-cols-4">
           <div className="min-w-[54px] lg:col-span-1">

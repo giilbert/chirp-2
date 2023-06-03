@@ -7,8 +7,11 @@ import { OnBottom } from "@/components/ui/on-bottom";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { cn } from "@/lib/utils";
 import { api } from "@/utils/api";
+import { createSsgHelpers } from "@/utils/ssg-helpers";
+import { TRPCError } from "@trpc/server";
 import { ArrowLeftIcon, CalendarIcon } from "lucide-react";
 import moment from "moment";
+import type { GetStaticPaths, GetStaticProps } from "next";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { useMemo } from "react";
@@ -70,7 +73,14 @@ const UserProfilePage: React.FC = () => {
   const isMe = profile?.userId === session.data?.user.id;
 
   return (
-    <Layout>
+    <Layout
+      seo={{
+        title: profile
+          ? `${profile.displayName} (@${profile.username}) / Chirp`
+          : "Profile / Chirp",
+        description: profile?.bio || "This user doesn't have a bio.",
+      }}
+    >
       <div className="sticky top-0 z-10 flex items-center gap-2 border-b bg-background/80 px-2 py-1.5 backdrop-blur-sm 2xl:pt-8">
         <div
           className="flex h-12 w-12 cursor-pointer items-center justify-center rounded-full hover:bg-muted"
@@ -237,6 +247,38 @@ const UserProfilePage: React.FC = () => {
       )}
     </Layout>
   );
+};
+
+export const getStaticProps: GetStaticProps = async (ctx) => {
+  const ssg = createSsgHelpers();
+
+  try {
+    await ssg.user.getUserProfileByTag.fetch({
+      tag: ctx.params?.tag as string,
+    });
+  } catch (e: unknown) {
+    if (e instanceof TRPCError && e.code === "NOT_FOUND") {
+      return {
+        notFound: true,
+      };
+    }
+
+    throw e;
+  }
+
+  return {
+    props: {
+      trpcState: ssg.dehydrate(),
+    },
+    revalidate: 60,
+  };
+};
+
+export const getStaticPaths: GetStaticPaths = () => {
+  return {
+    paths: [],
+    fallback: "blocking",
+  };
 };
 
 export default UserProfilePage;
