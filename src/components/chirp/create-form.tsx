@@ -10,29 +10,40 @@ import { FileImageIcon } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { useSession } from "next-auth/react";
 import { uploadFiles } from "@/utils/uploadthing-helpers";
+import { useToast } from "@/lib/use-toast";
 
 export const CreateChirpsForm: React.FC<{
   enlarged?: boolean;
-}> = ({ enlarged = false }) => {
+  close?: () => void;
+}> = ({ enlarged = false, close }) => {
+  const { toast } = useToast();
   const [files, setFiles] = useState<{ file: File; url: string }[]>([]);
   const trpcContext = api.useContext();
   const form = useZodForm({ schema: createChirpSchema });
   const createChirp = api.chirp.create.useMutation();
   const session = useSession();
+  const [loading, setLoading] = useState(false);
 
   const onSubmit = useCallback(
     async (values: z.infer<typeof createChirpSchema>) => {
+      setLoading(true);
       await createChirp.mutateAsync(values);
-      await uploadFiles(
-        files.map((f) => f.file),
-        "chirpAddMedia"
-      );
+      if (files.length > 0)
+        await uploadFiles(
+          files.map((f) => f.file),
+          "chirpAddMedia"
+        );
       form.reset();
       files.forEach(({ url }) => URL.revokeObjectURL(url));
       setFiles([]);
       await trpcContext.chirp.getInfinite.invalidate();
+      setLoading(false);
+      toast({
+        title: "Chirped!",
+      });
+      close?.();
     },
-    [createChirp, form, trpcContext.chirp.getInfinite, files]
+    [createChirp, form, trpcContext.chirp.getInfinite, files, close, toast]
   );
 
   return (
@@ -55,7 +66,7 @@ export const CreateChirpsForm: React.FC<{
 
         <div className="group ml-4 h-full w-full">
           <textarea
-            disabled={createChirp.isLoading}
+            disabled={loading}
             placeholder="What do you want to chirp about today?"
             className={cn(
               "mt-4 h-full w-full resize-none overflow-visible border-b bg-background pb-4 text-xl outline-none transition-colors group-focus-within:border-b-purple-600",
@@ -81,7 +92,7 @@ export const CreateChirpsForm: React.FC<{
               className="ml-auto w-24"
               size="sm"
               type="submit"
-              isLoading={createChirp.isLoading}
+              isLoading={loading}
             >
               Chirp
             </Button>
