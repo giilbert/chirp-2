@@ -69,7 +69,9 @@ export const Nav: React.FC = () => {
     <nav className="col-span-1 flex h-screen w-[54px] flex-col items-start border-r pt-4 lg:w-full 2xl:pt-8">
       <div>
         <div className="ml-3.5 mt-1 h-[32px] w-[32px] text-3xl font-extrabold lg:ml-8">
-          <Logo />
+          <Link href="/">
+            <Logo />
+          </Link>
         </div>
 
         <div className="mx-1 mt-4 flex flex-col gap-1 lg:mx-4">
