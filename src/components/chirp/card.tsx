@@ -133,9 +133,7 @@ export const ChirpCard: React.FC<{
             <div
               className="group flex cursor-pointer items-center gap-1 transition-colors hover:text-purple-500"
               onClick={() => {
-                copy(
-                  `${window.location.origin}/${chirp.author.username}/${chirp.id}`
-                )
+                copy(window.location.href)
                   .then(() => {
                     toast({
                       title: "Link copied to clipboard!",

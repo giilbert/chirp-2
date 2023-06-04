@@ -168,9 +168,7 @@ export const ChirpBigView: React.FC<{
           <div
             className="flex h-12 w-12 cursor-pointer items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-purple-600/10 hover:text-purple-500"
             onClick={() => {
-              copy(
-                `${window.location.origin}/${chirp.author.username}/${chirp.id}`
-              )
+              copy(window.location.href)
                 .then(() => {
                   toast({
                     title: "Link copied to clipboard!",
