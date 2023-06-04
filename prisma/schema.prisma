@@ -1,6 +1,6 @@
 generator client {
   provider        = "prisma-client-js"
-  previewFeatures = ["jsonProtocol", "fullTextSearch"]
+  previewFeatures = ["jsonProtocol", "fullTextIndex", "fullTextSearch"]
 }
 
 datasource db {
@@ -53,6 +53,7 @@ model Chirp {
   @@index([rechirpedFromId])
   @@index([replyingToId])
   @@index([authorId])
+  @@fulltext([body])
 }
 
 model ChirpMedia {

@@ -112,6 +112,8 @@ export const ChirpProfileCard: React.FC<
         <p className="mt-2">{author.displayName}</p>
         <p className="text-muted-foreground">@{author.username}</p>
 
+        <p>{author.bio}</p>
+
         <div className="mt-2 flex gap-4">
           <p>
             <span className="mr-1 font-bold">{author._count.following}</span>

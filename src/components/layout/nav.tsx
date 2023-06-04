@@ -7,6 +7,7 @@ import {
   // ListIcon,
   MoreHorizontalIcon,
   PenToolIcon,
+  SearchIcon,
   // TicketIcon,
   UserCircle,
 } from "lucide-react";
@@ -52,6 +53,11 @@ export const Nav: React.FC = () => {
     //   href: "/purple",
     //   Icon: TicketIcon,
     // },
+    {
+      name: "Search",
+      href: "/search",
+      Icon: SearchIcon,
+    },
     status === "authenticated" && {
       name: "Profile",
       href: "/" + (session?.user.profile?.username ?? ""),

@@ -5,7 +5,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "../layout/dialog";
+} from "@/components/ui/dialog";
 import { CreateChirpsForm } from "./create-form";
 import { CreateReplyForm } from "./reply-form";
 

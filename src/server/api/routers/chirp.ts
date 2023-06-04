@@ -300,4 +300,47 @@ export const chirpRouter = createTRPCRouter({
         },
       });
     }),
+
+  searchInfinite: publicProcedure
+    .input(
+      z.object({
+        query: z.string(),
+        cursor: z.string().nullish(),
+      })
+    )
+    .query(async ({ ctx, input }) => {
+      const TAKE = 10;
+
+      const chirps = await ctx.prisma.chirp.findMany({
+        where: {
+          body: {
+            search: input.query,
+          },
+        },
+        take: TAKE + 1,
+        orderBy: {
+          createdAt: "desc",
+        },
+        include: createChirpInclude(ctx.session?.user.id),
+        cursor: input.cursor ? { id: input.cursor } : undefined,
+      });
+
+      let nextCursor: typeof input.cursor | undefined = undefined;
+      if (chirps.length > TAKE) {
+        const nextItem = chirps.pop();
+        // This will never be null due to the length check
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        nextCursor = nextItem!.id;
+      }
+
+      for (const chirp of chirps) {
+        fixChirpLikes(chirp);
+        fixFollowers(chirp.author);
+      }
+
+      return {
+        chirps,
+        nextCursor,
+      };
+    }),
 });

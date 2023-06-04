@@ -3,12 +3,14 @@ import { Nav } from "./nav";
 import { useRouter } from "next/router";
 import { FullscreenLoader } from "./fullscreen-loader";
 import { NextSeo, type NextSeoProps } from "next-seo";
+import { Search } from "../ui/search";
 
 export const Layout: React.FC<
   React.PropsWithChildren<{
     seo?: NextSeoProps;
+    noSearch?: boolean;
   }>
-> = ({ seo = {}, children }) => {
+> = ({ seo = {}, children, noSearch }) => {
   const mergedProps = {
     title: "Chirp",
     description: "Basically a Twitter clone, but missing a lot of features",
@@ -53,7 +55,9 @@ export const Layout: React.FC<
         <div className="flex h-screen w-screen lg:grid lg:max-w-[150rem] lg:grid-cols-4">
           <Nav />
           <div className="col-span-2 w-full" />
-          <div className="hidden h-full w-[32rem] md:block lg:w-full"></div>
+          <div className="hidden h-full w-[32rem] p-4 md:block lg:w-full">
+            {!noSearch && <Search />}
+          </div>
         </div>
       </div>
     </>

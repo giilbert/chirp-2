@@ -5,7 +5,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "../layout/dialog";
+} from "@/components/ui/dialog";
 import { FileImageIcon } from "lucide-react";
 import { Button } from "../ui/button";
 
