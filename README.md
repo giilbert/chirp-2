@@ -57,7 +57,7 @@ Required tools (these are my versions, the app may or may not work on other vers
 
 1. Create a `.env.local` file with the appropriate environment variables (see `.env.example`)
 2. Install dependencies: `yarn`
-3. Start redis and MySQL service: `docker compose up`
+3. Start MySQL service: `docker compose up`
 4. Set up the database: `yarn prisma db push`
 5. Start the app: `yarn dev`
 6. If everything went right, you should be able to access the app at `http://localhost:3000`
