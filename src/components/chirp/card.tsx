@@ -10,6 +10,7 @@ import { CreateChirpDialog } from "./dialog";
 import { ChirpMediaDisplay } from "./media-display";
 import { useSession } from "next-auth/react";
 import { ChirpRepostOptions } from "./repost-options";
+import { ChirpRichText } from "./rich-text";
 
 const betterFormatDate = (date: Date) => {
   const dateMoment = moment(date);
@@ -80,7 +81,9 @@ export const ChirpCard: React.FC<{
           <p>{betterFormatDate(chirp.createdAt)}</p>
         </div>
 
-        <p className="break-all">{chirp.body}</p>
+        <div className="w-full">
+          <ChirpRichText body={chirp.body} />
+        </div>
 
         {chirp.media.length > 0 && (
           <div className="mt-2">

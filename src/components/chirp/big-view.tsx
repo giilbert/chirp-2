@@ -22,6 +22,7 @@ import { ChirpMediaDisplay } from "./media-display";
 import { Authed } from "../layout/authed";
 import { ChirpRepostOptions } from "./repost-options";
 import { useSession } from "next-auth/react";
+import { ChirpRichText } from "./rich-text";
 
 export const ChirpBigView: React.FC<{
   chirp: EverythingChirp | EverythingChirpWithoutNesting;
@@ -98,7 +99,7 @@ export const ChirpBigView: React.FC<{
         </div>
       </div>
       <div className="mt-6">
-        <p>{chirp.body}</p>
+        <ChirpRichText body={chirp.body} />
 
         <div className="mt-2">
           <ChirpMediaDisplay media={chirp.media} />
