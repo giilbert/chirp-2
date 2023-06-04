@@ -23,10 +23,14 @@ import { Authed } from "../layout/authed";
 import { ChirpRepostOptions } from "./repost-options";
 import { useSession } from "next-auth/react";
 import { ChirpRichText } from "./rich-text";
+import { useToast } from "@/lib/use-toast";
+import { useCopyToClipboard } from "@/lib/use-copy-to-clipboard";
 
 export const ChirpBigView: React.FC<{
   chirp: EverythingChirp | EverythingChirpWithoutNesting;
 }> = ({ chirp }) => {
+  const { toast } = useToast();
+  const [, copy] = useCopyToClipboard();
   const session = useSession();
   const replyTextareaRef = createRef<HTMLTextAreaElement>();
   const [likes, setLikes] = useState(chirp._count.likes);
@@ -161,7 +165,27 @@ export const ChirpBigView: React.FC<{
           </div>
           */}
 
-          <div className="flex h-12 w-12 cursor-pointer items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-purple-600/10 hover:text-purple-500">
+          <div
+            className="flex h-12 w-12 cursor-pointer items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-purple-600/10 hover:text-purple-500"
+            onClick={() => {
+              copy(
+                `${window.location.origin}/${chirp.author.username}/${chirp.id}`
+              )
+                .then(() => {
+                  toast({
+                    title: "Link copied to clipboard!",
+                    description: "You can now paste the link anywhere.",
+                  });
+                })
+                .catch((e) => {
+                  console.error(e);
+                  toast({
+                    title: "Failed to copy link to clipboard.",
+                    variant: "destructive",
+                  });
+                });
+            }}
+          >
             <ShareIcon size={20} className="transition-colors" />
           </div>
         </div>
