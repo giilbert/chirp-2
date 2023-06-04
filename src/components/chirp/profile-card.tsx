@@ -9,12 +9,14 @@ import type { EverythingChirpWithoutNesting } from "@/server/api/routers/chirp";
 import { api } from "@/utils/api";
 import { useState } from "react";
 import { useSession } from "next-auth/react";
+import { useToast } from "@/lib/use-toast";
 
 export const ChirpProfileCard: React.FC<
   React.PropsWithChildren<{
     chirp: EverythingChirpWithoutNesting;
   }>
 > = ({ chirp, children }) => {
+  const { toast } = useToast();
   const trpcContext = api.useContext();
   const followUser = api.user.followUser.useMutation();
   const unfollowUser = api.user.unfollowUser.useMutation();
@@ -56,7 +58,10 @@ export const ChirpProfileCard: React.FC<
                         userId: author.userId,
                       })
                       .then(async () => {
-                        // TODO: toast
+                        toast({
+                          title: "Unfollowed!",
+                          description: `You are no longer following ${author.displayName}`,
+                        });
                         setHasFollowed(false);
                         setNumFollowers(numFollowers - 1);
 
@@ -81,7 +86,11 @@ export const ChirpProfileCard: React.FC<
                         userId: author.userId,
                       })
                       .then(async () => {
-                        // TODO: toast
+                        toast({
+                          title: "Followed!",
+                          description: `You are now following ${author.displayName}`,
+                        });
+
                         setHasFollowed(true);
                         setNumFollowers(numFollowers + 1);
 

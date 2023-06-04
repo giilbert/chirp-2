@@ -1,6 +1,8 @@
+import { FullscreenLoader } from "@/components/layout/fullscreen-loader";
 import { Button } from "@/components/ui/button";
 import { TsForm } from "@/components/ui/forms";
 import { completeSignUpSchema } from "@/lib/schemas/user";
+import { useToast } from "@/lib/use-toast";
 import { api } from "@/utils/api";
 import type { NextPage } from "next";
 import { signOut, useSession } from "next-auth/react";
@@ -9,23 +11,33 @@ import { useCallback } from "react";
 import type { z } from "zod";
 
 const CompleteSignUp: NextPage = () => {
+  const { toast } = useToast();
   const router = useRouter();
   const session = useSession();
-  const completeSignUp = api.user.completeSignUp.useMutation();
+  const completeSignUp = api.user.completeSignUp.useMutation({
+    onError(e) {
+      toast({
+        title: "Error",
+        description: e.message,
+        variant: "destructive",
+      });
+    },
+  });
   const redirectUrl = router.query.redirect as string | undefined;
 
   const onSubmit = useCallback(
     async (values: z.infer<typeof completeSignUpSchema>) => {
-      await completeSignUp.mutateAsync(values);
-      await session.update();
-      await router.push(redirectUrl ?? "/").catch(() => 0);
+      try {
+        await completeSignUp.mutateAsync(values);
+        await session.update();
+        await router.push(redirectUrl ?? "/");
+      } catch {}
     },
     [completeSignUp, redirectUrl, router, session]
   );
 
   if (session.status === "loading") {
-    // TODO: loading state
-    return <p>Loading..</p>;
+    return <FullscreenLoader />;
   }
 
   if (session.status === "unauthenticated" || session.data?.user.profile) {

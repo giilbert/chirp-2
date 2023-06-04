@@ -5,6 +5,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { OnBottom } from "@/components/ui/on-bottom";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useToast } from "@/lib/use-toast";
 import { cn } from "@/lib/utils";
 import { api } from "@/utils/api";
 import { createSsgHelpers } from "@/utils/ssg-helpers";
@@ -56,6 +57,7 @@ const UserProfilePage: React.FC = () => {
       getNextPageParam: (lastPage) => lastPage.nextCursor,
     }
   );
+  const { toast } = useToast();
 
   const allChirps = useMemo(() => {
     return recentChirpsQuery.data?.pages.flatMap((p) => p.chirps);
@@ -131,6 +133,11 @@ const UserProfilePage: React.FC = () => {
                         .mutateAsync({ userId: profile.userId })
                         .then(async () => {
                           await userProfileQuery.refetch();
+
+                          toast({
+                            title: "Followed!",
+                            description: `You are now following ${profile.displayName}`,
+                          });
                         })
                         .catch(console.error);
                     }}
@@ -148,6 +155,11 @@ const UserProfilePage: React.FC = () => {
                         .mutateAsync({ userId: profile.userId })
                         .then(async () => {
                           await userProfileQuery.refetch();
+
+                          toast({
+                            title: "Unfollowed!",
+                            description: `You are no longer following ${profile.displayName}`,
+                          });
                         })
                         .catch(console.error);
                     }}

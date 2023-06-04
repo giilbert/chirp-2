@@ -21,8 +21,7 @@ export const TextField = (props: InputProps) => {
         placeholder={placeholder}
         {...props}
       />
-      {/* TODO: field errors */}
-      {error && error.errorMessage}
+      {error && <p className="mt-1 text-red-500">{error.errorMessage}</p>}
     </div>
   );
 };
