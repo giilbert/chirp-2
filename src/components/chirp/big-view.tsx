@@ -1,7 +1,7 @@
 import moment from "moment";
 import Link from "next/link";
 import {
-  BookmarkIcon,
+  // BookmarkIcon,
   MessageCircleIcon,
   RepeatIcon,
   ReplyIcon,
@@ -119,10 +119,12 @@ export const ChirpBigView: React.FC<{
             <span className="mr-1 font-bold">{likes}</span>
             <span className="text-muted-foreground">Likes</span>
           </p>
+          {/*
           <p>
             <span className="mr-1 font-bold">0</span>
             <span className="text-muted-foreground">Bookmarks</span>
           </p>
+          */}
         </div>
 
         <div className="mb-4 mt-4 flex flex-wrap justify-around border-y py-2 md:gap-8">
@@ -152,9 +154,11 @@ export const ChirpBigView: React.FC<{
             hasLiked={chirp.likes.length !== 0}
           />
 
+          {/*
           <div className="flex h-12 w-12 cursor-pointer items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-purple-600/10 hover:text-purple-500">
             <BookmarkIcon size={20} className="transition-colors" />
           </div>
+          */}
 
           <div className="flex h-12 w-12 cursor-pointer items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-purple-600/10 hover:text-purple-500">
             <ShareIcon size={20} className="transition-colors" />
