@@ -52,7 +52,7 @@ export const Nav: React.FC = () => {
     //   href: "/purple",
     //   Icon: TicketIcon,
     // },
-    {
+    status === "authenticated" && {
       name: "Profile",
       href: "/" + (session?.user.profile?.username ?? ""),
       Icon: UserCircle,
@@ -67,16 +67,19 @@ export const Nav: React.FC = () => {
         </div>
 
         <div className="mx-1 mt-4 flex flex-col gap-1 lg:mx-4">
-          {links.map(({ name, href, Icon }) => (
-            <Link
-              href={href}
-              key={name}
-              className="flex w-min items-center gap-4 whitespace-nowrap rounded-full p-3 text-2xl transition-colors hover:bg-gray-700/20 lg:py-3 lg:pl-4 lg:pr-6"
-            >
-              <Icon />
-              <span className="hidden lg:block">{name}</span>
-            </Link>
-          ))}
+          {links.map(
+            (item) =>
+              item && (
+                <Link
+                  href={item.href}
+                  key={item.name}
+                  className="flex w-min items-center gap-4 whitespace-nowrap rounded-full p-3 text-2xl transition-colors hover:bg-gray-700/20 lg:py-3 lg:pl-4 lg:pr-6"
+                >
+                  <item.Icon />
+                  <span className="hidden lg:block">{item.name}</span>
+                </Link>
+              )
+          )}
         </div>
       </div>
 
