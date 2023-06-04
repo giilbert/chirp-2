@@ -38,7 +38,6 @@ const UserProfilePage: React.FC = () => {
     { userId, filter: "chirps" },
     {
       enabled: enabled && selectedTab === "chirps",
-      refetchOnWindowFocus: false,
       getNextPageParam: (lastPage) => lastPage.nextCursor,
     }
   );
@@ -47,7 +46,6 @@ const UserProfilePage: React.FC = () => {
       { userId, filter: "replies" },
       {
         enabled: enabled && selectedTab === "replies",
-        refetchOnWindowFocus: false,
         getNextPageParam: (lastPage) => lastPage.nextCursor,
       }
     );
@@ -55,7 +53,6 @@ const UserProfilePage: React.FC = () => {
     { userId, filter: "media" },
     {
       enabled: enabled && selectedTab === "media",
-      refetchOnWindowFocus: false,
       getNextPageParam: (lastPage) => lastPage.nextCursor,
     }
   );
