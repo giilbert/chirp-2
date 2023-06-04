@@ -55,7 +55,7 @@ export const Layout: React.FC<
         <div className="flex h-screen w-screen lg:grid lg:max-w-[150rem] lg:grid-cols-4">
           <Nav />
           <div className="col-span-2 w-full" />
-          <div className="hidden h-full w-[32rem] p-4 md:block lg:w-full">
+          <div className="hidden h-full w-[32rem] p-2 md:block lg:w-full">
             {!noSearch && <Search />}
           </div>
         </div>

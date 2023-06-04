@@ -17,8 +17,8 @@ Twitter clone built with dark magic and ran by ducks.
 - [x] User authentication and profiles
 - [x] Follow and unfollow users
 - [x] View posts from followed users
+- [x] Search for users and posts
 - [ ] ✨ Recommendation algorithm 💰
-- [ ] Search for users and posts
 - [ ] Notifications
 - [ ] Direct messages
 - [ ] User analytics

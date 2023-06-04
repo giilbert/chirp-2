@@ -23,7 +23,7 @@ export const Search: React.FC = () => {
           setQuery(e.target.value);
         }}
       />
-      <Button className="mr-2">Search</Button>
+      <Button variant="secondary">Search</Button>
     </form>
   );
 };
