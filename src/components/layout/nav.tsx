@@ -159,7 +159,9 @@ export const Nav: React.FC = () => {
               </Avatar>
 
               <div>
-                <p className="font-bold">{session.user.name}</p>
+                <p className="font-bold">
+                  {session.user.profile?.displayName || ""}
+                </p>
                 {session.user.profile && (
                   <p className="-mt-1 text-muted-foreground">
                     @{session.user.profile.username}
