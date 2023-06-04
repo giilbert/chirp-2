@@ -1,5 +1,6 @@
 import { ChirpsList } from "@/components/chirp/list";
 import { Layout } from "@/components/layout";
+import { Authed } from "@/components/layout/authed";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
@@ -15,61 +16,64 @@ import moment from "moment";
 import type { GetStaticPaths, GetStaticProps } from "next";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 
 const UserProfilePage: React.FC = () => {
   const router = useRouter();
   const session = useSession();
+  const { toast } = useToast();
+  const [selectedTab, setSelectedTab] = useState("chirps");
+
   const follow = api.user.followUser.useMutation();
   const unfollow = api.user.unfollowUser.useMutation();
+
   const userProfileQuery = api.user.getUserProfileByTag.useQuery(
     { tag: router.query.tag as string },
     { enabled: !!router.query.tag }
   );
+
+  const userId = userProfileQuery.data?.userId || "";
+  const enabled = userProfileQuery.isSuccess;
   const recentChirpsQuery = api.chirp.getInfiniteFromUser.useInfiniteQuery(
+    { userId, filter: "chirps" },
     {
-      userId: userProfileQuery.data?.userId || "",
-      filter: "chirps",
-    },
-    {
-      enabled: !!userProfileQuery.data,
+      enabled: enabled && selectedTab === "chirps",
+      refetchOnWindowFocus: false,
       getNextPageParam: (lastPage) => lastPage.nextCursor,
     }
   );
   const recentReplyingChirpsQuery =
     api.chirp.getInfiniteFromUser.useInfiniteQuery(
+      { userId, filter: "replies" },
       {
-        userId: userProfileQuery.data?.userId || "",
-        filter: "replies",
-      },
-      {
-        enabled: !!userProfileQuery.data,
+        enabled: enabled && selectedTab === "replies",
+        refetchOnWindowFocus: false,
         getNextPageParam: (lastPage) => lastPage.nextCursor,
       }
     );
   const recentMediaChirpsQuery = api.chirp.getInfiniteFromUser.useInfiniteQuery(
+    { userId, filter: "media" },
     {
-      userId: userProfileQuery.data?.userId || "",
-      filter: "media",
-    },
-    {
-      enabled: !!userProfileQuery.data,
+      enabled: enabled && selectedTab === "media",
+      refetchOnWindowFocus: false,
       getNextPageParam: (lastPage) => lastPage.nextCursor,
     }
   );
-  const { toast } = useToast();
 
-  const allChirps = useMemo(() => {
-    return recentChirpsQuery.data?.pages.flatMap((p) => p.chirps);
-  }, [recentChirpsQuery.data?.pages]);
+  const allChirps = useMemo(
+    () => recentChirpsQuery.data?.pages.flatMap((p) => p.chirps),
+    [recentChirpsQuery.data?.pages]
+  );
 
-  const allReplies = useMemo(() => {
-    return recentReplyingChirpsQuery.data?.pages.flatMap((p) => p.chirps);
-  }, [recentReplyingChirpsQuery.data?.pages]);
+  const allReplies = useMemo(
+    () => recentReplyingChirpsQuery.data?.pages.flatMap((p) => p.chirps),
+    [recentReplyingChirpsQuery.data?.pages]
+  );
 
-  const allMediaChirps = useMemo(() => {
-    return recentMediaChirpsQuery.data?.pages.flatMap((p) => p.chirps);
-  }, [recentMediaChirpsQuery.data?.pages]);
+  const allMediaChirps = useMemo(
+    () => recentMediaChirpsQuery.data?.pages.flatMap((p) => p.chirps),
+    [recentMediaChirpsQuery.data?.pages]
+  );
 
   const profile = userProfileQuery.data;
   const isMe = profile?.userId === session.data?.user.id;
@@ -105,7 +109,12 @@ const UserProfilePage: React.FC = () => {
       {userProfileQuery.status === "error" && <p>TODO: error</p>}
 
       {userProfileQuery.status === "success" && profile && (
-        <Tabs defaultValue="chirps">
+        <Tabs
+          defaultValue="chirps"
+          onValueChange={(value) => {
+            setSelectedTab(value);
+          }}
+        >
           <header className="border-b pb-4">
             <AspectRatio ratio={4 / 1} className="-z-10 w-full">
               <div className="h-full w-full bg-secondary-foreground/10"></div>
@@ -122,51 +131,55 @@ const UserProfilePage: React.FC = () => {
             </Avatar>
 
             {!isMe && (
-              <div className="-mt-20 flex w-full pr-4 lg:-mt-36 lg:mb-10">
-                {profile.followers.length === 0 ? (
-                  <Button
-                    className="ml-auto"
-                    size="sm"
-                    isLoading={follow.isLoading || userProfileQuery.isLoading}
-                    onClick={() => {
-                      follow
-                        .mutateAsync({ userId: profile.userId })
-                        .then(async () => {
-                          await userProfileQuery.refetch();
+              <div className="-mt-20 flex h-10 w-full pr-4 lg:-mt-36 lg:mb-10">
+                <Authed>
+                  {profile.followers.length === 0 ? (
+                    <Button
+                      className="ml-auto"
+                      size="sm"
+                      isLoading={follow.isLoading || userProfileQuery.isLoading}
+                      onClick={() => {
+                        follow
+                          .mutateAsync({ userId: profile.userId })
+                          .then(async () => {
+                            await userProfileQuery.refetch();
 
-                          toast({
-                            title: "Followed!",
-                            description: `You are now following ${profile.displayName}`,
-                          });
-                        })
-                        .catch(console.error);
-                    }}
-                  >
-                    Follow
-                  </Button>
-                ) : (
-                  <Button
-                    className="ml-auto"
-                    size="sm"
-                    variant="secondary"
-                    isLoading={unfollow.isLoading || userProfileQuery.isLoading}
-                    onClick={() => {
-                      unfollow
-                        .mutateAsync({ userId: profile.userId })
-                        .then(async () => {
-                          await userProfileQuery.refetch();
+                            toast({
+                              title: "Followed!",
+                              description: `You are now following ${profile.displayName}`,
+                            });
+                          })
+                          .catch(console.error);
+                      }}
+                    >
+                      Follow
+                    </Button>
+                  ) : (
+                    <Button
+                      className="ml-auto"
+                      size="sm"
+                      variant="secondary"
+                      isLoading={
+                        unfollow.isLoading || userProfileQuery.isLoading
+                      }
+                      onClick={() => {
+                        unfollow
+                          .mutateAsync({ userId: profile.userId })
+                          .then(async () => {
+                            await userProfileQuery.refetch();
 
-                          toast({
-                            title: "Unfollowed!",
-                            description: `You are no longer following ${profile.displayName}`,
-                          });
-                        })
-                        .catch(console.error);
-                    }}
-                  >
-                    Unfollow
-                  </Button>
-                )}
+                            toast({
+                              title: "Unfollowed!",
+                              description: `You are no longer following ${profile.displayName}`,
+                            });
+                          })
+                          .catch(console.error);
+                      }}
+                    >
+                      Unfollow
+                    </Button>
+                  )}
+                </Authed>
               </div>
             )}
 

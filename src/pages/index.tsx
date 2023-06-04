@@ -8,8 +8,10 @@ import { api } from "@/utils/api";
 import { useMemo } from "react";
 import { OnBottom } from "@/components/ui/on-bottom";
 import { ChirpSkeleton } from "@/components/chirp/skeleton";
+import { useSession } from "next-auth/react";
 
 const Home: NextPage = () => {
+  const session = useSession();
   const recentChirpsQuery = api.chirp.getInfinite.useInfiniteQuery(
     {},
     { getNextPageParam: (lastPage) => lastPage.nextCursor }
@@ -17,7 +19,10 @@ const Home: NextPage = () => {
   const recentFollowingChirpsQuery =
     api.chirp.getInfiniteFollowing.useInfiniteQuery(
       {},
-      { getNextPageParam: (lastPage) => lastPage.nextCursor }
+      {
+        getNextPageParam: (lastPage) => lastPage.nextCursor,
+        enabled: session.status === "authenticated",
+      }
     );
 
   const allChirps = useMemo(() => {
@@ -33,14 +38,17 @@ const Home: NextPage = () => {
       <Tabs defaultValue="recent">
         <header className="sticky top-0 z-10 border-b bg-background/80 p-4 backdrop-blur-sm 2xl:pt-8">
           <h1 className="text-2xl font-bold">Home</h1>
-          <TabsList className="mt-4 w-full">
-            <TabsTrigger value="recent" className="w-full">
-              Recent
-            </TabsTrigger>
-            <TabsTrigger value="following" className="w-full">
-              Following
-            </TabsTrigger>
-          </TabsList>
+
+          <Authed>
+            <TabsList className="mt-4 w-full">
+              <TabsTrigger value="recent" className="w-full">
+                Recent
+              </TabsTrigger>
+              <TabsTrigger value="following" className="w-full">
+                Following
+              </TabsTrigger>
+            </TabsList>
+          </Authed>
         </header>
 
         <main>
