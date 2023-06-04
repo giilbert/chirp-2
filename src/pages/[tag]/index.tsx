@@ -1,10 +1,21 @@
 import { ChirpsList } from "@/components/chirp/list";
 import { Layout } from "@/components/layout";
+import { Authed } from "@/components/layout/authed";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { OnBottom } from "@/components/ui/on-bottom";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { UserEditProfileForm } from "@/components/user/edit-profile-form";
+import { useToast } from "@/lib/use-toast";
 import { cn } from "@/lib/utils";
 import { api } from "@/utils/api";
 import { createSsgHelpers } from "@/utils/ssg-helpers";
@@ -14,60 +25,74 @@ import moment from "moment";
 import type { GetStaticPaths, GetStaticProps } from "next";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 
 const UserProfilePage: React.FC = () => {
   const router = useRouter();
   const session = useSession();
+  const { toast } = useToast();
+  const [selectedTab, setSelectedTab] = useState("chirps");
+  const [editProfileDialogOpen, setEditProfileDialogOpen] = useState(false);
+
   const follow = api.user.followUser.useMutation();
   const unfollow = api.user.unfollowUser.useMutation();
+
   const userProfileQuery = api.user.getUserProfileByTag.useQuery(
     { tag: router.query.tag as string },
     { enabled: !!router.query.tag }
   );
+
+  const userId = userProfileQuery.data?.userId || "";
+  const enabled = userProfileQuery.isSuccess;
   const recentChirpsQuery = api.chirp.getInfiniteFromUser.useInfiniteQuery(
+    { userId, filter: "chirps" },
     {
-      userId: userProfileQuery.data?.userId || "",
-      filter: "chirps",
-    },
-    {
-      enabled: !!userProfileQuery.data,
+      enabled: enabled && selectedTab === "chirps",
       getNextPageParam: (lastPage) => lastPage.nextCursor,
     }
   );
   const recentReplyingChirpsQuery =
     api.chirp.getInfiniteFromUser.useInfiniteQuery(
+      { userId, filter: "replies" },
       {
-        userId: userProfileQuery.data?.userId || "",
-        filter: "replies",
-      },
-      {
-        enabled: !!userProfileQuery.data,
+        enabled: enabled && selectedTab === "replies",
         getNextPageParam: (lastPage) => lastPage.nextCursor,
       }
     );
   const recentMediaChirpsQuery = api.chirp.getInfiniteFromUser.useInfiniteQuery(
+    { userId, filter: "media" },
     {
-      userId: userProfileQuery.data?.userId || "",
-      filter: "media",
-    },
+      enabled: enabled && selectedTab === "media",
+      getNextPageParam: (lastPage) => lastPage.nextCursor,
+    }
+  );
+  const recentLikedChirpsQuery = api.chirp.getInfiniteFromUser.useInfiniteQuery(
+    { userId, filter: "likes" },
     {
-      enabled: !!userProfileQuery.data,
+      enabled: enabled && selectedTab === "likes",
       getNextPageParam: (lastPage) => lastPage.nextCursor,
     }
   );
 
-  const allChirps = useMemo(() => {
-    return recentChirpsQuery.data?.pages.flatMap((p) => p.chirps);
-  }, [recentChirpsQuery.data?.pages]);
+  const allChirps = useMemo(
+    () => recentChirpsQuery.data?.pages.flatMap((p) => p.chirps),
+    [recentChirpsQuery.data?.pages]
+  );
 
-  const allReplies = useMemo(() => {
-    return recentReplyingChirpsQuery.data?.pages.flatMap((p) => p.chirps);
-  }, [recentReplyingChirpsQuery.data?.pages]);
+  const allReplies = useMemo(
+    () => recentReplyingChirpsQuery.data?.pages.flatMap((p) => p.chirps),
+    [recentReplyingChirpsQuery.data?.pages]
+  );
 
-  const allMediaChirps = useMemo(() => {
-    return recentMediaChirpsQuery.data?.pages.flatMap((p) => p.chirps);
-  }, [recentMediaChirpsQuery.data?.pages]);
+  const allMediaChirps = useMemo(
+    () => recentMediaChirpsQuery.data?.pages.flatMap((p) => p.chirps),
+    [recentMediaChirpsQuery.data?.pages]
+  );
+
+  const allLikedChirps = useMemo(
+    () => recentLikedChirpsQuery.data?.pages.flatMap((p) => p.chirps),
+    [recentLikedChirpsQuery.data?.pages]
+  );
 
   const profile = userProfileQuery.data;
   const isMe = profile?.userId === session.data?.user.id;
@@ -98,15 +123,57 @@ const UserProfilePage: React.FC = () => {
             </p>
           </div>
         )}
+
+        {isMe && (
+          <Dialog
+            open={editProfileDialogOpen}
+            onOpenChange={setEditProfileDialogOpen}
+          >
+            <DialogTrigger asChild>
+              <Button className="ml-auto h-min w-32">Edit</Button>
+            </DialogTrigger>
+
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>Edit Profile</DialogTitle>
+                <DialogDescription>
+                  Make changes to your profile here. Click save when you&apos;re
+                  done.
+                </DialogDescription>
+              </DialogHeader>
+
+              {profile && (
+                <UserEditProfileForm
+                  profile={profile}
+                  setOpen={setEditProfileDialogOpen}
+                />
+              )}
+            </DialogContent>
+          </Dialog>
+        )}
       </div>
 
       {userProfileQuery.status === "error" && <p>TODO: error</p>}
 
       {userProfileQuery.status === "success" && profile && (
-        <Tabs defaultValue="chirps">
+        <Tabs
+          defaultValue="chirps"
+          onValueChange={(value) => {
+            setSelectedTab(value);
+          }}
+        >
           <header className="border-b pb-4">
             <AspectRatio ratio={4 / 1} className="-z-10 w-full">
-              <div className="h-full w-full bg-secondary-foreground/10"></div>
+              <div className="h-full w-full bg-secondary-foreground/10">
+                {profile.headerUrl && (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img
+                    className="h-full w-full"
+                    src={profile.headerUrl}
+                    alt=""
+                  />
+                )}
+              </div>
             </AspectRatio>
 
             <Avatar className="relative -top-12 left-4 h-24 w-24 rounded-full ring-4 ring-background lg:-top-20 lg:h-40 lg:w-40">
@@ -120,47 +187,62 @@ const UserProfilePage: React.FC = () => {
             </Avatar>
 
             {!isMe && (
-              <div className="-mt-20 flex w-full pr-4 lg:-mt-36 lg:mb-10">
-                {profile.followers.length === 0 ? (
-                  <Button
-                    className="ml-auto"
-                    size="sm"
-                    isLoading={follow.isLoading || userProfileQuery.isLoading}
-                    onClick={() => {
-                      follow
-                        .mutateAsync({ userId: profile.userId })
-                        .then(async () => {
-                          await userProfileQuery.refetch();
-                        })
-                        .catch(console.error);
-                    }}
-                  >
-                    Follow
-                  </Button>
-                ) : (
-                  <Button
-                    className="ml-auto"
-                    size="sm"
-                    variant="secondary"
-                    isLoading={unfollow.isLoading || userProfileQuery.isLoading}
-                    onClick={() => {
-                      unfollow
-                        .mutateAsync({ userId: profile.userId })
-                        .then(async () => {
-                          await userProfileQuery.refetch();
-                        })
-                        .catch(console.error);
-                    }}
-                  >
-                    Unfollow
-                  </Button>
-                )}
+              <div className="-mt-20 flex h-10 w-full pr-4 lg:-mt-36 lg:mb-10">
+                <Authed>
+                  {profile.followers.length === 0 ? (
+                    <Button
+                      className="ml-auto"
+                      size="sm"
+                      isLoading={follow.isLoading || userProfileQuery.isLoading}
+                      onClick={() => {
+                        follow
+                          .mutateAsync({ userId: profile.userId })
+                          .then(async () => {
+                            await userProfileQuery.refetch();
+
+                            toast({
+                              title: "Followed!",
+                              description: `You are now following ${profile.displayName}`,
+                            });
+                          })
+                          .catch(console.error);
+                      }}
+                    >
+                      Follow
+                    </Button>
+                  ) : (
+                    <Button
+                      className="ml-auto"
+                      size="sm"
+                      variant="secondary"
+                      isLoading={
+                        unfollow.isLoading || userProfileQuery.isLoading
+                      }
+                      onClick={() => {
+                        unfollow
+                          .mutateAsync({ userId: profile.userId })
+                          .then(async () => {
+                            await userProfileQuery.refetch();
+
+                            toast({
+                              title: "Unfollowed!",
+                              description: `You are no longer following ${profile.displayName}`,
+                            });
+                          })
+                          .catch(console.error);
+                      }}
+                    >
+                      Unfollow
+                    </Button>
+                  )}
+                </Authed>
               </div>
             )}
 
-            <div className={cn("m-4", isMe ? "-mt-16" : "mt-0")}>
+            <div className={cn("m-4", isMe ? "-mt-8 lg:-mt-16" : "mt-0")}>
               <h1 className="text-2xl font-bold">{profile.displayName}</h1>
               <p className="text-muted-foreground">@{profile.username}</p>
+              {profile.bio && <p className="mt-2">{profile.bio}</p>}
               <div className="mt-2 flex items-center gap-2 text-muted-foreground">
                 <CalendarIcon size={20} />
                 Joined {moment(profile.createdAt).format("MMM YYYY")}
@@ -239,6 +321,20 @@ const UserProfilePage: React.FC = () => {
                   }}
                 >
                   <ChirpsList chirps={allMediaChirps} />
+                </OnBottom>
+              )}
+            </TabsContent>
+
+            <TabsContent value="likes" className="mt-0">
+              {allLikedChirps && (
+                <OnBottom
+                  onBottom={() => {
+                    if (recentLikedChirpsQuery.hasNextPage) {
+                      recentLikedChirpsQuery.fetchNextPage().catch(() => 0);
+                    }
+                  }}
+                >
+                  <ChirpsList chirps={allLikedChirps} />
                 </OnBottom>
               )}
             </TabsContent>

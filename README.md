@@ -4,7 +4,6 @@
 ![React](https://img.shields.io/badge/react-%2320232a.svg?style=for-the-badge&logo=react&logoColor=%2361DAFB)
 ![TypeScript](https://img.shields.io/badge/typescript-%23007ACC.svg?style=for-the-badge&logo=typescript&logoColor=white)
 ![Prisma](https://img.shields.io/badge/Prisma-3982CE?style=for-the-badge&logo=Prisma&logoColor=white)
-![Redis](https://img.shields.io/badge/redis-%23DD0031.svg?style=for-the-badge&logo=redis&logoColor=white)
 ![TailwindCSS](https://img.shields.io/badge/tailwindcss-%2338B2AC.svg?style=for-the-badge&logo=tailwind-css&logoColor=white)
 
 ### [🦆 Visit Here!](https://example.com)
@@ -18,8 +17,8 @@ Twitter clone built with dark magic and ran by ducks.
 - [x] User authentication and profiles
 - [x] Follow and unfollow users
 - [x] View posts from followed users
+- [x] Search for users and posts
 - [ ] ✨ Recommendation algorithm 💰
-- [ ] Search for users and posts
 - [ ] Notifications
 - [ ] Direct messages
 - [ ] User analytics
@@ -31,7 +30,6 @@ Twitter clone built with dark magic and ran by ducks.
 - [Prisma](https://www.prisma.io/) - Database without the tears 😭
 - [tRPC](https://trpc.io/) - Typescript RPC framework 🦉
 - [Tailwind CSS](https://tailwindcss.com/) - CSS framework 🎨
-- [Redis](https://redis.io/) - In-memory data structure store 🗄️
 - [MySQL](https://www.mysql.com/) - Database 🗃️
 
 ## Hosted on
@@ -59,7 +57,7 @@ Required tools (these are my versions, the app may or may not work on other vers
 
 1. Create a `.env.local` file with the appropriate environment variables (see `.env.example`)
 2. Install dependencies: `yarn`
-3. Start redis and MySQL service: `docker compose up`
+3. Start MySQL service: `docker compose up`
 4. Set up the database: `yarn prisma db push`
 5. Start the app: `yarn dev`
 6. If everything went right, you should be able to access the app at `http://localhost:3000`

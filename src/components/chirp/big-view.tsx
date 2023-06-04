@@ -1,7 +1,7 @@
 import moment from "moment";
 import Link from "next/link";
 import {
-  BookmarkIcon,
+  // BookmarkIcon,
   MessageCircleIcon,
   RepeatIcon,
   ReplyIcon,
@@ -22,10 +22,15 @@ import { ChirpMediaDisplay } from "./media-display";
 import { Authed } from "../layout/authed";
 import { ChirpRepostOptions } from "./repost-options";
 import { useSession } from "next-auth/react";
+import { ChirpRichText } from "./rich-text";
+import { useToast } from "@/lib/use-toast";
+import { useCopyToClipboard } from "@/lib/use-copy-to-clipboard";
 
 export const ChirpBigView: React.FC<{
   chirp: EverythingChirp | EverythingChirpWithoutNesting;
 }> = ({ chirp }) => {
+  const { toast } = useToast();
+  const [, copy] = useCopyToClipboard();
   const session = useSession();
   const replyTextareaRef = createRef<HTMLTextAreaElement>();
   const [likes, setLikes] = useState(chirp._count.likes);
@@ -98,7 +103,7 @@ export const ChirpBigView: React.FC<{
         </div>
       </div>
       <div className="mt-6">
-        <p>{chirp.body}</p>
+        <ChirpRichText body={chirp.body} />
 
         <div className="mt-2">
           <ChirpMediaDisplay media={chirp.media} />
@@ -119,10 +124,12 @@ export const ChirpBigView: React.FC<{
             <span className="mr-1 font-bold">{likes}</span>
             <span className="text-muted-foreground">Likes</span>
           </p>
+          {/*
           <p>
             <span className="mr-1 font-bold">0</span>
             <span className="text-muted-foreground">Bookmarks</span>
           </p>
+          */}
         </div>
 
         <div className="mb-4 mt-4 flex flex-wrap justify-around border-y py-2 md:gap-8">
@@ -152,11 +159,33 @@ export const ChirpBigView: React.FC<{
             hasLiked={chirp.likes.length !== 0}
           />
 
+          {/*
           <div className="flex h-12 w-12 cursor-pointer items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-purple-600/10 hover:text-purple-500">
             <BookmarkIcon size={20} className="transition-colors" />
           </div>
+          */}
 
-          <div className="flex h-12 w-12 cursor-pointer items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-purple-600/10 hover:text-purple-500">
+          <div
+            className="flex h-12 w-12 cursor-pointer items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-purple-600/10 hover:text-purple-500"
+            onClick={() => {
+              copy(
+                `${window.location.origin}/${chirp.author.username}/${chirp.id}`
+              )
+                .then(() => {
+                  toast({
+                    title: "Link copied to clipboard!",
+                    description: "You can now paste the link anywhere.",
+                  });
+                })
+                .catch((e) => {
+                  console.error(e);
+                  toast({
+                    title: "Failed to copy link to clipboard.",
+                    variant: "destructive",
+                  });
+                });
+            }}
+          >
             <ShareIcon size={20} className="transition-colors" />
           </div>
         </div>

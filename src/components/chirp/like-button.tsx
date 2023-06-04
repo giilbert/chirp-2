@@ -1,3 +1,4 @@
+import { useToast } from "@/lib/use-toast";
 import { api } from "@/utils/api";
 import { useAnimate } from "framer-motion";
 import { HeartIcon } from "lucide-react";
@@ -11,9 +12,26 @@ export const LikeButton: React.FC<{
   likes: number;
   hasLiked: boolean;
 }> = ({ chirpId, numbered, setLikes, likes, hasLiked }) => {
+  const { toast } = useToast();
   const { status: sessionStatus } = useSession();
-  const likeChirp = api.chirp.likeChirp.useMutation();
-  const unlikeChirp = api.chirp.unlikeChirp.useMutation();
+  const likeChirp = api.chirp.likeChirp.useMutation({
+    onError() {
+      toast({
+        title: "Error",
+        description: "There was an error liking this chirp.",
+        variant: "destructive",
+      });
+    },
+  });
+  const unlikeChirp = api.chirp.unlikeChirp.useMutation({
+    onError() {
+      toast({
+        title: "Error",
+        description: "There was an error unliking this chirp.",
+        variant: "destructive",
+      });
+    },
+  });
   const [scope, animate] = useAnimate();
   const [liked, setLiked] = useState(hasLiked);
 

@@ -9,12 +9,15 @@ import type { EverythingChirpWithoutNesting } from "@/server/api/routers/chirp";
 import { api } from "@/utils/api";
 import { useState } from "react";
 import { useSession } from "next-auth/react";
+import { useToast } from "@/lib/use-toast";
+import { Authed } from "../layout/authed";
 
 export const ChirpProfileCard: React.FC<
   React.PropsWithChildren<{
     chirp: EverythingChirpWithoutNesting;
   }>
 > = ({ chirp, children }) => {
+  const { toast } = useToast();
   const trpcContext = api.useContext();
   const followUser = api.user.followUser.useMutation();
   const unfollowUser = api.user.unfollowUser.useMutation();
@@ -39,66 +42,77 @@ export const ChirpProfileCard: React.FC<
             displayName={author.displayName}
             image={author.user.image}
           />
-          {session?.user?.id !== author.userId && (
-            <>
-              {hasFollowed ? (
-                <Button
-                  size="sm"
-                  variant="secondary"
-                  className="ml-auto"
-                  isLoading={unfollowUser.isLoading}
-                  onClick={(e) => {
-                    e.preventDefault();
-                    e.stopPropagation();
+          <Authed>
+            {session?.user?.id !== author.userId && (
+              <>
+                {hasFollowed ? (
+                  <Button
+                    size="sm"
+                    variant="secondary"
+                    className="ml-auto"
+                    isLoading={unfollowUser.isLoading}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
 
-                    unfollowUser
-                      .mutateAsync({
-                        userId: author.userId,
-                      })
-                      .then(async () => {
-                        // TODO: toast
-                        setHasFollowed(false);
-                        setNumFollowers(numFollowers - 1);
+                      unfollowUser
+                        .mutateAsync({
+                          userId: author.userId,
+                        })
+                        .then(async () => {
+                          toast({
+                            title: "Unfollowed!",
+                            description: `You are no longer following ${author.displayName}`,
+                          });
+                          setHasFollowed(false);
+                          setNumFollowers(numFollowers - 1);
 
-                        await trpcContext.user.getUserProfileByTag.invalidate();
-                      })
-                      .catch(console.error);
-                  }}
-                >
-                  Unfollow
-                </Button>
-              ) : (
-                <Button
-                  size="sm"
-                  className="ml-auto"
-                  isLoading={followUser.isLoading}
-                  onClick={(e) => {
-                    e.preventDefault();
-                    e.stopPropagation();
+                          await trpcContext.user.getUserProfileByTag.invalidate();
+                        })
+                        .catch(console.error);
+                    }}
+                  >
+                    Unfollow
+                  </Button>
+                ) : (
+                  <Button
+                    size="sm"
+                    className="ml-auto"
+                    isLoading={followUser.isLoading}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
 
-                    followUser
-                      .mutateAsync({
-                        userId: author.userId,
-                      })
-                      .then(async () => {
-                        // TODO: toast
-                        setHasFollowed(true);
-                        setNumFollowers(numFollowers + 1);
+                      followUser
+                        .mutateAsync({
+                          userId: author.userId,
+                        })
+                        .then(async () => {
+                          toast({
+                            title: "Followed!",
+                            description: `You are now following ${author.displayName}`,
+                          });
 
-                        await trpcContext.user.getUserProfileByTag.invalidate();
-                      })
-                      .catch(console.error);
-                  }}
-                >
-                  Follow
-                </Button>
-              )}
-            </>
-          )}
+                          setHasFollowed(true);
+                          setNumFollowers(numFollowers + 1);
+
+                          await trpcContext.user.getUserProfileByTag.invalidate();
+                        })
+                        .catch(console.error);
+                    }}
+                  >
+                    Follow
+                  </Button>
+                )}
+              </>
+            )}
+          </Authed>
         </div>
 
         <p className="mt-2">{author.displayName}</p>
         <p className="text-muted-foreground">@{author.username}</p>
+
+        <p>{author.bio}</p>
 
         <div className="mt-2 flex gap-4">
           <p>

@@ -1,4 +1,4 @@
-import { PencilIcon, RepeatIcon } from "lucide-react";
+import { RepeatIcon } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -7,14 +7,30 @@ import {
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
 import { api } from "@/utils/api";
-import { EverythingChirpWithoutNesting } from "@/server/api/routers/chirp";
+import type { EverythingChirpWithoutNesting } from "@/server/api/routers/chirp";
+import { useToast } from "@/lib/use-toast";
 
 export const ChirpRepostOptions: React.FC<{
   children: React.ReactNode;
   disabled?: boolean;
   chirp: EverythingChirpWithoutNesting;
 }> = ({ children, disabled, chirp }) => {
-  const rechirp = api.chirp.rechirp.useMutation();
+  const { toast } = useToast();
+  const rechirp = api.chirp.rechirp.useMutation({
+    onSuccess() {
+      toast({
+        title: "Rechirped!",
+        description: "Your rechirp has been posted.",
+      });
+    },
+    onError() {
+      toast({
+        title: "Error",
+        description: "There was an error rechirping this chirp.",
+        variant: "destructive",
+      });
+    },
+  });
   // const quote = api.chirp.quote.useMutation();
 
   return (
@@ -32,17 +48,12 @@ export const ChirpRepostOptions: React.FC<{
               .mutateAsync({
                 chirpId: chirp.id,
               })
-              .then(() => {
-                // TODO: toast
-                console.log("chirp rechirped");
-              })
               .catch(console.error);
           }}
         >
           <RepeatIcon size={16} className="mr-2" />
           Rechirp
         </DropdownMenuItem>
-        <p className="m-2 text-sm">More coming soon!</p>
       </DropdownMenuContent>
     </DropdownMenu>
   );

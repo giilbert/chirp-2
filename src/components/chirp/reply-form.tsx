@@ -11,36 +11,55 @@ import { useSession } from "next-auth/react";
 import { ChirpMediaUpload } from "./media-upload";
 import { FileImageIcon } from "lucide-react";
 import { uploadFiles } from "@/utils/uploadthing-helpers";
+import { useToast } from "@/lib/use-toast";
 
 export const CreateReplyForm = forwardRef<
   HTMLTextAreaElement,
   {
     replyingToId: string;
     enlarged?: boolean;
+    close?: () => void;
   }
->(({ replyingToId, enlarged = false }, ref) => {
+>(({ replyingToId, enlarged = false, close }, ref) => {
+  const { toast } = useToast();
   const session = useSession();
   const [files, setFiles] = useState<{ file: File; url: string }[]>([]);
+  const [loading, setLoading] = useState(false);
   const trpcContext = api.useContext();
   const form = useZodForm({ schema: createChirpSchema });
   const createChirp = api.chirp.create.useMutation();
 
   const onSubmit = useCallback(
     async (values: z.infer<typeof createChirpSchema>) => {
+      setLoading(true);
       await createChirp.mutateAsync({
         replyingToId,
         ...values,
       });
-      await uploadFiles(
-        files.map((f) => f.file),
-        "chirpAddMedia"
-      );
+      if (files.length > 0)
+        await uploadFiles(
+          files.map((f) => f.file),
+          "chirpAddMedia"
+        );
       form.reset();
       files.forEach(({ url }) => URL.revokeObjectURL(url));
       setFiles([]);
       await trpcContext.chirp.getInfinite.invalidate();
+      setLoading(false);
+      toast({
+        title: "Replied made!",
+      });
+      close?.();
     },
-    [createChirp, form, trpcContext.chirp.getInfinite, replyingToId, files]
+    [
+      createChirp,
+      form,
+      trpcContext.chirp.getInfinite,
+      replyingToId,
+      files,
+      close,
+      toast,
+    ]
   );
 
   return (
@@ -63,7 +82,7 @@ export const CreateReplyForm = forwardRef<
 
         <div className="group ml-4 h-full w-full">
           <textarea
-            disabled={createChirp.isLoading}
+            disabled={loading}
             placeholder="Chirp your reply!"
             className={cn(
               "mt-4 h-full w-full resize-none overflow-visible border-b bg-background pb-4 text-xl outline-none transition-colors group-focus-within:border-b-purple-600",
@@ -90,7 +109,7 @@ export const CreateReplyForm = forwardRef<
               className="ml-auto w-24"
               size="sm"
               type="submit"
-              isLoading={createChirp.isLoading}
+              isLoading={loading}
             >
               Chirp
             </Button>

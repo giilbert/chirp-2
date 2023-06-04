@@ -10,6 +10,9 @@ import { CreateChirpDialog } from "./dialog";
 import { ChirpMediaDisplay } from "./media-display";
 import { useSession } from "next-auth/react";
 import { ChirpRepostOptions } from "./repost-options";
+import { ChirpRichText } from "./rich-text";
+import { useCopyToClipboard } from "@/lib/use-copy-to-clipboard";
+import { useToast } from "@/lib/use-toast";
 
 const betterFormatDate = (date: Date) => {
   const dateMoment = moment(date);
@@ -40,6 +43,8 @@ export const ChirpCard: React.FC<{
   chirp: EverythingChirpWithoutNesting;
   showActions?: boolean;
 }> = ({ chirp, showActions = true }) => {
+  const { toast } = useToast();
+  const [, copy] = useCopyToClipboard();
   const session = useSession();
   const [likes, setLikes] = useState(chirp._count.likes);
 
@@ -80,7 +85,9 @@ export const ChirpCard: React.FC<{
           <p>{betterFormatDate(chirp.createdAt)}</p>
         </div>
 
-        <p className="break-all">{chirp.body}</p>
+        <div className="w-full">
+          <ChirpRichText body={chirp.body} />
+        </div>
 
         {chirp.media.length > 0 && (
           <div className="mt-2">
@@ -123,7 +130,27 @@ export const ChirpCard: React.FC<{
               hasLiked={chirp.likes.length !== 0}
             />
 
-            <div className="group flex cursor-pointer items-center gap-1 transition-colors hover:text-purple-500">
+            <div
+              className="group flex cursor-pointer items-center gap-1 transition-colors hover:text-purple-500"
+              onClick={() => {
+                copy(
+                  `${window.location.origin}/${chirp.author.username}/${chirp.id}`
+                )
+                  .then(() => {
+                    toast({
+                      title: "Link copied to clipboard!",
+                      description: "You can now paste the link anywhere.",
+                    });
+                  })
+                  .catch((e) => {
+                    console.error(e);
+                    toast({
+                      title: "Failed to copy link to clipboard.",
+                      variant: "destructive",
+                    });
+                  });
+              }}
+            >
               <div className="flex h-10 w-10 items-center justify-center rounded-full transition-colors group-hover:bg-purple-600/10">
                 <ShareIcon size={18} className="transition-colors" />
               </div>

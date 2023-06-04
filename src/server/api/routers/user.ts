@@ -1,8 +1,11 @@
-import { completeSignUpSchema } from "@/lib/schemas/user";
+import { completeSignUpSchema, editProfileSchema } from "@/lib/schemas/user";
 import { TRPCError } from "@trpc/server";
 import { createTRPCRouter, protectedProcedure, publicProcedure } from "../trpc";
 import { z } from "zod";
-import { Prisma, Profile } from "@prisma/client";
+import { Prisma, type Profile } from "@prisma/client";
+import type { RouterOutputs } from "@/utils/api";
+
+export type EverythingUser = RouterOutputs["user"]["getUserProfileByTag"];
 
 export const createProfileInclude = (userId?: string) =>
   Prisma.validator<Prisma.ProfileInclude>()({
@@ -130,5 +133,63 @@ export const userRouter = createTRPCRouter({
           },
         },
       });
+    }),
+
+  editProfile: protectedProcedure
+    .input(editProfileSchema)
+    .mutation(async ({ input, ctx }) => {
+      await ctx.prisma.profile.update({
+        where: { userId: ctx.session.user.id },
+        data: {
+          displayName: input.displayName,
+          bio: input.bio,
+        },
+      });
+    }),
+
+  searchInfinite: publicProcedure
+    .input(
+      z.object({
+        query: z.string(),
+        cursor: z.string().nullish(),
+      })
+    )
+    .query(async ({ ctx, input }) => {
+      const TAKE = 10;
+
+      const profiles = await ctx.prisma.profile.findMany({
+        where: {
+          displayName: { search: input.query },
+          username: { search: input.query },
+          bio: { search: input.query },
+        },
+        take: TAKE + 1,
+        orderBy: {
+          _relevance: {
+            sort: "desc",
+            fields: ["displayName", "username", "bio"],
+            search: input.query,
+          },
+        },
+        include: createProfileInclude(ctx.session?.user.id),
+        cursor: input.cursor ? { userId: input.cursor } : undefined,
+      });
+
+      let nextCursor: typeof input.cursor | undefined = undefined;
+      if (profiles.length > TAKE) {
+        const nextItem = profiles.pop();
+        // This will never be null due to the length check
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        nextCursor = nextItem!.userId;
+      }
+
+      for (const profile of profiles) {
+        fixFollowers(profile);
+      }
+
+      return {
+        profiles,
+        nextCursor,
+      };
     }),
 });

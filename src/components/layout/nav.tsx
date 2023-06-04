@@ -7,6 +7,7 @@ import {
   // ListIcon,
   MoreHorizontalIcon,
   PenToolIcon,
+  SearchIcon,
   // TicketIcon,
   UserCircle,
 } from "lucide-react";
@@ -53,6 +54,11 @@ export const Nav: React.FC = () => {
     //   Icon: TicketIcon,
     // },
     {
+      name: "Search",
+      href: "/search",
+      Icon: SearchIcon,
+    },
+    status === "authenticated" && {
       name: "Profile",
       href: "/" + (session?.user.profile?.username ?? ""),
       Icon: UserCircle,
@@ -63,20 +69,25 @@ export const Nav: React.FC = () => {
     <nav className="col-span-1 flex h-screen w-[54px] flex-col items-start border-r pt-4 lg:w-full 2xl:pt-8">
       <div>
         <div className="ml-3.5 mt-1 h-[32px] w-[32px] text-3xl font-extrabold lg:ml-8">
-          <Logo />
+          <Link href="/">
+            <Logo />
+          </Link>
         </div>
 
         <div className="mx-1 mt-4 flex flex-col gap-1 lg:mx-4">
-          {links.map(({ name, href, Icon }) => (
-            <Link
-              href={href}
-              key={name}
-              className="flex w-min items-center gap-4 whitespace-nowrap rounded-full p-3 text-2xl transition-colors hover:bg-gray-700/20 lg:py-3 lg:pl-4 lg:pr-6"
-            >
-              <Icon />
-              <span className="hidden lg:block">{name}</span>
-            </Link>
-          ))}
+          {links.map(
+            (item) =>
+              item && (
+                <Link
+                  href={item.href}
+                  key={item.name}
+                  className="flex w-min items-center gap-4 whitespace-nowrap rounded-full p-3 text-2xl transition-colors hover:bg-gray-700/20 lg:py-3 lg:pl-4 lg:pr-6"
+                >
+                  <item.Icon />
+                  <span className="hidden lg:block">{item.name}</span>
+                </Link>
+              )
+          )}
         </div>
       </div>
 
@@ -150,7 +161,9 @@ export const Nav: React.FC = () => {
               </Avatar>
 
               <div>
-                <p className="font-bold">{session.user.name}</p>
+                <p className="font-bold">
+                  {session.user.profile?.displayName || ""}
+                </p>
                 {session.user.profile && (
                   <p className="-mt-1 text-muted-foreground">
                     @{session.user.profile.username}

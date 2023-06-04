@@ -6,6 +6,7 @@ import { api } from "@/utils/api";
 import NextNProgress from "nextjs-progressbar";
 
 import "@/styles/globals.css";
+import { Toaster } from "@/components/ui/toaster";
 
 export const roboto = Roboto({
   weight: ["300", "400", "500", "700"],
@@ -20,6 +21,7 @@ const MyApp: AppType<{ session: Session | null }> = ({
   return (
     <SessionProvider session={session}>
       <NextNProgress color="#6b21a8" />
+      <Toaster />
       <Component {...pageProps} />
     </SessionProvider>
   );
