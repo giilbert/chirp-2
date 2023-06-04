@@ -1,4 +1,4 @@
-import { completeSignUpSchema } from "@/lib/schemas/user";
+import { completeSignUpSchema, editProfileSchema } from "@/lib/schemas/user";
 import { TRPCError } from "@trpc/server";
 import { createTRPCRouter, protectedProcedure, publicProcedure } from "../trpc";
 import { z } from "zod";
@@ -128,6 +128,18 @@ export const userRouter = createTRPCRouter({
               userId: input.userId,
             },
           },
+        },
+      });
+    }),
+
+  editProfile: protectedProcedure
+    .input(editProfileSchema)
+    .mutation(async ({ input, ctx }) => {
+      await ctx.prisma.profile.update({
+        where: { userId: ctx.session.user.id },
+        data: {
+          displayName: input.displayName,
+          bio: input.bio,
         },
       });
     }),

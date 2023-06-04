@@ -2,7 +2,7 @@ import { getServerSession } from "next-auth";
 import { createUploadthing, type FileRouter } from "uploadthing/next-legacy";
 import { authOptions } from "./auth";
 import { prisma } from "./db";
-import type { UploadedFile } from "uploadthing/server";
+import { UploadedFile, utapi } from "uploadthing/server";
 import { MediaType } from "@prisma/client";
 
 const f = createUploadthing();
@@ -45,6 +45,41 @@ export const chirpFileRouter = {
           chirpId: metadata.chirpId,
           mediaType: getMediaType(file),
           mediaUrl: file.url,
+        },
+      });
+    }),
+
+  updateHeaderImage: f({
+    image: {
+      maxFileSize: "1MB",
+      maxFileCount: 1,
+    },
+  })
+    .middleware(async (req, res) => {
+      const session = await getServerSession(req, res, authOptions);
+
+      if (!session) throw new Error("Unauthorized");
+
+      // delete the previous header image
+      const profile = await prisma.profile.findFirst({
+        where: { userId: session.user.id },
+        select: { headerUrl: true },
+      });
+
+      if (profile?.headerUrl) {
+        const lastSegment = profile.headerUrl.split("/").pop();
+        if (lastSegment) await utapi.deleteFiles([lastSegment]);
+      }
+
+      return {
+        user: session.user,
+      };
+    })
+    .onUploadComplete(async ({ metadata, file }) => {
+      await prisma.profile.update({
+        where: { userId: metadata.user.id },
+        data: {
+          headerUrl: file.url,
         },
       });
     }),

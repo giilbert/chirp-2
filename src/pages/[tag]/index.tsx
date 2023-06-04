@@ -1,11 +1,20 @@
 import { ChirpsList } from "@/components/chirp/list";
 import { Layout } from "@/components/layout";
 import { Authed } from "@/components/layout/authed";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/layout/dialog";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { OnBottom } from "@/components/ui/on-bottom";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { UserEditProfileForm } from "@/components/user/edit-profile-form";
 import { useToast } from "@/lib/use-toast";
 import { cn } from "@/lib/utils";
 import { api } from "@/utils/api";
@@ -23,6 +32,7 @@ const UserProfilePage: React.FC = () => {
   const session = useSession();
   const { toast } = useToast();
   const [selectedTab, setSelectedTab] = useState("chirps");
+  const [editProfileDialogOpen, setEditProfileDialogOpen] = useState(false);
 
   const follow = api.user.followUser.useMutation();
   const unfollow = api.user.unfollowUser.useMutation();
@@ -101,6 +111,34 @@ const UserProfilePage: React.FC = () => {
             </p>
           </div>
         )}
+
+        {isMe && (
+          <Dialog
+            open={editProfileDialogOpen}
+            onOpenChange={setEditProfileDialogOpen}
+          >
+            <DialogTrigger asChild>
+              <Button className="ml-auto h-min w-32">Edit</Button>
+            </DialogTrigger>
+
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>Edit Profile</DialogTitle>
+                <DialogDescription>
+                  Make changes to your profile here. Click save when you&apos;re
+                  done.
+                </DialogDescription>
+              </DialogHeader>
+
+              {profile && (
+                <UserEditProfileForm
+                  profile={profile}
+                  setOpen={setEditProfileDialogOpen}
+                />
+              )}
+            </DialogContent>
+          </Dialog>
+        )}
       </div>
 
       {userProfileQuery.status === "error" && <p>TODO: error</p>}
@@ -114,7 +152,16 @@ const UserProfilePage: React.FC = () => {
         >
           <header className="border-b pb-4">
             <AspectRatio ratio={4 / 1} className="-z-10 w-full">
-              <div className="h-full w-full bg-secondary-foreground/10"></div>
+              <div className="h-full w-full bg-secondary-foreground/10">
+                {profile.headerUrl && (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img
+                    className="h-full w-full"
+                    src={profile.headerUrl}
+                    alt=""
+                  />
+                )}
+              </div>
             </AspectRatio>
 
             <Avatar className="relative -top-12 left-4 h-24 w-24 rounded-full ring-4 ring-background lg:-top-20 lg:h-40 lg:w-40">
@@ -180,9 +227,10 @@ const UserProfilePage: React.FC = () => {
               </div>
             )}
 
-            <div className={cn("m-4", isMe ? "-mt-16" : "mt-0")}>
+            <div className={cn("m-4", isMe ? "-mt-8 lg:-mt-16" : "mt-0")}>
               <h1 className="text-2xl font-bold">{profile.displayName}</h1>
               <p className="text-muted-foreground">@{profile.username}</p>
+              {profile.bio && <p className="mt-2">{profile.bio}</p>}
               <div className="mt-2 flex items-center gap-2 text-muted-foreground">
                 <CalendarIcon size={20} />
                 Joined {moment(profile.createdAt).format("MMM YYYY")}

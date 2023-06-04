@@ -16,6 +16,7 @@ model Profile {
   username    String   @unique
   displayName String
   bio         String   @db.Text @default("") 
+  headerUrl   String?
 
   following   Profile[] @relation("Follows")
   followers   Profile[] @relation("Follows")
