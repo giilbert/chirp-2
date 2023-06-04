@@ -66,6 +66,7 @@ export const chirpFileRouter = {
         select: { headerUrl: true },
       });
 
+      // FIXME: this doesnt work
       if (profile?.headerUrl) {
         const lastSegment = profile.headerUrl.split("/").pop();
         if (lastSegment) await utapi.deleteFiles([lastSegment]);
