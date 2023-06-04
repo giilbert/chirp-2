@@ -203,7 +203,7 @@ export const chirpRouter = createTRPCRouter({
       const TAKE = 10;
       const chirps = await ctx.prisma.chirp.findMany({
         where: {
-          authorId: input.userId,
+          authorId: input.filter !== "likes" ? input.userId : undefined,
           replyingToId: input.filter === "replies" ? { not: null } : null,
           media:
             input.filter === "media"
@@ -212,6 +212,14 @@ export const chirpRouter = createTRPCRouter({
                     mediaType: {
                       in: ["IMAGE", "VIDEO", "AUDIO"],
                     },
+                  },
+                }
+              : undefined,
+          likes:
+            input.filter === "likes"
+              ? {
+                  some: {
+                    userId: input.userId,
                   },
                 }
               : undefined,
