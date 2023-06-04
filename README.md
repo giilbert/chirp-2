@@ -4,7 +4,6 @@
 ![React](https://img.shields.io/badge/react-%2320232a.svg?style=for-the-badge&logo=react&logoColor=%2361DAFB)
 ![TypeScript](https://img.shields.io/badge/typescript-%23007ACC.svg?style=for-the-badge&logo=typescript&logoColor=white)
 ![Prisma](https://img.shields.io/badge/Prisma-3982CE?style=for-the-badge&logo=Prisma&logoColor=white)
-![Redis](https://img.shields.io/badge/redis-%23DD0031.svg?style=for-the-badge&logo=redis&logoColor=white)
 ![TailwindCSS](https://img.shields.io/badge/tailwindcss-%2338B2AC.svg?style=for-the-badge&logo=tailwind-css&logoColor=white)
 
 ### [🦆 Visit Here!](https://example.com)
@@ -31,7 +30,6 @@ Twitter clone built with dark magic and ran by ducks.
 - [Prisma](https://www.prisma.io/) - Database without the tears 😭
 - [tRPC](https://trpc.io/) - Typescript RPC framework 🦉
 - [Tailwind CSS](https://tailwindcss.com/) - CSS framework 🎨
-- [Redis](https://redis.io/) - In-memory data structure store 🗄️
 - [MySQL](https://www.mysql.com/) - Database 🗃️
 
 ## Hosted on
