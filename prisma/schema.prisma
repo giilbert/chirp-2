@@ -23,6 +23,8 @@ model Profile {
 
   chirps      Chirp[]
   likes       Like[]
+
+  @@fulltext([displayName, bio, username])
 }
 
 model Chirp {
