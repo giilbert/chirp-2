@@ -21,11 +21,11 @@ Twitter clone built with dark magic and ran by ducks.
 - [x] Follow and unfollow users
 - [x] View posts from followed users
 - [x] Search for users and posts
+- [x] Chirp Purple
 - [ ] ✨ Recommendation algorithm 💰
 - [ ] Notifications
 - [ ] Direct messages
 - [ ] User analytics
-- [ ] Chirp Purple
 
 ## The Stack
 
