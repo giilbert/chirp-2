@@ -159,7 +159,7 @@ const PurplePage: NextPage = () => {
             </h1>
             <p>
               With Purple, you will not be able to be silenced on this platform.
-              Basically you&apos; buying youre freedom to speak (This isn&apos;t
+              Basically you&apos;re buying your freedom to speak (This isn&apos;t
               the US).
             </p>
           </motion.div>
