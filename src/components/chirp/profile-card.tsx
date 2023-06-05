@@ -11,6 +11,7 @@ import { useState } from "react";
 import { useSession } from "next-auth/react";
 import { useToast } from "@/lib/use-toast";
 import { Authed } from "../layout/authed";
+import { PurpleBadge } from "../user/purple-badge";
 
 export const ChirpProfileCard: React.FC<
   React.PropsWithChildren<{
@@ -109,7 +110,10 @@ export const ChirpProfileCard: React.FC<
           </Authed>
         </div>
 
-        <p className="mt-2">{author.displayName}</p>
+        <div className="mt-2 flex items-center gap-1">
+          <p>{author.displayName}</p>
+          {author.purple && <PurpleBadge />}
+        </div>
         <p className="text-muted-foreground">@{author.username}</p>
 
         <p>{author.bio}</p>

@@ -1,4 +1,3 @@
-import moment from "moment";
 import Link from "next/link";
 import { MessageCircleIcon, RepeatIcon, ShareIcon } from "lucide-react";
 import { ChirpProfilePicture } from "./profile-picture";
@@ -13,31 +12,8 @@ import { ChirpRepostOptions } from "./repost-options";
 import { ChirpRichText } from "./rich-text";
 import { useCopyToClipboard } from "@/lib/use-copy-to-clipboard";
 import { useToast } from "@/lib/use-toast";
-
-const betterFormatDate = (date: Date) => {
-  const dateMoment = moment(date);
-  const now = moment();
-  const diffHours = now.diff(dateMoment, "hours");
-  const diffDays = now.diff(dateMoment, "days");
-
-  // if the time is less than 6 hours ago, return a relative time
-  if (diffHours < 6) return dateMoment.fromNow();
-
-  // if it was more than a month ago, return a date
-  if (diffDays > 30) {
-    // if not in the same year, return a year
-    if (now.year() !== dateMoment.year())
-      return dateMoment.format("MMM D, YYYY");
-    // otherwise return a month and day
-    return dateMoment.format("MMM D");
-  }
-
-  // if the date is not the same, return a month and a day
-  if (now.date() !== dateMoment.date()) return dateMoment.format("MMM D");
-
-  // otherwise only return a time
-  return dateMoment.format("H:MM A");
-};
+import { PurpleBadge } from "../user/purple-badge";
+import { betterFormatDate } from "@/lib/utils";
 
 export const ChirpCard: React.FC<{
   chirp: EverythingChirpWithoutNesting;
@@ -57,13 +33,16 @@ export const ChirpCard: React.FC<{
         />
         {/* MOBILE: show the profile and post metadata above the content */}
         <div className="xs:hidden">
-          <ChirpProfileCard chirp={chirp}>
-            <Link href={`/${chirp.author.username}`}>
-              <p className="group-hover:underline">
-                {chirp.author.displayName}
-              </p>
-            </Link>
-          </ChirpProfileCard>
+          <div className="flex items-center gap-1">
+            <ChirpProfileCard chirp={chirp}>
+              <Link href={`/${chirp.author.username}`}>
+                <p className="group-hover:underline">
+                  {chirp.author.displayName}
+                </p>
+              </Link>
+            </ChirpProfileCard>
+            {chirp.author.purple && <PurpleBadge />}
+          </div>
           <div className="flex gap-1 text-muted-foreground">
             <p>@{chirp.author.username}</p>
             <p>·</p>
@@ -80,6 +59,9 @@ export const ChirpCard: React.FC<{
               </p>
             </Link>
           </ChirpProfileCard>
+
+          {chirp.author.purple && <PurpleBadge />}
+
           <p>@{chirp.author.username}</p>
           <p>·</p>
           <p>{betterFormatDate(chirp.createdAt)}</p>
@@ -133,9 +115,7 @@ export const ChirpCard: React.FC<{
             <div
               className="group flex cursor-pointer items-center gap-1 transition-colors hover:text-purple-500"
               onClick={() => {
-                copy(
-                  `${window.location.origin}/${chirp.author.username}/${chirp.id}`
-                )
+                copy(window.location.href)
                   .then(() => {
                     toast({
                       title: "Link copied to clipboard!",

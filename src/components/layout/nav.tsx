@@ -8,6 +8,7 @@ import {
   MoreHorizontalIcon,
   PenToolIcon,
   SearchIcon,
+  TicketIcon,
   // TicketIcon,
   UserCircle,
 } from "lucide-react";
@@ -48,15 +49,15 @@ export const Nav: React.FC = () => {
     //   href: "/bookmarks",
     //   Icon: BookmarkIcon,
     // },
-    // {
-    //   name: "Chirp Purple",
-    //   href: "/purple",
-    //   Icon: TicketIcon,
-    // },
     {
       name: "Search",
       href: "/search",
       Icon: SearchIcon,
+    },
+    {
+      name: "Chirp Purple",
+      href: "/purple",
+      Icon: TicketIcon,
     },
     status === "authenticated" && {
       name: "Profile",

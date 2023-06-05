@@ -15,14 +15,15 @@ model Profile {
   createdAt   DateTime @default(now())
   username    String   @unique
   displayName String
-  bio         String   @db.Text @default("") 
+  bio         String   @default("") @db.Text
   headerUrl   String?
+  purple      Boolean  @default(false)
 
-  following   Profile[] @relation("Follows")
-  followers   Profile[] @relation("Follows")
+  following Profile[] @relation("Follows")
+  followers Profile[] @relation("Follows")
 
-  chirps      Chirp[]
-  likes       Like[]
+  chirps Chirp[]
+  likes  Like[]
 
   @@fulltext([displayName, bio, username])
 }
@@ -44,9 +45,9 @@ model Chirp {
   replyingToId String?
   replyingTo   Chirp?  @relation(fields: [replyingToId], references: [id], name: "ChirpReplyingTo", onDelete: NoAction, onUpdate: NoAction)
 
-  replies  Chirp[]   @relation("ChirpReplyingTo")
-  rechirps Chirp[]   @relation("ChirpRechirps")
-  quotedBy Chirp[]   @relation("ChirpQuotedFrom")
+  replies  Chirp[]      @relation("ChirpReplyingTo")
+  rechirps Chirp[]      @relation("ChirpRechirps")
+  quotedBy Chirp[]      @relation("ChirpQuotedFrom")
   media    ChirpMedia[]
   likes    Like[]
   hashtags Hashtag[]
