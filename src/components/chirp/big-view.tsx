@@ -25,6 +25,7 @@ import { useSession } from "next-auth/react";
 import { ChirpRichText } from "./rich-text";
 import { useToast } from "@/lib/use-toast";
 import { useCopyToClipboard } from "@/lib/use-copy-to-clipboard";
+import { PurpleBadge } from "../user/purple-badge";
 
 export const ChirpBigView: React.FC<{
   chirp: EverythingChirp | EverythingChirpWithoutNesting;
@@ -89,13 +90,17 @@ export const ChirpBigView: React.FC<{
             displayName={chirp.author.displayName}
           />
           <div className="ml-4">
-            <ChirpProfileCard chirp={chirp}>
-              <Link href={`/${chirp.author.username}`}>
-                <p className="group-hover:underline">
-                  {chirp.author.displayName}
-                </p>
-              </Link>
-            </ChirpProfileCard>
+            <div className="flex items-center gap-2">
+              <ChirpProfileCard chirp={chirp}>
+                <Link href={`/${chirp.author.username}`}>
+                  <p className="group-hover:underline">
+                    {chirp.author.displayName}
+                  </p>
+                </Link>
+              </ChirpProfileCard>
+
+              {chirp.author.purple && <PurpleBadge />}
+            </div>
             <p className="-mt-2 text-muted-foreground">
               @{chirp.author.username}
             </p>

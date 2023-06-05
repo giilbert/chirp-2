@@ -13,6 +13,7 @@ import { ChirpRepostOptions } from "./repost-options";
 import { ChirpRichText } from "./rich-text";
 import { useCopyToClipboard } from "@/lib/use-copy-to-clipboard";
 import { useToast } from "@/lib/use-toast";
+import { PurpleBadge } from "../user/purple-badge";
 
 const betterFormatDate = (date: Date) => {
   const dateMoment = moment(date);
@@ -57,13 +58,16 @@ export const ChirpCard: React.FC<{
         />
         {/* MOBILE: show the profile and post metadata above the content */}
         <div className="xs:hidden">
-          <ChirpProfileCard chirp={chirp}>
-            <Link href={`/${chirp.author.username}`}>
-              <p className="group-hover:underline">
-                {chirp.author.displayName}
-              </p>
-            </Link>
-          </ChirpProfileCard>
+          <div className="flex items-center gap-1">
+            <ChirpProfileCard chirp={chirp}>
+              <Link href={`/${chirp.author.username}`}>
+                <p className="group-hover:underline">
+                  {chirp.author.displayName}
+                </p>
+              </Link>
+            </ChirpProfileCard>
+            {chirp.author.purple && <PurpleBadge />}
+          </div>
           <div className="flex gap-1 text-muted-foreground">
             <p>@{chirp.author.username}</p>
             <p>·</p>
@@ -80,6 +84,9 @@ export const ChirpCard: React.FC<{
               </p>
             </Link>
           </ChirpProfileCard>
+
+          {chirp.author.purple && <PurpleBadge />}
+
           <p>@{chirp.author.username}</p>
           <p>·</p>
           <p>{betterFormatDate(chirp.createdAt)}</p>

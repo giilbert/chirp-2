@@ -1,6 +1,7 @@
 import type { EverythingUser } from "@/server/api/routers/user";
 import { ChirpProfilePicture } from "../chirp/profile-picture";
 import Link from "next/link";
+import { PurpleBadge } from "./purple-badge";
 
 export const UserCard: React.FC<{
   user: EverythingUser;
@@ -13,10 +14,11 @@ export const UserCard: React.FC<{
           displayName={user.displayName}
         />
         <div>
-          <p>
-            {user.displayName}
-            <span className="ml-1 text-muted-foreground">@{user.username}</span>
-          </p>
+          <div className="flex items-center gap-1">
+            <p>{user.displayName}</p>
+            {user.purple && <PurpleBadge />}
+            <p className="text-muted-foreground">@{user.username}</p>
+          </div>
 
           <p>{user.bio}</p>
 

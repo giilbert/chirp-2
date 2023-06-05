@@ -26,6 +26,8 @@ import type { GetStaticPaths, GetStaticProps } from "next";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { useMemo, useState } from "react";
+import { ErrorMessage } from "@/components/layout/error-message";
+import { PurpleBadge } from "@/components/user/purple-badge";
 
 const UserProfilePage: React.FC = () => {
   const router = useRouter();
@@ -153,7 +155,9 @@ const UserProfilePage: React.FC = () => {
         )}
       </div>
 
-      {userProfileQuery.status === "error" && <p>TODO: error</p>}
+      {userProfileQuery.status === "error" && (
+        <ErrorMessage error={userProfileQuery.error} />
+      )}
 
       {userProfileQuery.status === "success" && profile && (
         <Tabs
@@ -240,7 +244,10 @@ const UserProfilePage: React.FC = () => {
             )}
 
             <div className={cn("m-4", isMe ? "-mt-8 lg:-mt-16" : "mt-0")}>
-              <h1 className="text-2xl font-bold">{profile.displayName}</h1>
+              <div className="flex items-center gap-2">
+                <h1 className="text-2xl font-bold">{profile.displayName}</h1>
+                {profile.purple && <PurpleBadge />}
+              </div>
               <p className="text-muted-foreground">@{profile.username}</p>
               {profile.bio && <p className="mt-2">{profile.bio}</p>}
               <div className="mt-2 flex items-center gap-2 text-muted-foreground">
