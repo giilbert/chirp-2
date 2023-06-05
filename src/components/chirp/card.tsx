@@ -1,4 +1,3 @@
-import moment from "moment";
 import Link from "next/link";
 import { MessageCircleIcon, RepeatIcon, ShareIcon } from "lucide-react";
 import { ChirpProfilePicture } from "./profile-picture";
@@ -14,31 +13,7 @@ import { ChirpRichText } from "./rich-text";
 import { useCopyToClipboard } from "@/lib/use-copy-to-clipboard";
 import { useToast } from "@/lib/use-toast";
 import { PurpleBadge } from "../user/purple-badge";
-
-const betterFormatDate = (date: Date) => {
-  const dateMoment = moment(date);
-  const now = moment();
-  const diffHours = now.diff(dateMoment, "hours");
-  const diffDays = now.diff(dateMoment, "days");
-
-  // if the time is less than 6 hours ago, return a relative time
-  if (diffHours < 6) return dateMoment.fromNow();
-
-  // if it was more than a month ago, return a date
-  if (diffDays > 30) {
-    // if not in the same year, return a year
-    if (now.year() !== dateMoment.year())
-      return dateMoment.format("MMM D, YYYY");
-    // otherwise return a month and day
-    return dateMoment.format("MMM D");
-  }
-
-  // if the date is not the same, return a month and a day
-  if (now.date() !== dateMoment.date()) return dateMoment.format("MMM D");
-
-  // otherwise only return a time
-  return dateMoment.format("H:MM A");
-};
+import { betterFormatDate } from "@/lib/utils";
 
 export const ChirpCard: React.FC<{
   chirp: EverythingChirpWithoutNesting;
