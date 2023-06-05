@@ -1,3 +1,6 @@
+<img src="https://github.com/giilbert/chirp-2/assets/40220369/ffb6433f-183d-4bef-b871-e6445b56435b" width="100%" height="auto" />
+
+
 # Chirp (2.0)
 
 ![Next JS](https://img.shields.io/badge/Next-black?style=for-the-badge&logo=next.js&logoColor=white)
