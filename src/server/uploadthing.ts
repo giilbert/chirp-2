@@ -66,7 +66,6 @@ export const chirpFileRouter = {
         select: { headerUrl: true },
       });
 
-      // FIXME: this doesnt work
       if (profile?.headerUrl) {
         const lastSegment = decodeURIComponent(
           profile.headerUrl.split("/").pop() || ""
