@@ -1,6 +1,7 @@
 import { Layout } from "@/components/layout";
 import type { NextPage } from "next";
 import styles from "@/styles/purple.module.css";
+import { motion } from "framer-motion";
 import {
   BadgeCheckIcon,
   MicIcon,
@@ -11,29 +12,105 @@ import {
 const PurplePage: NextPage = () => {
   return (
     <Layout>
-      <div>
-        <h1
+      <motion.div initial="hidden" animate="show">
+        <motion.h1
           className={`mt-16 text-center text-5xl font-bold xs:text-6xl lg:text-7xl ${
             styles.purple as string
           }`}
+          variants={{
+            hidden: {
+              opacity: 0,
+              y: 100,
+            },
+            show: {
+              opacity: 1,
+              y: 0,
+              transition: {
+                ease: "easeOut",
+                duration: 4,
+              },
+            },
+          }}
         >
           Chirp Purple
-        </h1>
+        </motion.h1>
 
-        <div
+        <motion.div
           className={`relative left-1/2 -z-10 -mb-[64rem] h-[64rem] w-full -translate-x-1/2 -translate-y-1/2 ${
             styles.spotlight as string
           }`}
+          variants={{
+            hidden: {
+              opacity: 0,
+            },
+            show: {
+              opacity: 1,
+              transition: {
+                duration: 3,
+                delay: 1,
+              },
+            },
+          }}
         />
 
-        <div className="flex flex-col items-center gap-4">
-          <TicketIcon size={200} className="mt-4 -rotate-6 text-purple-500" />
+        <motion.div
+          className="flex flex-col items-center gap-4"
+          initial="hidden"
+          animate="show"
+          variants={{
+            show: {
+              transition: {
+                staggerChildren: 4,
+              },
+            },
+          }}
+        >
+          <motion.div
+            variants={{
+              hidden: {
+                opacity: 0,
+                y: -20,
+              },
+              show: {
+                opacity: 1,
+                y: 0,
+                transition: {
+                  duration: 4,
+                  delay: 3,
+                },
+              },
+            }}
+          >
+            <TicketIcon size={200} className="mt-4 -rotate-6 text-purple-500" />
+          </motion.div>
 
-          <p className="mt-16 text-xl text-white/50">
+          <motion.p
+            className="mt-16 text-xl text-white/50"
+            variants={{
+              hidden: {
+                opacity: 0,
+              },
+              show: {
+                opacity: 1,
+              },
+            }}
+          >
             Improve your Chirp Experience.
-          </p>
-          <p className="text-4xl font-bold">Join Today.</p>
-        </div>
+          </motion.p>
+          <motion.p
+            className="text-4xl font-bold"
+            variants={{
+              hidden: {
+                opacity: 0,
+              },
+              show: {
+                opacity: 1,
+              },
+            }}
+          >
+            Join Today.
+          </motion.p>
+        </motion.div>
 
         <hr className="mt-16" />
 
@@ -69,7 +146,7 @@ const PurplePage: NextPage = () => {
             algorithm. More people will be able to find you with Purple.
           </p>
         </div>
-      </div>
+      </motion.div>
     </Layout>
   );
 };
