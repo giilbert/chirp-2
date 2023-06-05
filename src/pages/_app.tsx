@@ -4,6 +4,7 @@ import { SessionProvider } from "next-auth/react";
 import { Roboto } from "next/font/google";
 import { api } from "@/utils/api";
 import NextNProgress from "nextjs-progressbar";
+import { Analytics } from "@vercel/analytics/react";
 
 import "@/styles/globals.css";
 import { Toaster } from "@/components/ui/toaster";
@@ -22,6 +23,7 @@ const MyApp: AppType<{ session: Session | null }> = ({
     <SessionProvider session={session}>
       <NextNProgress color="#6b21a8" />
       <Toaster />
+      <Analytics />
       <Component {...pageProps} />
     </SessionProvider>
   );
