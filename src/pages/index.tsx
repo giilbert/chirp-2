@@ -9,6 +9,7 @@ import { useMemo } from "react";
 import { OnBottom } from "@/components/ui/on-bottom";
 import { ChirpSkeleton } from "@/components/chirp/skeleton";
 import { useSession } from "next-auth/react";
+import { ErrorMessage } from "@/components/layout/error-message";
 
 const Home: NextPage = () => {
   const session = useSession();
@@ -76,7 +77,9 @@ const Home: NextPage = () => {
                     ))}
                   </>
                 )}
-                {recentChirpsQuery.status === "error" && <p>TODO: Error</p>}
+                {recentChirpsQuery.status === "error" && (
+                  <ErrorMessage error={recentChirpsQuery.error} />
+                )}
                 {allChirps && (
                   <ChirpsList chirps={allChirps} showReplyingTo={false} />
                 )}
@@ -110,7 +113,7 @@ const Home: NextPage = () => {
                   </>
                 )}
                 {recentFollowingChirpsQuery.status === "error" && (
-                  <p>TODO: Error</p>
+                  <ErrorMessage error={recentFollowingChirpsQuery.error} />
                 )}
                 {allFollowingChirps && (
                   <ChirpsList
