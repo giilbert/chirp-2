@@ -68,12 +68,25 @@ export const chirpFileRouter = {
 
       // FIXME: this doesnt work
       if (profile?.headerUrl) {
-        const lastSegment = profile.headerUrl.split("/").pop();
-        if (lastSegment) await utapi.deleteFiles([lastSegment]);
+        const lastSegment = decodeURIComponent(
+          profile.headerUrl.split("/").pop() || ""
+        );
+        if (lastSegment) {
+          await utapi.deleteFiles([lastSegment]);
+        }
       }
 
+      await prisma.profile.update({
+        where: { userId: session.user.id },
+        data: {
+          headerUrl: null,
+        },
+      });
+
       return {
-        user: session.user,
+        user: {
+          id: session.user.id,
+        },
       };
     })
     .onUploadComplete(async ({ metadata, file }) => {
