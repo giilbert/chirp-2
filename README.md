@@ -1,5 +1,4 @@
-<img src="https://github.com/giilbert/chirp-2/assets/40220369/ffb6433f-183d-4bef-b871-e6445b56435b" width="100%" height="auto" />
-
+<img src="https://github.com/giilbert/chirp-2/assets/40220369/4d1d7065-3441-4658-9d1d-be9555210031" width="100%" height="auto" />
 
 # Chirp (2.0)
 
