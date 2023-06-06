@@ -8,23 +8,19 @@
 ![Prisma](https://img.shields.io/badge/Prisma-3982CE?style=for-the-badge&logo=Prisma&logoColor=white)
 ![TailwindCSS](https://img.shields.io/badge/tailwindcss-%2338B2AC.svg?style=for-the-badge&logo=tailwind-css&logoColor=white)
 
-### [🦆 Visit Here!](https://chirp-2.gilbertz.tech/)
+## [🦆 Visit Here!](https://chirp-2.gilbertz.tech/)
 
-Twitter clone built with dark magic and ran by ducks.
+From breaking news to shitposts, get the latest information from people all over the world with this next-generation blazingly-fast social media app!
 
 ## Features
 
-- [x] Create, edit, and delete posts
-- [x] Like and unlike posts
+- [x] Create, edit, and delete chirps (posts)
+- [x] Like and unlike chirps
 - [x] User authentication and profiles
 - [x] Follow and unfollow users
 - [x] View posts from followed users
 - [x] Search for users and posts
 - [x] Chirp Purple
-- [ ] ✨ Recommendation algorithm 💰
-- [ ] Notifications
-- [ ] Direct messages
-- [ ] User analytics
 
 ## The Stack
 
