@@ -35,15 +35,20 @@ From breaking news to shitposts, get the latest information from people all over
 - [Vercel](https://vercel.com/) - Frontend hosting ▲ (they're awesome ~~for sponsoring TechCodes~~)
 - [PlanetScale](https://planetscale.com/) - [Vitess](https://vitess.io/) MySQL Database hosting 🗄️ (they're awesome too)
 
-## Running in Development
+## Developing
 
-### The Easy Way
+### Overview of the Folder Structure
+Extending https://create.t3.gg/en/folder-structure
+`src/components/[division]/[component-name].tsx` - Contains reusable UI code for chirps, users, layout, or general UI stuff.
+`src/lib/**` - Contains reusable code appropriate for other projects.
+
+### Running The Easy Way
 
 1. Load the devcontainer defined in `.devcontainer/devcontainer.json`
 2. Create a `.env.local` file with the appropriate environment variables (see `.env.example`)
 3. Run the development task in VSCode
 
-### The Harder Way
+### Running The Harder Way
 
 Required tools (these are my versions, the app may or may not work on other versions):
 
