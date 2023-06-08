@@ -70,7 +70,7 @@ export const CreateChirpsForm: React.FC<{
             placeholder="What do you want to chirp about today?"
             className={cn(
               "mt-4 h-full w-full resize-none overflow-visible border-b bg-background pb-4 text-xl outline-none transition-colors group-focus-within:border-b-purple-600",
-              enlarged ? "h-32" : "group-focus-within:h-32"
+              enlarged ? "h-32" : "h-24 md:group-focus-within:h-32"
             )}
             {...form.register("body")}
           />
@@ -82,7 +82,7 @@ export const CreateChirpsForm: React.FC<{
           )}
 
           <div className="mt-2 flex">
-            <div className="hidden text-purple-500 group-focus-within:block">
+            <div className="text-purple-500 md:hidden md:group-focus-within:block">
               <ChirpMediaUpload files={files} setFiles={setFiles}>
                 <FileImageIcon />
               </ChirpMediaUpload>

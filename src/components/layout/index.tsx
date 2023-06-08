@@ -4,6 +4,7 @@ import { useRouter } from "next/router";
 import { FullscreenLoader } from "./fullscreen-loader";
 import { NextSeo, type NextSeoProps } from "next-seo";
 import { Search } from "../ui/search";
+import Head from "next/head";
 
 export const Layout: React.FC<
   React.PropsWithChildren<{
@@ -11,7 +12,7 @@ export const Layout: React.FC<
     noSearch?: boolean;
   }>
 > = ({ seo = {}, children, noSearch }) => {
-  const mergedProps = {
+  const mergedProps: NextSeoProps = {
     title: "Chirp",
     description: "Basically a Twitter clone, but missing a lot of features",
     themeColor: "#9333ea",
@@ -36,6 +37,10 @@ export const Layout: React.FC<
   return (
     <>
       <NextSeo {...mergedProps} />
+
+      <Head>
+        <link rel="manifest" href="/manifest.json" />
+      </Head>
 
       <div className="flex justify-center">
         <div className="flex w-screen lg:grid lg:max-w-[150rem] lg:grid-cols-4">
