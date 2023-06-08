@@ -1,5 +1,4 @@
-<img src="https://github.com/giilbert/chirp-2/assets/40220369/ffb6433f-183d-4bef-b871-e6445b56435b" width="100%" height="auto" />
-
+<img src="https://github.com/giilbert/chirp-2/assets/40220369/4d1d7065-3441-4658-9d1d-be9555210031" width="100%" height="auto" />
 
 # Chirp (2.0)
 
@@ -9,23 +8,19 @@
 ![Prisma](https://img.shields.io/badge/Prisma-3982CE?style=for-the-badge&logo=Prisma&logoColor=white)
 ![TailwindCSS](https://img.shields.io/badge/tailwindcss-%2338B2AC.svg?style=for-the-badge&logo=tailwind-css&logoColor=white)
 
-### [🦆 Visit Here!](https://chirp-2.gilbertz.tech/)
+## [🦆 Visit Here!](https://chirp-2.gilbertz.tech/)
 
-Twitter clone built with dark magic and ran by ducks.
+From breaking news to shitposts, get the latest information from people all over the world with this next-generation blazingly-fast social media app!
 
 ## Features
 
-- [x] Create, edit, and delete posts
-- [x] Like and unlike posts
+- [x] Create, edit, and delete chirps (posts)
+- [x] Like and unlike chirps
 - [x] User authentication and profiles
 - [x] Follow and unfollow users
 - [x] View posts from followed users
 - [x] Search for users and posts
-- [ ] ✨ Recommendation algorithm 💰
-- [ ] Notifications
-- [ ] Direct messages
-- [ ] User analytics
-- [ ] Chirp Purple
+- [x] Chirp Purple
 
 ## The Stack
 
@@ -40,15 +35,20 @@ Twitter clone built with dark magic and ran by ducks.
 - [Vercel](https://vercel.com/) - Frontend hosting ▲ (they're awesome ~~for sponsoring TechCodes~~)
 - [PlanetScale](https://planetscale.com/) - [Vitess](https://vitess.io/) MySQL Database hosting 🗄️ (they're awesome too)
 
-## Running in Development
+## Developing
 
-### The Easy Way
+### Overview of the Folder Structure
+Extending https://create.t3.gg/en/folder-structure
+`src/components/[division]/[component-name].tsx` - Contains reusable UI code for chirps, users, layout, or general UI stuff.
+`src/lib/**` - Contains reusable code appropriate for other projects.
+
+### Running The Easy Way
 
 1. Load the devcontainer defined in `.devcontainer/devcontainer.json`
 2. Create a `.env.local` file with the appropriate environment variables (see `.env.example`)
 3. Run the development task in VSCode
 
-### The Harder Way
+### Running The Harder Way
 
 Required tools (these are my versions, the app may or may not work on other versions):
 

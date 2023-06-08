@@ -16,7 +16,7 @@ import Link from "next/link";
 import { Button } from "../ui/button";
 import { signIn, useSession } from "next-auth/react";
 import { ProfilePopover } from "./profile-popover";
-import { Avatar, AvatarImage } from "../ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { CreateChirpDialog } from "../chirp/dialog";
 import { Logo } from "./logo";
 
@@ -129,6 +129,12 @@ export const Nav: React.FC = () => {
           <ProfilePopover>
             <Avatar className="mb-1 ml-1 h-[46.5px] w-[46.5px] cursor-pointer">
               <AvatarImage src={session?.user.image} />
+              <AvatarFallback>
+                {session?.user.profile?.displayName
+                  .split(" ")
+                  .map((w) => w[0]?.toUpperCase())
+                  .join("")}
+              </AvatarFallback>
             </Avatar>
           </ProfilePopover>
         )}
@@ -159,6 +165,12 @@ export const Nav: React.FC = () => {
             <div className="flex cursor-pointer items-center gap-4 rounded-full py-2 pl-4 pr-6 transition-colors hover:bg-muted">
               <Avatar className="mb-1 ml-1 h-[40px] w-[40px] cursor-pointer">
                 <AvatarImage src={session?.user.image} />
+                <AvatarFallback>
+                  {session.user.profile?.displayName
+                    .split(" ")
+                    .map((w) => w[0]?.toUpperCase())
+                    .join("")}
+                </AvatarFallback>
               </Avatar>
 
               <div>
